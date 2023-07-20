@@ -6,4 +6,13 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="InfrastructureUnitTests\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Movieverse.Application\Movieverse.Application.csproj" />
+      <ProjectReference Include="..\Movieverse.Infrastructure\Movieverse.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>

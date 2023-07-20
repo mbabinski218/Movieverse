@@ -15,4 +15,13 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Controllers\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Movieverse.Application\Movieverse.Application.csproj" />
+      <ProjectReference Include="..\Movieverse.Infrastructure\Movieverse.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>
