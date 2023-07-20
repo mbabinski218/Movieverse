@@ -19,4 +19,17 @@
       <ProjectReference Include="..\Movieverse.Domain\Movieverse.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Behaviors\" />
+      <Folder Include="Commands\" />
+      <Folder Include="Common\" />
+      <Folder Include="DataTransferObjects\" />
+      <Folder Include="Queries\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="12.1.1" />
+      <PackageReference Include="NLog" Version="5.2.2" />
+    </ItemGroup>
+
 </Project>

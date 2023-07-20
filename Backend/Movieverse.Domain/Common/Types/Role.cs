@@ -1,5 +1,8 @@
-﻿namespace Movieverse.Domain.Common.Types;
+﻿using NetEscapades.EnumGenerators;
 
+namespace Movieverse.Domain.Common.Types;
+
+[EnumExtensions]
 public enum Role
 {
 	Director,
@@ -15,11 +18,4 @@ public enum Role
 	MakeupArtist,
 	SoundDesigner,
 	Other
-}
-
-public static class RoleHelper
-{
-	public static Role ToRole(this string str) => Enum.Parse<Role>(str);
-	
-	public static IEnumerable<string> Supported => Enum.GetNames<Role>();
 }

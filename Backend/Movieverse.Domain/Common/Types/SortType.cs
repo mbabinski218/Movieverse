@@ -1,5 +1,8 @@
-﻿namespace Movieverse.Domain.Common.Types;
+﻿using NetEscapades.EnumGenerators;
 
+namespace Movieverse.Domain.Common.Types;
+
+[EnumExtensions]
 public enum SortType
 {
 	ReleaseDateAscending,
@@ -10,7 +13,7 @@ public enum SortType
 	VotesDescending
 }
 
-public static class SortTypeHelper
+public static partial class SortTypeExtensions
 {
 	public static string ToSqlString(this SortType sortType)
 	{
@@ -22,12 +25,7 @@ public static class SortTypeHelper
 			SortType.PopularityDescending => "Popularity DESC",
 			SortType.VotesAscending => "Votes ASC",
 			SortType.VotesDescending => "Votes DESC",
-			_ => throw new ArgumentOutOfRangeException(nameof(sortType), sortType, null)
+			_ => string.Empty
 		};
-		
 	}
-	
-	public static SortType ToSortType(this string str) => Enum.Parse<SortType>(str);
-
-	public static IEnumerable<string> Supported() => Enum.GetNames<SortType>();
 }

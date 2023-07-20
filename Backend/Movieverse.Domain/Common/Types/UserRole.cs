@@ -1,5 +1,8 @@
-﻿namespace Movieverse.Domain.Common.Types;
+﻿using NetEscapades.EnumGenerators;
 
+namespace Movieverse.Domain.Common.Types;
+
+[EnumExtensions]
 public enum UserRole
 {
 	Administrator,
@@ -7,11 +10,4 @@ public enum UserRole
 	Critic,
 	Pro,
 	User
-}
-
-public static class UserRoleHelper
-{
-	public static UserRole ToUserRole(this string str) => Enum.Parse<UserRole>(str);
-	
-	public static IEnumerable<string> Supported => Enum.GetNames<UserRole>();
 }

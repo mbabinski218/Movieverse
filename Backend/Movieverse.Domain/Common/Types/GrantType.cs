@@ -1,5 +1,8 @@
-﻿namespace Movieverse.Domain.Common.Types;
+﻿using NetEscapades.EnumGenerators;
 
+namespace Movieverse.Domain.Common.Types;
+
+[EnumExtensions]
 public enum GrantType
 {
 	Password,
@@ -7,11 +10,4 @@ public enum GrantType
 	Google,
 	Facebook,
 	Amazon
-}
-
-public static class GrantTypeHelper
-{
-	public static GrantType ToGrantType(this string str) => Enum.Parse<GrantType>(str);
-	
-	public static IEnumerable<string> Supported => Enum.GetNames<GrantType>();
 }

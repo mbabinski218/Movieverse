@@ -1,7 +1,7 @@
-﻿using MediatR;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Movieverse.Domain.Common;
+using MediatR;
 
 namespace Movieverse.Infrastructure.Persistence.Interceptors;
 
@@ -32,17 +32,18 @@ public class PublishDomainEventsInterceptor : SaveChangesInterceptor
 		{
 			return;
 		}
-		
-		var entitiesWithDomainEvents = context.ChangeTracker.Entries<IHasDomainEvent>()
+
+		var domainEvents = context.ChangeTracker
+			.Entries<IHasDomainEvent>()
 			.Where(entry => entry.Entity.DomainEvents.Any())
 			.Select(entry => entry.Entity)
+			.SelectMany(entity =>
+			{
+				var domainEvents = entity.DomainEvents;
+				entity.ClearDomainEvents();
+				return domainEvents;
+			})
 			.ToList();
-		
-		var domainEvents = entitiesWithDomainEvents
-			.SelectMany(entity => entity.DomainEvents)
-			.ToList();
-		
-		entitiesWithDomainEvents.ForEach(entity => entity.ClearDomainEvents());
 
 		foreach (var domainEvent in domainEvents)
 		{
