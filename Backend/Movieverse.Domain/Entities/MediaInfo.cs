@@ -1,8 +1,9 @@
 ﻿using Movieverse.Domain.Common.Models;
+using Movieverse.Domain.ValueObjects;
 
-namespace Movieverse.Domain.ValueObjects;
+namespace Movieverse.Domain.Entities;
 
-public class MediaInfo : ValueObject
+public class MediaInfo : Entity<ObjectId>
 {
 	public ObjectId MediaId { get; set; } = null!;
 	public bool IsInWatchlist { get; set; }

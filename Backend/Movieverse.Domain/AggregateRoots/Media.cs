@@ -11,8 +11,10 @@ public class Media : AggregateRoot<ObjectId>
 	public TechnicalSpecs TechnicalSpecs { get; set; } = null!;
 	public ObjectId StatisticsId { get; set; } = null!;
 	public int Popularity { get; set; }
-	public virtual List<MediaGenre> Genres { get; set; } = new();
 	public string? PosterPath { get; set; }
 	public string? TrailerPath { get; set; }
-	public List<ObjectId> ContentIds { get; set; } = new();
+	public virtual List<ObjectId> PlatformIds { get; set; } = new();
+	public virtual List<ObjectId> ContentIds { get; set; } = new();
+	public virtual List<MediaGenre> Genres { get; set; } = new();
+	public virtual List<Staff> Staff { get; set; } = new();
 }

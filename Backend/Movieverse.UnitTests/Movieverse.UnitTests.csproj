@@ -15,4 +15,9 @@
       <ProjectReference Include="..\Movieverse.Infrastructure\Movieverse.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="NSubstitute" Version="5.0.0" />
+      <PackageReference Include="NUnit" Version="3.13.3" />
+    </ItemGroup>
+
 </Project>

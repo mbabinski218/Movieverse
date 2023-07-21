@@ -7,8 +7,7 @@ namespace Movieverse.Domain.AggregateRoots;
 public class Statistics : AggregateRoot<ObjectId>
 {
 	public ObjectId MediaId { get; set; } = null!;
-	public BasicStatistics Current { get; set; } = null!;
-	public BasicStatistics Previous { get; set; } = null!;
+	public BasicStatistics BasicStatistics { get; set; } = null!;
 	public BoxOffice BoxOffice { get; set; } = null!;
 	public virtual List<Popularity> Popularity { get; set; } = new();
 	public virtual List<StatisticsAward> StatisticsAwards { get; set; } = new();

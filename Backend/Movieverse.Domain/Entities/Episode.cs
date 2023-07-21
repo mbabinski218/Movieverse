@@ -12,5 +12,5 @@ public class Episode : Entity<ObjectId>
 	public string Title { get; set; } = null!;
 	public Details Details { get; set; } = null!;
 	public BasicStatistics BasicStatistics { get; set; } = null!;
-	public List<ObjectId> ContentIds { get; set; } = new();
+	public virtual List<ObjectId> ContentIds { get; set; } = new();
 }
