@@ -14,8 +14,6 @@ public static class DependencyInjection
 		{
 			cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
 
-			cfg.AddRequestPreProcessor(typeof(LoggingBehavior<>));
-			
 			cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 #if _debug
 			cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));

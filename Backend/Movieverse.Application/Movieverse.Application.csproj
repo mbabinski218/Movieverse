@@ -11,11 +11,10 @@
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.6.0" />
       <PackageReference Include="MediatR" Version="12.1.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Commands\" />
       <Folder Include="Common\" />
       <Folder Include="DataTransferObjects\" />
       <Folder Include="Queries\" />
