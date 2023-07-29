@@ -1,22 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <OutputType>Library</OutputType>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <DebugType>full</DebugType>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="Properties\launchSettings.json" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Movieverse.Domain\Movieverse.Domain.csproj" />
+      <PackageReference Include="MediatR" Version="12.1.1" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,11 +17,6 @@
       <Folder Include="Common\" />
       <Folder Include="DataTransferObjects\" />
       <Folder Include="Queries\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="MediatR" Version="12.1.1" />
-      <PackageReference Include="NLog" Version="5.2.2" />
     </ItemGroup>
 
 </Project>

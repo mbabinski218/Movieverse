@@ -1,56 +1,58 @@
-﻿using System.Reflection;
-using Movieverse.Infrastructure.Persistence.Interceptors;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Movieverse.Domain.ValueObjects;
-using Microsoft.AspNetCore.Identity;
+using Movieverse.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Movieverse.Domain.AggregateRoots;
+using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common;
-using Movieverse.Domain.Entities;
+using Movieverse.Domain.Common.Types;
 
 namespace Movieverse.Infrastructure.Persistence;
 
-public class AppDbContext : IdentityDbContext<User, IdentityRole<ObjectId>, ObjectId>
+public sealed class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
-	// DbSets
-	public DbSet<Content> Contents { get; set; } = null!;
+	// DbSet
 	public DbSet<Media> Medias { get; set; } = null!;
 	public DbSet<Movie> Movies { get; set; } = null!;
+	public DbSet<Series> Series { get; set; } = null!;
+	public DbSet<Content> Contents { get; set; } = null!;
+	public DbSet<Genre> Genres { get; set; } = null!;
 	public DbSet<Person> Persons { get; set; } = null!;
 	public DbSet<Platform> Platforms { get; set; } = null!;
-	public DbSet<Series> Series { get; set; } = null!;
-	public DbSet<Statistics> Statistics { get; set; } = null!;
-	public DbSet<Award> Awards { get; set; } = null!;
-	public DbSet<Episode> Episodes { get; set; } = null!;
-	public DbSet<Genre> Genres { get; set; } = null!;
-	public DbSet<MediaGenre> MediaGenres { get; set; } = null!;
-	public DbSet<Popularity> Popularity { get; set; } = null!;
-	public DbSet<Review> Reviews { get; set; } = null!;
-	public DbSet<Season> Seasons { get; set; } = null!;
-	public DbSet<StatisticsAward> StatisticsAwards { get; set; } = null!;
 
 	// Configuration
 	private readonly PublishDomainEventsInterceptor _publishDomainEventsInterceptor;
+	private readonly DateTimeSetterInterceptor _dateTimeSetterInterceptor;
 	
-	public AppDbContext(DbContextOptions<AppDbContext> options, PublishDomainEventsInterceptor publishDomainEventsInterceptor) : base(options)
+	private readonly ILogger<AppDbContext> _logger;
+	
+	public AppDbContext(DbContextOptions<AppDbContext> options, PublishDomainEventsInterceptor publishDomainEventsInterceptor, 
+		DateTimeSetterInterceptor dateTimeSetterInterceptor, ILogger<AppDbContext> logger) : base(options)
 	{
 		_publishDomainEventsInterceptor = publishDomainEventsInterceptor;
-        
-		// Database.EnsureDeleted();
-		Database.EnsureCreated();
+		_dateTimeSetterInterceptor = dateTimeSetterInterceptor;
+		_logger = logger;
 	}
 	
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		modelBuilder.Ignore<List<IDomainEvent>>()
-			.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        
+		_logger.LogDebug("Model building...");
+
 		base.OnModelCreating(modelBuilder);
+		
+		modelBuilder.HasPostgresEnum<Role>();
+
+		modelBuilder.Ignore<List<IDomainEvent>>()
+			.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 	}
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 	{
-		optionsBuilder.AddInterceptors(_publishDomainEventsInterceptor);
+		_logger.LogDebug("Configuring database...");
+				
 		base.OnConfiguring(optionsBuilder);
+		
+		optionsBuilder.AddInterceptors(_publishDomainEventsInterceptor, _dateTimeSetterInterceptor);
 	}
 }

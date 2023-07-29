@@ -2,7 +2,7 @@
 
 namespace Movieverse.Domain.ValueObjects;
 
-public class LifeHistory : ValueObject
+public sealed class LifeHistory : ValueObject
 {
 	public string? BirthPlace { get; set; }
     public DateTimeOffset? BirthDate { get; set; }
@@ -10,4 +10,9 @@ public class LifeHistory : ValueObject
     public DateTimeOffset? DeathDate { get; set; }
     public DateTimeOffset? CareerStart { get; set; }
     public DateTimeOffset? CareerEnd { get; set; }
+
+    private LifeHistory()
+    {
+	    
+    }
 }

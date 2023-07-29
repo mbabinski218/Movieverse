@@ -1,6 +1,6 @@
 ﻿namespace Movieverse.Application.Interfaces;
 
-public interface IStatisticsRepository
+public interface IGenreRepository
 {
 	
 }

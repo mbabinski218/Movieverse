@@ -1,16 +1,25 @@
-﻿using Movieverse.Domain.AggregateRoots;
-using Movieverse.Domain.Common.Models;
+﻿using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.ValueObjects;
+using Movieverse.Domain.ValueObjects.Id;
 
 namespace Movieverse.Domain.Entities;
 
-public class Episode : Entity<ObjectId>
+public class Episode : Entity
 {
-	public virtual Season Season { get; set; } = null!;
-	public ObjectId SeasonId { get; set; } = null!;
-	public int EpisodeNumber { get; set; }
+	// Map to table
+	public virtual Season Season { get; private set; } = null!;
+	public uint EpisodeNumber { get; set; }
 	public string Title { get; set; } = null!;
 	public Details Details { get; set; } = null!;
 	public BasicStatistics BasicStatistics { get; set; } = null!;
-	public virtual List<ObjectId> ContentIds { get; set; } = new();
+	public virtual List<AggregateRootId> ContentIds { get; private set; } = new();
+	public virtual List<Review> Reviews { get; private set; } = new();
+	
+	// EF Core
+	private Episode()
+	{
+			
+	}
+	
+	// Other
 }

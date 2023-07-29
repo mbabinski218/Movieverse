@@ -8,15 +8,14 @@
 
     <ItemGroup>
       <PackageReference Include="MediatR" Version="12.1.1" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.9" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.9" />
       <PackageReference Include="NLog" Version="5.2.2" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Common\" />
+      <Folder Include="Migrations\" />
       <Folder Include="Persistence\Migrations\" />
-      <Folder Include="Repositories\" />
     </ItemGroup>
 
     <ItemGroup>

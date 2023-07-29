@@ -1,20 +1,14 @@
 ﻿namespace Movieverse.Domain.Common.Models;
 
-public abstract class Entity<TKey> : IHasDomainEvent
-	where TKey : ValueObject
+public abstract class Entity : BaseEntity<int>
 {
-	public TKey Id { get; set; } = default!;
-	
-	private readonly List<IDomainEvent> _domainEvents = new();
-	public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
-
-	public void ClearDomainEvents()
+	protected Entity(int id) : base(id)
 	{
-		_domainEvents.Clear();
+		
 	}
-	
-	public void AddDomainEvent(IDomainEvent domainEvent)
+
+	protected Entity()
 	{
-		_domainEvents.Add(domainEvent);
+		
 	}
 }

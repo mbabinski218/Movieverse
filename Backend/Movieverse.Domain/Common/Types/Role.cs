@@ -19,3 +19,12 @@ public enum Role
 	SoundDesigner,
 	Other
 }
+
+public static partial class RoleExtensions
+{
+	public static Role ParseOrDefault(string value)
+	{
+		var success = TryParse(value, out var role);
+		return success ? role : Role.Other;
+	}
+}

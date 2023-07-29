@@ -1,11 +1,22 @@
-﻿using Movieverse.Domain.Common.Models;
+﻿using Movieverse.Domain.AggregateRoots.Media;
+using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Types;
-using Movieverse.Domain.ValueObjects;
+using Movieverse.Domain.ValueObjects.Id;
 
 namespace Movieverse.Domain.Entities;
 
-public class Staff : Entity<ObjectId>
+public class Staff : Entity
 {
-	public ObjectId PersonId { get; set; } = null!;
+	// Map to table
+	public virtual Media Media { get; private set; } = null!;
+	public AggregateRootId PersonId { get; private set; } = null!;
 	public Role Role { get; set; }
+
+	// EF Core
+	private Staff()
+	{
+		
+	}
+	
+	// Other
 }

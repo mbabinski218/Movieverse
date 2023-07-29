@@ -1,22 +1,62 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Movieverse.Application.Interfaces;
+using Movieverse.Domain.Common.Types;
+using Movieverse.Infrastructure.Persistence;
+using Movieverse.Infrastructure.Persistence.Interceptors;
+using Movieverse.Infrastructure.Repositories;
+using Npgsql;
 
 namespace Movieverse.Infrastructure;
 
 public static class DependencyInjection
 {
-	public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+	public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
 	{
-		AddRepositories(services);
+		services.AddPersistence(configuration);
+		services.AddAuthentication(configuration);
+		services.AddRepositories();
+		
+		return services;
+	}
+	
+	private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.AddDbContext<AppDbContext>(options => options.UseNpgsql(GetNpgsqlDataSource()));
+
+		services.AddScoped<IUnitOfWork, UnitOfWork>();
+		services.AddScoped<PublishDomainEventsInterceptor>();
+		services.AddScoped<DateTimeSetterInterceptor>();
 		
 		return services;
 	}
 
-	private static IServiceCollection AddRepositories(IServiceCollection services)
+	private static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
 	{
 		
 		
 		return services;
+	}
+	
+	private static IServiceCollection AddRepositories(this IServiceCollection services)
+	{
+		services.AddScoped<IContentRepository, ContentRepository>();
+		services.AddScoped<IGenreRepository, GenreRepository>();
+		services.AddScoped<IMediaRepository, MediaRepository>();
+		services.AddScoped<IPersonRepository, PersonRepository>();
+		services.AddScoped<IPlatformRepository, PlatformRepository>();
+		services.AddScoped<IUserRepository, UserRepository>();
+
+		return services;
+	}
+
+	private static NpgsqlDataSource GetNpgsqlDataSource()
+	{
+		var dataSourceBuilder = new NpgsqlDataSourceBuilder("Host=localhost; database=Test; Username=postgres; Password=Babina123456789");
+
+		dataSourceBuilder.MapEnum<Role>();
+
+		return dataSourceBuilder.Build();
 	}
 }
