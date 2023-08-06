@@ -46,7 +46,7 @@ public sealed class Error
 	public static Error AlreadyExists(string message) => new(StatusCode.AlreadyExists, message);
 	public static Error Unauthorized(string message) => new(StatusCode.Unauthorized, message);
 	public static Error Forbidden(string message) => new(StatusCode.Forbidden, message);
-	public static Error NotImplemented() => new(StatusCode.InternalError);
+	public static Error NotImplemented() => new(StatusCode.NotImplemented);
 	public static Error InternalError(string message) => new(StatusCode.InternalError, message);
 	public static Error ValidationError(List<string> message) => new(StatusCode.Invalid, message);
 }

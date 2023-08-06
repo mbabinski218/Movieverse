@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using FluentValidation;
 using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
 using Movieverse.Application.Behaviors;
 
@@ -13,13 +14,12 @@ public static class DependencyInjection
 		services.AddMediatR(cfg =>
 		{
 			cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-
+			
+			cfg.AddOpenRequestPreProcessor(typeof(LoggingBehavior<>));
+			
 			cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-#if _debug
-			cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
-#endif
 		});
-
+        
 		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 		return services;
