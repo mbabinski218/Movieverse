@@ -5,9 +5,10 @@ namespace Movieverse.Application.Commands.UserCommands.Register;
 
 public sealed record RegisterUserCommand(
 	string Email,
-	string FirstName,
-	string LastName,
+	string UserName,
+	string? FirstName,
+	string? LastName,
 	string Password,
 	string ConfirmPassword,
-	int Age
+	ushort Age
 	) : IRequest<Result>;

@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Movieverse.Application.Interfaces;
+using Movieverse.Domain.AggregateRoots;
+using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Types;
 using Movieverse.Infrastructure.Persistence;
 using Movieverse.Infrastructure.Persistence.Interceptors;
@@ -25,6 +27,22 @@ public static class DependencyInjection
 	{
 		services.AddDbContext<AppDbContext>(options => options.UseNpgsql(GetNpgsqlDataSource()));
 
+		services.AddIdentityCore<User>(options =>
+			{
+				options.User.RequireUniqueEmail = true;
+				
+				//TODO Remove password requirements
+				options.Password.RequireDigit = false;
+				options.Password.RequireLowercase = false;
+				options.Password.RequireNonAlphanumeric = false;
+				options.Password.RequireUppercase = false;
+				options.Password.RequiredLength = 1;
+				options.Password.RequiredUniqueChars = 0;
+			})
+			.AddRoles<IdentityUserRole>()
+			.AddEntityFrameworkStores<AppDbContext>();
+		
+		services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.AddScoped<PublishDomainEventsInterceptor>();
 		services.AddScoped<DateTimeSetterInterceptor>();

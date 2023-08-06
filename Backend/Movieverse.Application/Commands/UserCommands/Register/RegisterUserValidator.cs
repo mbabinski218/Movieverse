@@ -10,11 +10,8 @@ public sealed class RegisterUserValidator : AbstractValidator<RegisterUserComman
 			.NotEmpty().WithMessage("Enter email address")
 			.EmailAddress().WithMessage("Wrong email format");
 
-		RuleFor(u => u.FirstName)
-			.NotEmpty().WithMessage("Enter first name");		
-		
-		RuleFor(u => u.LastName)
-			.NotEmpty().WithMessage("Enter last name");
+		RuleFor(u => u.UserName)
+			.NotEmpty().WithMessage("Enter username");
 
 		RuleFor(u => u.Password)
 			.NotEmpty().WithMessage("Enter password")

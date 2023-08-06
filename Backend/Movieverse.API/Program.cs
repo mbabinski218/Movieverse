@@ -1,3 +1,4 @@
+using Movieverse.API.Common;
 using NLog.Extensions.Logging;
 using Movieverse.Infrastructure;
 using Movieverse.Application;
@@ -28,6 +29,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+await app.SeedDatabase();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

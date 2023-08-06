@@ -43,6 +43,7 @@ public sealed class Error
 
 	public static Error NotFound(string message) => new(StatusCode.NotFound, message);
 	public static Error Invalid(string message) => new(StatusCode.Invalid, message);
+	public static Error Invalid(List<string> message) => new(StatusCode.Invalid, message);
 	public static Error AlreadyExists(string message) => new(StatusCode.AlreadyExists, message);
 	public static Error Unauthorized(string message) => new(StatusCode.Unauthorized, message);
 	public static Error Forbidden(string message) => new(StatusCode.Forbidden, message);

@@ -20,4 +20,8 @@
       <Folder Include="Queries\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Movieverse.Domain\Movieverse.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

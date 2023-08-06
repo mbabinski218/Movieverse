@@ -1,16 +1,18 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Reflection;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Movieverse.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Movieverse.Application.Interfaces;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common;
+using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Types;
 
 namespace Movieverse.Infrastructure.Persistence;
 
-public sealed class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
+public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Guid>
 {
 	// DbSet
 	public DbSet<Media> Medias { get; set; } = null!;
@@ -44,7 +46,7 @@ public sealed class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, G
 		modelBuilder.HasPostgresEnum<Role>();
 
 		modelBuilder.Ignore<List<IDomainEvent>>()
-			.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+			.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 	}
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
