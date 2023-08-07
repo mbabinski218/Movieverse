@@ -15,7 +15,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Common\" />
       <Folder Include="DataTransferObjects\" />
       <Folder Include="Queries\" />
     </ItemGroup>

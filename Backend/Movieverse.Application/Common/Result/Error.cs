@@ -1,44 +1,46 @@
 ﻿namespace Movieverse.Application.Common.Result;
 
-public sealed class Error
+using System.Runtime.InteropServices;
+
+public readonly struct Error
 {
 	public ushort Code { get; }
-	public List<string> Messages { get; }
+	public string[] Messages { get; }
 	
 	public Error(ushort code)
 	{
 		Code = code;
-		Messages = new List<string>();
+		Messages = Array.Empty<string>();
 	}
 	
 	public Error(ushort code, string message)
 	{
 		Code = code;
-		Messages = new List<string> { message };
+		Messages = new[] { message };
 	}
 	
 	public Error(ushort code, List<string> messages)
 	{
 		Code = code;
-		Messages = messages;
+		Messages = CollectionsMarshal.AsSpan(messages).ToArray();
 	}
 	
 	private Error(StatusCode code)
 	{
 		Code = (ushort)code;
-		Messages = new List<string>();
+		Messages = Array.Empty<string>();
 	}
 	
 	private Error(StatusCode code, List<string> messages)
 	{
 		Code = (ushort)code;
-		Messages = messages;
+		Messages = CollectionsMarshal.AsSpan(messages).ToArray();
 	}
 	
 	private Error(StatusCode code, string message)
 	{
 		Code = (ushort)code;
-		Messages = new List<string> { message };
+		Messages = new[] { message };
 	}
 
 	public static Error NotFound(string message) => new(StatusCode.NotFound, message);

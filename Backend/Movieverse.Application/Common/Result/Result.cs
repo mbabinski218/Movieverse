@@ -28,7 +28,7 @@ public readonly struct Result : IResult
 	public static Result Error(Error error) => new(error);
 	
 	public TResult Match<TResult>(Func<TResult> success, Func<Error, TResult> error) =>
-		IsSuccessful ? success() : error(_error!);
+		IsSuccessful ? success() : error(_error!.Value);
 }
 
 public readonly struct Result<TSuccess> : IResult
@@ -58,5 +58,5 @@ public readonly struct Result<TSuccess> : IResult
 	public static Result<TSuccess> Error(Error error) => new(error);
 	
 	public TResult Match<TResult>(Func<TSuccess, TResult> success, Func<Error, TResult> error) =>
-		IsSuccessful ? success(_success!) : error(_error!);
+		IsSuccessful ? success(_success!) : error(_error!.Value);
 }
