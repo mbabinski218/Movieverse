@@ -10,7 +10,7 @@ public class User : IdentityAggregateRoot
 	// Map to table
 	public Information Information { get; set; } = null!;
 	public AggregateRootId? AvatarId { get; set; } = null!;
-	public virtual List<MediaInfo> MediaInfos { get; private set; } = new();
+	public List<MediaInfo> MediaInfos { get; private set; } = new();
 	public AggregateRootId? PersonId { get; set; }
 
 	// EF Core
@@ -18,18 +18,21 @@ public class User : IdentityAggregateRoot
 	{
 		
 	}
-	
-	// Other
-	public static User Create(string email, string userName, string? firstName, string? lastName, short age) => new()
+
+	protected User(Guid id, string email, string userName, string? firstName, string? lastName, short age)
 	{
-		Id = Guid.NewGuid(),
-		Email = email,
-		UserName = userName,
+		Id = id;
+		Email = email;
+		UserName = userName;
 		Information = new Information
 		{
 			FirstName = firstName,
 			LastName = lastName,
 			Age = age
-		}
-	};
+		};
+	}
+	
+	// Other
+	public static User Create(string email, string userName, string? firstName, string? lastName, short age) => 
+		new(Guid.NewGuid(), email, userName, firstName, lastName, age);
 }

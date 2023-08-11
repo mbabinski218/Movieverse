@@ -18,7 +18,7 @@ public sealed class UserRepository : IUserRepository
 	private readonly UserManager<User> _userManager;
 	private readonly RoleManager<IdentityUserRole> _roleManager;
 
-	public UserRepository( ILogger<UserRepository> logger, AppDbContext dbContext, UserManager<User> userManager, 
+	public UserRepository(ILogger<UserRepository> logger, AppDbContext dbContext, UserManager<User> userManager, 
 		RoleManager<IdentityUserRole> roleManager)
 	{
 		_logger = logger;
@@ -29,7 +29,8 @@ public sealed class UserRepository : IUserRepository
 
 	public async Task<Result<User>> FindByIdAsync(AggregateRootId id)
 	{
-		var user = await _dbContext.Users.FindAsync(id.Value);
+		var user = await _userManager.FindByIdAsync(id.Value.ToString());
+		//var user = await _dbContext.Users.FindAsync(id.Value);
 		return user is null ? Error.NotFound($"User with id: {id.Value} not found") : user;
 	}
 
