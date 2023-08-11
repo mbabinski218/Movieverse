@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Movieverse.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Interfaces;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.AggregateRoots.Media;
-using Movieverse.Domain.Common;
 using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Types;
 
@@ -45,8 +43,7 @@ public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Gui
 		
 		modelBuilder.HasPostgresEnum<Role>();
 
-		modelBuilder.Ignore<List<IDomainEvent>>()
-			.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+		modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 	}
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

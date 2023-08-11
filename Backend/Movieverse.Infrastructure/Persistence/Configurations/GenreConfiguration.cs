@@ -16,7 +16,7 @@ public sealed class GenreConfiguration : IEntityTypeConfiguration<Genre>
 	private static void ConfigureGenreTable(EntityTypeBuilder<Genre> builder)
 	{
 		builder.HasKey(g => g.Id);
-		
+
 		builder.Property(g => g.Name)
 			.HasMaxLength(Constants.maxNameLength);
 		

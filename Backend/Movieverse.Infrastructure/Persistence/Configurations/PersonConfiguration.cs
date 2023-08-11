@@ -12,6 +12,7 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
 		ConfigurePersonTable(builder);
 		ConfigurePersonContentIdsTable(builder);
 		ConfigureInformation(builder);
+		ConfigureValueObjects(builder);
 	}
 	
 	private static void ConfigurePersonTable(EntityTypeBuilder<Person> builder)
@@ -54,6 +55,18 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
 			
 			informationBuilder.Property(i => i.LastName)
 				.HasMaxLength(Constants.maxNameLength);
+		});
+	}
+
+	private static void ConfigureValueObjects(EntityTypeBuilder<Person> builder)
+	{
+		builder.OwnsOne(p => p.LifeHistory, lifeHistoryConfiguration =>
+		{
+			lifeHistoryConfiguration.Property(lh => lh.BirthPlace)
+				.HasMaxLength(Constants.maxLocationLength);
+			
+			lifeHistoryConfiguration.Property(lh => lh.DeathPlace)
+				.HasMaxLength(Constants.maxLocationLength);
 		});
 	}
 }

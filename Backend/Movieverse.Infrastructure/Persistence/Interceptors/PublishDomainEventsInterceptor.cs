@@ -33,22 +33,18 @@ public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
 	{
 		_logger.LogDebug("Publishing domain events...");
 		
-		if (context is null)
-		{
-			return;
-		}
+		if (context is null) return;
 
-		var domainEvents = context.ChangeTracker
-			.Entries<IHasDomainEvent>()
+		var entitiesWithDomainEvents = context.ChangeTracker.Entries<IHasDomainEvent>()
 			.Where(entry => entry.Entity.DomainEvents.Any())
 			.Select(entry => entry.Entity)
-			.SelectMany(entity =>
-			{
-				var domainEvents = entity.DomainEvents;
-				entity.ClearDomainEvents();
-				return domainEvents;
-			})
 			.ToList();
+		
+		var domainEvents = entitiesWithDomainEvents
+			.SelectMany(entity => entity.DomainEvents)
+			.ToList();
+		
+		entitiesWithDomainEvents.ForEach(entity => entity.ClearDomainEvents());
 
 		foreach (var domainEvent in domainEvents)
 		{

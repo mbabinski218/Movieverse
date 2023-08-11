@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Movieverse.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230806184924_Initial")]
+    [Migration("20230809173754_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -138,18 +138,20 @@ namespace Movieverse.Infrastructure.Migrations
 
                     b.Property<string>("ContentType")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Path")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(36)
+                        .HasColumnType("character varying(36)");
 
                     b.Property<string>("Title")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -173,13 +175,13 @@ namespace Movieverse.Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
-                    b.Property<long>("MediaCount")
-                        .HasColumnType("bigint");
+                    b.Property<int>("MediaCount")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -198,8 +200,8 @@ namespace Movieverse.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("CurrentPosition")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("CurrentPosition")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
@@ -210,8 +212,8 @@ namespace Movieverse.Infrastructure.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<Guid?>("TrailerId")
                         .HasColumnType("uuid");
@@ -267,8 +269,8 @@ namespace Movieverse.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(2)
@@ -338,8 +340,8 @@ namespace Movieverse.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.HasKey("Id");
 
@@ -389,14 +391,16 @@ namespace Movieverse.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<Guid?>("ImageId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.HasKey("Id");
 
@@ -451,15 +455,15 @@ namespace Movieverse.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("PrequelTitle")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<Guid?>("SequelId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("SequelTitle")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.HasDiscriminator().HasValue("Movie");
                 });
@@ -468,11 +472,11 @@ namespace Movieverse.Infrastructure.Migrations
                 {
                     b.HasBaseType("Movieverse.Domain.AggregateRoots.Media.Media");
 
-                    b.Property<int?>("EpisodeCount")
-                        .HasColumnType("integer");
+                    b.Property<short>("EpisodeCount")
+                        .HasColumnType("smallint");
 
-                    b.Property<int?>("SeasonCount")
-                        .HasColumnType("integer");
+                    b.Property<short>("SeasonCount")
+                        .HasColumnType("smallint");
 
                     b.HasDiscriminator().HasValue("Series");
                 });
@@ -585,6 +589,48 @@ namespace Movieverse.Infrastructure.Migrations
                                 .HasForeignKey("MediaId");
                         });
 
+                    b.OwnsOne("Movieverse.Domain.ValueObjects.Details", "Details", b1 =>
+                        {
+                            b1.Property<Guid>("MediaId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int?>("Certificate")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("CountryOfOrigin")
+                                .HasMaxLength(150)
+                                .HasColumnType("character varying(150)");
+
+                            b1.Property<string>("FilmingLocations")
+                                .HasMaxLength(150)
+                                .HasColumnType("character varying(150)");
+
+                            b1.Property<string>("Language")
+                                .HasMaxLength(30)
+                                .HasColumnType("character varying(30)");
+
+                            b1.Property<DateTimeOffset?>("ReleaseDate")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<int?>("Runtime")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Storyline")
+                                .HasMaxLength(1000)
+                                .HasColumnType("character varying(1000)");
+
+                            b1.Property<string>("Tagline")
+                                .HasMaxLength(1000)
+                                .HasColumnType("character varying(1000)");
+
+                            b1.HasKey("MediaId");
+
+                            b1.ToTable("Medias");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MediaId");
+                        });
+
                     b.OwnsMany("Movieverse.Domain.ValueObjects.Id.AggregateRootId", "GenreIds", b1 =>
                         {
                             b1.Property<int>("Id")
@@ -674,16 +720,16 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.Property<string>("Title")
                                 .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)");
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)");
 
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
 
                             b1.Property<string>("UserName")
                                 .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)");
+                                .HasMaxLength(150)
+                                .HasColumnType("character varying(150)");
 
                             b1.HasKey("Id");
 
@@ -724,7 +770,43 @@ namespace Movieverse.Infrastructure.Migrations
                             b1.Navigation("Media");
                         });
 
+                    b.OwnsOne("Movieverse.Domain.ValueObjects.TechnicalSpecs", "TechnicalSpecs", b1 =>
+                        {
+                            b1.Property<Guid>("MediaId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("AspectRatio")
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)");
+
+                            b1.Property<string>("Camera")
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)");
+
+                            b1.Property<string>("Color")
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)");
+
+                            b1.Property<string>("NegativeFormat")
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)");
+
+                            b1.Property<string>("SoundMix")
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)");
+
+                            b1.HasKey("MediaId");
+
+                            b1.ToTable("Medias");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MediaId");
+                        });
+
                     b.Navigation("ContentIds");
+
+                    b.Navigation("Details")
+                        .IsRequired();
 
                     b.Navigation("GenreIds");
 
@@ -733,6 +815,9 @@ namespace Movieverse.Infrastructure.Migrations
                     b.Navigation("Reviews");
 
                     b.Navigation("Staff");
+
+                    b.Navigation("TechnicalSpecs")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Person", b =>
@@ -767,16 +852,16 @@ namespace Movieverse.Infrastructure.Migrations
                             b1.Property<Guid>("PersonId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<int>("Age")
-                                .HasColumnType("integer");
+                            b1.Property<short>("Age")
+                                .HasColumnType("smallint");
 
                             b1.Property<string>("FirstName")
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)");
+                                .HasMaxLength(150)
+                                .HasColumnType("character varying(150)");
 
                             b1.Property<string>("LastName")
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)");
+                                .HasMaxLength(150)
+                                .HasColumnType("character varying(150)");
 
                             b1.HasKey("PersonId");
 
@@ -795,7 +880,8 @@ namespace Movieverse.Infrastructure.Migrations
                                 .HasColumnType("timestamp with time zone");
 
                             b1.Property<string>("BirthPlace")
-                                .HasColumnType("text");
+                                .HasMaxLength(150)
+                                .HasColumnType("character varying(150)");
 
                             b1.Property<DateTimeOffset?>("CareerEnd")
                                 .HasColumnType("timestamp with time zone");
@@ -807,7 +893,8 @@ namespace Movieverse.Infrastructure.Migrations
                                 .HasColumnType("timestamp with time zone");
 
                             b1.Property<string>("DeathPlace")
-                                .HasColumnType("text");
+                                .HasMaxLength(150)
+                                .HasColumnType("character varying(150)");
 
                             b1.HasKey("PersonId");
 
@@ -863,16 +950,16 @@ namespace Movieverse.Infrastructure.Migrations
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<int>("Age")
-                                .HasColumnType("integer");
+                            b1.Property<short>("Age")
+                                .HasColumnType("smallint");
 
                             b1.Property<string>("FirstName")
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)");
+                                .HasMaxLength(150)
+                                .HasColumnType("character varying(150)");
 
                             b1.Property<string>("LastName")
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)");
+                                .HasMaxLength(150)
+                                .HasColumnType("character varying(150)");
 
                             b1.HasKey("UserId");
 
@@ -962,20 +1049,20 @@ namespace Movieverse.Infrastructure.Migrations
                                     b2.Property<int>("PopularityId")
                                         .HasColumnType("integer");
 
-                                    b2.Property<long>("CriticReviews")
-                                        .HasColumnType("bigint");
-
-                                    b2.Property<long>("InWatchlistCount")
-                                        .HasColumnType("bigint");
-
-                                    b2.Property<int>("Rating")
+                                    b2.Property<int>("CriticReviews")
                                         .HasColumnType("integer");
 
-                                    b2.Property<long>("UserReviews")
-                                        .HasColumnType("bigint");
+                                    b2.Property<int>("InWatchlistCount")
+                                        .HasColumnType("integer");
 
-                                    b2.Property<long>("Votes")
-                                        .HasColumnType("bigint");
+                                    b2.Property<short>("Rating")
+                                        .HasColumnType("smallint");
+
+                                    b2.Property<int>("UserReviews")
+                                        .HasColumnType("integer");
+
+                                    b2.Property<int>("Votes")
+                                        .HasColumnType("integer");
 
                                     b2.HasKey("PopularityId");
 
@@ -997,21 +1084,27 @@ namespace Movieverse.Infrastructure.Migrations
                                 .HasColumnType("integer");
 
                             b1.Property<decimal>("Budget")
+                                .HasMaxLength(2)
                                 .HasColumnType("numeric");
 
                             b1.Property<decimal>("GrossUs")
+                                .HasMaxLength(2)
                                 .HasColumnType("numeric");
 
                             b1.Property<decimal>("GrossWorldwide")
+                                .HasMaxLength(2)
                                 .HasColumnType("numeric");
 
                             b1.Property<decimal>("OpeningWeekendUs")
+                                .HasMaxLength(2)
                                 .HasColumnType("numeric");
 
                             b1.Property<decimal>("OpeningWeekendWorldwide")
+                                .HasMaxLength(2)
                                 .HasColumnType("numeric");
 
                             b1.Property<decimal>("Revenue")
+                                .HasMaxLength(2)
                                 .HasColumnType("numeric");
 
                             b1.Property<int>("Theaters")
@@ -1059,103 +1152,25 @@ namespace Movieverse.Infrastructure.Migrations
                             b1.Property<Guid>("MovieId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<long>("CriticReviews")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("bigint");
-
-                            b1.Property<long>("InWatchlistCount")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("bigint");
-
-                            b1.Property<int>("Rating")
+                            b1.Property<int>("CriticReviews")
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<long>("UserReviews")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("bigint");
-
-                            b1.Property<long>("Votes")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("bigint");
-
-                            b1.HasKey("MovieId");
-
-                            b1.ToTable("Medias");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MovieId");
-                        });
-
-                    b.OwnsOne("Movieverse.Domain.ValueObjects.Details", "Details", b1 =>
-                        {
-                            b1.Property<Guid>("MovieId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int?>("Certificate")
+                            b1.Property<int>("InWatchlistCount")
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("CountryOfOrigin")
+                            b1.Property<short>("Rating")
                                 .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
+                                .HasColumnType("smallint");
 
-                            b1.Property<string>("FilmingLocations")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("Language")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<DateTimeOffset?>("ReleaseDate")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<int?>("Runtime")
+                            b1.Property<int>("UserReviews")
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Storyline")
+                            b1.Property<int>("Votes")
                                 .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("Tagline")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.HasKey("MovieId");
-
-                            b1.ToTable("Medias");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MovieId");
-                        });
-
-                    b.OwnsOne("Movieverse.Domain.ValueObjects.TechnicalSpecs", "TechnicalSpecs", b1 =>
-                        {
-                            b1.Property<Guid>("MovieId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("AspectRatio")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("Camera")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("Color")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("NegativeFormat")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("SoundMix")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
+                                .HasColumnType("integer");
 
                             b1.HasKey("MovieId");
 
@@ -1167,12 +1182,6 @@ namespace Movieverse.Infrastructure.Migrations
 
                     b.Navigation("BasicStatistics")
                         .IsRequired();
-
-                    b.Navigation("Details")
-                        .IsRequired();
-
-                    b.Navigation("TechnicalSpecs")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Media.Series", b =>
@@ -1182,103 +1191,25 @@ namespace Movieverse.Infrastructure.Migrations
                             b1.Property<Guid>("SeriesId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<long>("CriticReviews")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("bigint");
-
-                            b1.Property<long>("InWatchlistCount")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("bigint");
-
-                            b1.Property<int>("Rating")
+                            b1.Property<int>("CriticReviews")
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<long>("UserReviews")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("bigint");
-
-                            b1.Property<long>("Votes")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("bigint");
-
-                            b1.HasKey("SeriesId");
-
-                            b1.ToTable("Medias");
-
-                            b1.WithOwner()
-                                .HasForeignKey("SeriesId");
-                        });
-
-                    b.OwnsOne("Movieverse.Domain.ValueObjects.Details", "Details", b1 =>
-                        {
-                            b1.Property<Guid>("SeriesId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int?>("Certificate")
+                            b1.Property<int>("InWatchlistCount")
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("CountryOfOrigin")
+                            b1.Property<short>("Rating")
                                 .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
+                                .HasColumnType("smallint");
 
-                            b1.Property<string>("FilmingLocations")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("Language")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<DateTimeOffset?>("ReleaseDate")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<int?>("Runtime")
+                            b1.Property<int>("UserReviews")
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Storyline")
+                            b1.Property<int>("Votes")
                                 .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("Tagline")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.HasKey("SeriesId");
-
-                            b1.ToTable("Medias");
-
-                            b1.WithOwner()
-                                .HasForeignKey("SeriesId");
-                        });
-
-                    b.OwnsOne("Movieverse.Domain.ValueObjects.TechnicalSpecs", "TechnicalSpecs", b1 =>
-                        {
-                            b1.Property<Guid>("SeriesId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("AspectRatio")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("Camera")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("Color")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("NegativeFormat")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("SoundMix")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("text");
+                                .HasColumnType("integer");
 
                             b1.HasKey("SeriesId");
 
@@ -1322,16 +1253,16 @@ namespace Movieverse.Infrastructure.Migrations
 
                                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b2.Property<int>("Id"));
 
-                                    b2.Property<long>("EpisodeNumber")
-                                        .HasColumnType("bigint");
+                                    b2.Property<short>("EpisodeNumber")
+                                        .HasColumnType("smallint");
 
                                     b2.Property<int>("SeasonId")
                                         .HasColumnType("integer");
 
                                     b2.Property<string>("Title")
                                         .IsRequired()
-                                        .HasMaxLength(100)
-                                        .HasColumnType("character varying(100)");
+                                        .HasMaxLength(200)
+                                        .HasColumnType("character varying(200)");
 
                                     b2.HasKey("Id");
 
@@ -1347,20 +1278,20 @@ namespace Movieverse.Infrastructure.Migrations
                                             b3.Property<int>("EpisodeId")
                                                 .HasColumnType("integer");
 
-                                            b3.Property<long>("CriticReviews")
-                                                .HasColumnType("bigint");
-
-                                            b3.Property<long>("InWatchlistCount")
-                                                .HasColumnType("bigint");
-
-                                            b3.Property<int>("Rating")
+                                            b3.Property<int>("CriticReviews")
                                                 .HasColumnType("integer");
 
-                                            b3.Property<long>("UserReviews")
-                                                .HasColumnType("bigint");
+                                            b3.Property<int>("InWatchlistCount")
+                                                .HasColumnType("integer");
 
-                                            b3.Property<long>("Votes")
-                                                .HasColumnType("bigint");
+                                            b3.Property<short>("Rating")
+                                                .HasColumnType("smallint");
+
+                                            b3.Property<int>("UserReviews")
+                                                .HasColumnType("integer");
+
+                                            b3.Property<int>("Votes")
+                                                .HasColumnType("integer");
 
                                             b3.HasKey("EpisodeId");
 
@@ -1471,16 +1402,16 @@ namespace Movieverse.Infrastructure.Migrations
 
                                             b3.Property<string>("Title")
                                                 .IsRequired()
-                                                .HasMaxLength(100)
-                                                .HasColumnType("character varying(100)");
+                                                .HasMaxLength(200)
+                                                .HasColumnType("character varying(200)");
 
                                             b3.Property<Guid>("UserId")
                                                 .HasColumnType("uuid");
 
                                             b3.Property<string>("UserName")
                                                 .IsRequired()
-                                                .HasMaxLength(100)
-                                                .HasColumnType("character varying(100)");
+                                                .HasMaxLength(150)
+                                                .HasColumnType("character varying(150)");
 
                                             b3.HasKey("Id");
 
@@ -1513,13 +1444,7 @@ namespace Movieverse.Infrastructure.Migrations
                     b.Navigation("BasicStatistics")
                         .IsRequired();
 
-                    b.Navigation("Details")
-                        .IsRequired();
-
                     b.Navigation("Seasons");
-
-                    b.Navigation("TechnicalSpecs")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Media.Media", b =>

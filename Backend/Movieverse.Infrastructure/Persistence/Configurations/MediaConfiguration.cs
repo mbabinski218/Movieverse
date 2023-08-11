@@ -18,6 +18,7 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 		ConfigureReviewsTable(builder);
 		ConfigureStaffTable(builder);
 		ConfigureAdvancedStatisticsTable(builder);
+		ConfigureValueObjects(builder);
 	}
 
 	private static void ConfigureMediaTable(EntityTypeBuilder<Media> builder)
@@ -122,5 +123,44 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 		builder.HasOne(m => m.AdvancedStatistics)
 			.WithOne(s => s.Media)
 			.HasForeignKey<Statistics>("MediaId");
+	}
+
+	private static void ConfigureValueObjects(EntityTypeBuilder<Media> builder)
+	{
+		builder.OwnsOne(m => m.Details, detailsConfiguration =>
+		{
+			detailsConfiguration.Property(d => d.Language)
+				.HasMaxLength(Constants.maxLanguageLength);
+			
+			detailsConfiguration.Property(d => d.FilmingLocations)
+				.HasMaxLength(Constants.maxLocationLength);
+			
+			detailsConfiguration.Property(d => d.Storyline)
+				.HasMaxLength(Constants.maxDescriptionLength);
+			
+			detailsConfiguration.Property(d => d.Tagline)
+				.HasMaxLength(Constants.maxDescriptionLength);
+			
+			detailsConfiguration.Property(d => d.CountryOfOrigin)
+				.HasMaxLength(Constants.maxLocationLength);	
+		});
+		
+		builder.OwnsOne(m => m.TechnicalSpecs, technicalSpecsConfiguration =>
+		{
+			technicalSpecsConfiguration.Property(t => t.Camera)
+				.HasMaxLength(Constants.maxTechnicalSpecsLength);
+
+			technicalSpecsConfiguration.Property(t => t.Color)
+				.HasMaxLength(Constants.maxTechnicalSpecsLength);
+			
+			technicalSpecsConfiguration.Property(t => t.AspectRatio)
+				.HasMaxLength(Constants.maxTechnicalSpecsLength);
+			
+			technicalSpecsConfiguration.Property(t => t.NegativeFormat)
+				.HasMaxLength(Constants.maxTechnicalSpecsLength);
+			
+			technicalSpecsConfiguration.Property(t => t.SoundMix)
+				.HasMaxLength(Constants.maxTechnicalSpecsLength);
+		});
 	}
 }

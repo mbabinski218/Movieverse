@@ -12,4 +12,6 @@ public sealed class EntityId : BaseEntityId<int>
 	}
 	
 	public static EntityId Create(int value) => new(value);
+	
+	public static implicit operator EntityId(int value) => Create(value);
 }

@@ -38,7 +38,7 @@ public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
 			return await next();
 		}
 
-		var result = Result.Error(Error.ValidationError(errors));
+		var result = Result.Fail(Error.ValidationError(errors));
 		return (TResponse)(IResult)result;
 	}
 }

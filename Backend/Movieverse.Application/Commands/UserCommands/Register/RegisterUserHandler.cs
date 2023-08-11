@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Movieverse.Application.Common.Result;
 using Movieverse.Application.Interfaces;
 using Movieverse.Domain.AggregateRoots;
+using Movieverse.Domain.DomainEvents;
 
 namespace Movieverse.Application.Commands.UserCommands.Register;
 
@@ -23,13 +24,15 @@ public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, R
 	{
 		var user = User.Create(request.Email, request.UserName, request.FirstName, request.LastName, request.Age);
 		
-		var result = await _userRepository.RegisterAsync(user, request.Password);
+		var token = await _userRepository.RegisterAsync(user, request.Password);
 
-		if (!result.IsSuccessful) return result;
+		if (!token.IsSuccessful) return token.Error;
+		
+		user.AddDomainEvent(new UserRegistered(user.Id, user.Email!, token.Value));
 		
 		await _unitOfWork.SaveChangesAsync(cancellationToken);
+		
 		_logger.LogDebug("User {email} registered successfully.", request.Email);
-
-		return result;
+		return Result.Ok();
 	}
 }

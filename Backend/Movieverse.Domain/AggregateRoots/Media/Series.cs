@@ -6,8 +6,8 @@ public class Series : Media
 {
 	// Map to table
 	public virtual List<Season> Seasons { get; private set; } = new();
-	public ushort? SeasonCount { get; set; }
-	public ushort? EpisodeCount { get; set; }
+	public short SeasonCount { get; set; }
+	public short EpisodeCount { get; set; }
 
 	// EF Core
 	private Series()

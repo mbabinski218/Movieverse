@@ -18,7 +18,7 @@ public class Platform : AggregateRoot
 	}
 	
 	// Other
-	private Platform(Guid id, string name, AggregateRootId logoId, decimal price) : base(id)
+	private Platform(AggregateRootId id, string name, AggregateRootId logoId, decimal price) : base(id)
 	{
 		Name = name;
 		LogoId = logoId;
@@ -26,5 +26,5 @@ public class Platform : AggregateRoot
 	}
 
 	public static Platform Create(string name, AggregateRootId logoId, decimal price)
-		=> new(Guid.NewGuid(), name, logoId, price);
+		=> new(AggregateRootId.Create(Guid.NewGuid()), name, logoId, price);
 }

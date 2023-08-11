@@ -12,6 +12,7 @@ public sealed class SeriesConfiguration : IEntityTypeConfiguration<Series>
 	public void Configure(EntityTypeBuilder<Series> builder)
 	{
 		ConfigureSeasonsTable(builder);
+		ConfigureValueObjects(builder);
 	}
 	
 	private static void ConfigureSeasonsTable(EntityTypeBuilder<Series> builder)
@@ -71,6 +72,27 @@ public sealed class SeriesConfiguration : IEntityTypeConfiguration<Series>
 						.HasMaxLength(Constants.maxReviewLength);
 				});
 			});
+		});
+	}
+
+	private static void ConfigureValueObjects(EntityTypeBuilder<Series> builder)
+	{
+		builder.OwnsOne(s => s.Details, detailsConfiguration =>
+		{
+			detailsConfiguration.Property(d => d.Language)
+				.HasMaxLength(Constants.maxLanguageLength);
+
+			detailsConfiguration.Property(d => d.FilmingLocations)
+				.HasMaxLength(Constants.maxLocationLength);
+
+			detailsConfiguration.Property(d => d.Storyline)
+				.HasMaxLength(Constants.maxDescriptionLength);
+
+			detailsConfiguration.Property(d => d.Tagline)
+				.HasMaxLength(Constants.maxDescriptionLength);
+
+			detailsConfiguration.Property(d => d.CountryOfOrigin)
+				.HasMaxLength(Constants.maxLocationLength);
 		});
 	}
 }

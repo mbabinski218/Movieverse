@@ -1,7 +1,9 @@
 using Movieverse.API.Common;
+using Movieverse.API.Services;
 using NLog.Extensions.Logging;
 using Movieverse.Infrastructure;
 using Movieverse.Application;
+using Movieverse.Application.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -13,8 +15,11 @@ services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
-services.AddApplication();
+services.AddApplication(builder.Configuration);
 services.AddInfrastructure(builder.Configuration);
+
+services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+services.AddScoped<IHttpService, HttpService>();
 
 services.Configure<RouteOptions>(options =>
 {

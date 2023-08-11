@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Movieverse.Application.Interfaces;
@@ -25,12 +26,13 @@ public static class DependencyInjection
 	
 	private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.AddDbContext<AppDbContext>(options => options.UseNpgsql(GetNpgsqlDataSource()));
+		services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
+			GetNpgsqlDataSource(configuration.GetConnectionString("MovieverseDb"))));
 
-		services.AddIdentityCore<User>(options =>
+		services.AddIdentity<User, IdentityUserRole>(options =>
 			{
 				options.User.RequireUniqueEmail = true;
-				
+
 				//TODO Remove password requirements
 				options.Password.RequireDigit = false;
 				options.Password.RequireLowercase = false;
@@ -38,8 +40,10 @@ public static class DependencyInjection
 				options.Password.RequireUppercase = false;
 				options.Password.RequiredLength = 1;
 				options.Password.RequiredUniqueChars = 0;
+
+				options.SignIn.RequireConfirmedEmail = true;
 			})
-			.AddRoles<IdentityUserRole>()
+			.AddDefaultTokenProviders()
 			.AddEntityFrameworkStores<AppDbContext>();
 		
 		services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
@@ -69,9 +73,9 @@ public static class DependencyInjection
 		return services;
 	}
 
-	private static NpgsqlDataSource GetNpgsqlDataSource()
+	private static NpgsqlDataSource GetNpgsqlDataSource(string? connectionString)
 	{
-		var dataSourceBuilder = new NpgsqlDataSourceBuilder("Host=localhost; database=Test; Username=postgres; Password=Babina123456789");
+		var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 
 		dataSourceBuilder.MapEnum<Role>();
 

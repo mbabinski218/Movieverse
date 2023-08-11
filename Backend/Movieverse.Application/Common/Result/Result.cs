@@ -8,6 +8,7 @@ public interface IResult
 public readonly struct Result : IResult
 {
 	private readonly Error? _error;
+	public Error Error => _error!.Value;
 	public bool IsSuccessful { get; }
 
 	public Result()
@@ -25,7 +26,7 @@ public readonly struct Result : IResult
 	
 	public static Result Ok() => new();
 	
-	public static Result Error(Error error) => new(error);
+	public static Result Fail(Error error) => new(error);
 	
 	public TResult Match<TResult>(Func<TResult> success, Func<Error, TResult> error) =>
 		IsSuccessful ? success() : error(_error!.Value);
@@ -35,6 +36,10 @@ public readonly struct Result<TSuccess> : IResult
 {
 	private readonly TSuccess? _success;
 	private readonly Error? _error;
+	
+	public TSuccess Value => _success!;
+    public Error Error => _error!.Value;
+	
 	public bool IsSuccessful { get; }
 	
 	private Result(TSuccess value)
@@ -55,7 +60,7 @@ public readonly struct Result<TSuccess> : IResult
 	
 	public static Result<TSuccess> Ok(TSuccess value) => new(value);
 	
-	public static Result<TSuccess> Error(Error error) => new(error);
+	public static Result<TSuccess> Fail(Error error) => new(error);
 	
 	public TResult Match<TResult>(Func<TSuccess, TResult> success, Func<Error, TResult> error) =>
 		IsSuccessful ? success(_success!) : error(_error!.Value);

@@ -1,14 +1,19 @@
 ﻿using System.Reflection;
 using FluentValidation;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Movieverse.Application.Behaviors;
+using Movieverse.Application.Common.Settings;
+using Movieverse.Application.Interfaces;
+using Movieverse.Application.Services;
 
 namespace Movieverse.Application;
 
 public static class DependencyInjection
 {
-	public static IServiceCollection AddApplication(this IServiceCollection services)
+	public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddMediatR(cfg =>
 		{
@@ -21,6 +26,12 @@ public static class DependencyInjection
         
 		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
+		services.AddSingleton<IEmailServiceProvider, EmailServiceProvider>();
+		
+		var emailServiceSettings = new EmailServiceSettings();
+		configuration.Bind(EmailServiceSettings.sectionName, emailServiceSettings);
+		services.AddSingleton(Options.Create(emailServiceSettings));
+		
 		return services;
 	}
 }

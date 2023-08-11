@@ -18,5 +18,11 @@ public sealed class ContentConfiguration : IEntityTypeConfiguration<Content>
 
 		builder.Property(c => c.Title)
 			.HasMaxLength(Constants.maxTitleLength);
+
+		builder.Property(c => c.Path)
+			.HasMaxLength(Constants.maxPathLength);
+
+		builder.Property(c => c.ContentType)
+			.HasMaxLength(Constants.maxContentTypeLenght);
 	}
 }

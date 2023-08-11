@@ -8,7 +8,7 @@ public class Episode : Entity
 {
 	// Map to table
 	public virtual Season Season { get; private set; } = null!;
-	public uint EpisodeNumber { get; set; }
+	public short EpisodeNumber { get; set; }
 	public string Title { get; set; } = null!;
 	public Details Details { get; set; } = null!;
 	public BasicStatistics BasicStatistics { get; set; } = null!;

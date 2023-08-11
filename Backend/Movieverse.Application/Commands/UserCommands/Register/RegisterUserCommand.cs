@@ -10,5 +10,5 @@ public sealed record RegisterUserCommand(
 	string? LastName,
 	string Password,
 	string ConfirmPassword,
-	ushort Age
+	short Age
 	) : IRequest<Result>;

@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace Movieverse.Domain.Common.Models;
 
 public abstract class IdentityAggregateRoot : IdentityUser<Guid>, IHasDomainEvent
 {
 	private readonly List<IDomainEvent> _domainEvents = new();
+	
+	[NotMapped]
 	public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
 	protected IdentityAggregateRoot()

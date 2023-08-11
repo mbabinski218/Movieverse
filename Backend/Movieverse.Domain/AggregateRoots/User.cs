@@ -1,5 +1,4 @@
 ﻿using Movieverse.Domain.Common.Models;
-using Movieverse.Domain.DomainEvents;
 using Movieverse.Domain.Entities;
 using Movieverse.Domain.ValueObjects;
 using Movieverse.Domain.ValueObjects.Id;
@@ -21,24 +20,16 @@ public class User : IdentityAggregateRoot
 	}
 	
 	// Other
-	
-	public static User Create(string email, string userName, string? firstName, string? lastName, ushort age)
+	public static User Create(string email, string userName, string? firstName, string? lastName, short age) => new()
 	{
-		var user = new User
+		Id = Guid.NewGuid(),
+		Email = email,
+		UserName = userName,
+		Information = new Information
 		{
-			Id = Guid.NewGuid(),
-			Email = email,
-			UserName = userName,
-			Information = new Information
-			{
-				FirstName = firstName,
-				LastName = lastName,
-				Age = age
-			}
-		};
-
-		user.AddDomainEvent(new UserRegistered(AggregateRootId.Create(user.Id), user.Email));
-
-		return user;
-	}
+			FirstName = firstName,
+			LastName = lastName,
+			Age = age
+		}
+	};
 }
