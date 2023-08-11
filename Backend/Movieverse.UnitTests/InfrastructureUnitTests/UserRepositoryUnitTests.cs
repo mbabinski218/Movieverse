@@ -50,11 +50,13 @@ public class UserRepositoryUnitTests
 	}
 	
 	[Test]
-	public async Task FindById_WhenIdIsInvalid_ShouldReturnError()
+	[TestCase("668a7286-7556-4b3f-bcd1-1d687109c6b1")]
+	[TestCase("e0ad8fc8-3891-11ee-be56-0242ac120002")]
+	public async Task FindById_WhenIdIsInvalid_ShouldReturnError(string badGuid)
 	{
 		// Arrange
 		var goodId = Guid.Parse("3b0e2f40-3883-11ee-be56-0242ac120002");
-		var badId = Guid.Parse("668a7286-7556-4b3f-bcd1-1d687109c6b1");
+		var badId = Guid.Parse(badGuid);
 		var goodUser = EntityMock.CreateUser(goodId);
 		_userManager.FindByIdAsync(goodId.ToString()).Returns(goodUser);
 		_userManager.FindByIdAsync(Arg.Any<string>()).Returns((User?)null);
