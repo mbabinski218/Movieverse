@@ -31,6 +31,8 @@
       <Content Update="NLog.config">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+
+
     </ItemGroup>
 
 

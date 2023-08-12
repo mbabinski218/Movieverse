@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Movieverse.Application.Common.Result;
 
-namespace Movieverse.API.Common;
+namespace Movieverse.API.Common.Extensions;
 
 public static class ResultExtensions
 {

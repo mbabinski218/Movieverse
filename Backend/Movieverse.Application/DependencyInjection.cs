@@ -28,9 +28,15 @@ public static class DependencyInjection
 
 		services.AddSingleton<IEmailServiceProvider, EmailServiceProvider>();
 		
+		services.AddHostedService<StatisticsUpdateWorkerService>();
+		
 		var emailServiceSettings = new EmailServiceSettings();
 		configuration.Bind(EmailServiceSettings.sectionName, emailServiceSettings);
 		services.AddSingleton(Options.Create(emailServiceSettings));
+		
+		var statisticsSettings = new StatisticsSettings();
+		configuration.Bind(StatisticsSettings.sectionName, statisticsSettings);
+		services.AddSingleton(Options.Create(statisticsSettings));
 		
 		return services;
 	}

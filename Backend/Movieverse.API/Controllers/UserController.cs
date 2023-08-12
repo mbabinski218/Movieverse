@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Movieverse.API.Common;
+using Movieverse.API.Common.Extensions;
 using Movieverse.Application.Commands.UserCommands.ConfirmEmail;
 using Movieverse.Application.Commands.UserCommands.Register;
 using Movieverse.Application.Commands.UserCommands.ResendEmailConfirmation;

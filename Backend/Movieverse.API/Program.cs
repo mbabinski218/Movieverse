@@ -1,4 +1,5 @@
-using Movieverse.API.Common;
+using Movieverse.API.Common.Extensions;
+using Movieverse.API.Common.Middlewares;
 using Movieverse.API.Services;
 using NLog.Extensions.Logging;
 using Movieverse.Infrastructure;
@@ -6,22 +7,24 @@ using Movieverse.Application;
 using Movieverse.Application.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
-var services = builder.Services;
+var configuration = builder.Configuration;
+var service = builder.Services;
+var logging = builder.Logging;
 
-builder.Logging.ClearProviders();
-builder.Logging.AddNLog();
+logging.ClearProviders();
+logging.AddNLog();
 
-services.AddControllers();
-services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
+service.AddControllers();
+service.AddEndpointsApiExplorer();
+service.AddSwaggerGen();
 
-services.AddApplication(builder.Configuration);
-services.AddInfrastructure(builder.Configuration);
+service.AddInfrastructure(configuration);
+service.AddApplication(configuration);
 
-services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-services.AddScoped<IHttpService, HttpService>();
+service.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+service.AddScoped<IHttpService, HttpService>();
 
-services.Configure<RouteOptions>(options =>
+service.Configure<RouteOptions>(options =>
 {
     options.LowercaseUrls = true;
 });
@@ -35,6 +38,9 @@ if (app.Environment.IsDevelopment())
 }
 
 await app.SeedDatabase();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

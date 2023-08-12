@@ -2,7 +2,6 @@
 using NSubstitute;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Common.Result;
 using Movieverse.Infrastructure.Persistence;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Models;
@@ -14,7 +13,6 @@ namespace Movieverse.UnitTests.InfrastructureUnitTests;
 [TestFixture]
 public class UserRepositoryUnitTests
 {
-	private ILogger<UserRepository> _logger = null!;
 	private IAppDbContext _dbContext = null!;
 	private UserManager<User> _userManager = null!;
 	private RoleManager<IdentityUserRole> _roleManager = null!;
@@ -22,7 +20,6 @@ public class UserRepositoryUnitTests
 	[SetUp]
 	public void SetUp()
 	{
-		_logger = Substitute.For<ILogger<UserRepository>>();
 		_dbContext = Substitute.For<IAppDbContext>();
 		_userManager = UserManagerMock.Get<User>();
 		_roleManager = RoleManagerMock.Get<IdentityUserRole>();
@@ -37,7 +34,7 @@ public class UserRepositoryUnitTests
 		var id = Guid.Parse(guid);
 		var user = EntityMock.CreateUser(id);
 		_dbContext.Users.FindAsync(id).Returns(user);
-		var userRepository = new UserRepository(_logger, _dbContext, _userManager, _roleManager);
+		var userRepository = new UserRepository(_dbContext, _userManager, _roleManager);
 		
 		// Act
 		var result = await userRepository.FindByIdAsync(id);
@@ -61,7 +58,7 @@ public class UserRepositoryUnitTests
 		var goodUser = EntityMock.CreateUser(goodId);
 		_dbContext.Users.FindAsync(goodId).Returns(goodUser);
 		_dbContext.Users.FindAsync(Arg.Any<string>()).Returns(null as User);
-		var userRepository = new UserRepository(_logger, _dbContext, _userManager, _roleManager);
+		var userRepository = new UserRepository(_dbContext, _userManager, _roleManager);
 		
 		// Act
 		var result = await userRepository.FindByIdAsync(badId);

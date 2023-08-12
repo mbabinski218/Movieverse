@@ -1,6 +1,6 @@
 ﻿using Movieverse.Application.Interfaces;
 
-namespace Movieverse.API.Common;
+namespace Movieverse.API.Common.Extensions;
 
 public static class DatabaseExtensions
 {
