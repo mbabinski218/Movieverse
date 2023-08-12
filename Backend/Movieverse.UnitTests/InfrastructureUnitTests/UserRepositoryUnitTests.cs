@@ -2,6 +2,7 @@
 using NSubstitute;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Movieverse.Application.Common.Result;
 using Movieverse.Infrastructure.Persistence;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Models;
@@ -14,7 +15,7 @@ namespace Movieverse.UnitTests.InfrastructureUnitTests;
 public class UserRepositoryUnitTests
 {
 	private ILogger<UserRepository> _logger = null!;
-	private AppDbContext _dbContext = null!;
+	private IAppDbContext _dbContext = null!;
 	private UserManager<User> _userManager = null!;
 	private RoleManager<IdentityUserRole> _roleManager = null!;
 	
@@ -22,7 +23,7 @@ public class UserRepositoryUnitTests
 	public void SetUp()
 	{
 		_logger = Substitute.For<ILogger<UserRepository>>();
-		_dbContext = AppDbContextMock.Get();
+		_dbContext = Substitute.For<IAppDbContext>();
 		_userManager = UserManagerMock.Get<User>();
 		_roleManager = RoleManagerMock.Get<IdentityUserRole>();
 	}
@@ -35,14 +36,14 @@ public class UserRepositoryUnitTests
 		// Arrange
 		var id = Guid.Parse(guid);
 		var user = EntityMock.CreateUser(id);
-		_userManager.FindByIdAsync(guid).Returns(user);
+		_dbContext.Users.FindAsync(id).Returns(user);
 		var userRepository = new UserRepository(_logger, _dbContext, _userManager, _roleManager);
 		
 		// Act
 		var result = await userRepository.FindByIdAsync(id);
 
 		// Assert
-		await _userManager.Received(1).FindByIdAsync(guid);
+		await _dbContext.Users.Received(1).FindAsync(id);
 		Assert.That(result, Is.Not.Null);
 		Assert.That(result.IsSuccessful, Is.True);
 		Assert.That(result.Value, Is.EqualTo(user));
@@ -58,15 +59,17 @@ public class UserRepositoryUnitTests
 		var goodId = Guid.Parse("3b0e2f40-3883-11ee-be56-0242ac120002");
 		var badId = Guid.Parse(badGuid);
 		var goodUser = EntityMock.CreateUser(goodId);
-		_userManager.FindByIdAsync(goodId.ToString()).Returns(goodUser);
-		_userManager.FindByIdAsync(Arg.Any<string>()).Returns((User?)null);
+		_dbContext.Users.FindAsync(goodId).Returns(goodUser);
+		_dbContext.Users.FindAsync(Arg.Any<string>()).Returns(null as User);
 		var userRepository = new UserRepository(_logger, _dbContext, _userManager, _roleManager);
 		
 		// Act
 		var result = await userRepository.FindByIdAsync(badId);
 
 		// Assert
-		await _userManager.Received(1).FindByIdAsync(badId.ToString());
+		await _dbContext.Users.DidNotReceive().FindAsync(goodId);
+		await _dbContext.Users.Received(1).FindAsync(badId);
+		Assert.That(result, Is.Not.Null);
 		Assert.That(result.IsSuccessful, Is.False);
 	}
 }

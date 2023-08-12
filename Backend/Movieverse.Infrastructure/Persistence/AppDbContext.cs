@@ -10,7 +10,7 @@ using Movieverse.Domain.Common.Types;
 
 namespace Movieverse.Infrastructure.Persistence;
 
-public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Guid>
+public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Guid>, IAppDbContext
 {
 	// DbSet
 	public DbSet<Media> Medias { get; set; } = null!;
