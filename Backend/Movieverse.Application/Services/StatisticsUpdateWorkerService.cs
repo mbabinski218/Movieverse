@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -10,14 +11,14 @@ namespace Movieverse.Application.Services;
 public sealed class StatisticsUpdateWorkerService : BackgroundService
 {
 	private readonly ILogger<StatisticsUpdateWorkerService> _logger;
-	private readonly IMediator _mediator;
+	private readonly IServiceProvider _serviceProvider;
 	private readonly PeriodicTimer? _timer;
 
-	public StatisticsUpdateWorkerService(ILogger<StatisticsUpdateWorkerService> logger, IMediator mediator,
+	public StatisticsUpdateWorkerService(ILogger<StatisticsUpdateWorkerService> logger, IServiceProvider serviceProvider, 
 		IOptions<StatisticsSettings> settings)
 	{
 		_logger = logger;
-		_mediator = mediator;
+		_serviceProvider = serviceProvider;
 
 		if (TimeSpan.TryParse(settings.Value.UpdateInterval, out var interval))
 		{
@@ -33,10 +34,12 @@ public sealed class StatisticsUpdateWorkerService : BackgroundService
 			return;
 		}
 		_logger.LogInformation("Statistics update worker service started.");
-			
+
 		while (await _timer.WaitForNextTickAsync(stoppingToken) && !stoppingToken.IsCancellationRequested)
 		{
-			await _mediator.Send(new UpdateStatisticsCommand(), stoppingToken);
+			using var scope = _serviceProvider.CreateScope();
+			var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+			await mediator.Send(new UpdateStatisticsCommand(), stoppingToken);
 		}
 		
 		_logger.LogInformation("Statistics update worker service stopped.");
