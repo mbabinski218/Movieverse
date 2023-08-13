@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Common.Result;
 using Movieverse.Application.Interfaces;
+using Movieverse.Contracts.Commands.Media;
+using Movieverse.Domain.Common.Result;
 
-namespace Movieverse.Application.Commands.MediaCommands.UpdateStatistics;
+namespace Movieverse.Application.CommandHandlers.MediaCommands.UpdateStatistics;
 
 public sealed class UpdateStatisticsHandler : IRequestHandler<UpdateStatisticsCommand, Result>
 {

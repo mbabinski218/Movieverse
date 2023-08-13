@@ -1,5 +1,5 @@
-﻿using Movieverse.Application.Common.Result;
-using Movieverse.Domain.AggregateRoots;
+﻿using Movieverse.Domain.AggregateRoots;
+using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.ValueObjects.Id;
 
 namespace Movieverse.Application.Interfaces;

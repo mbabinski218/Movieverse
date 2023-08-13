@@ -1,4 +1,4 @@
-﻿namespace Movieverse.Application.Common.Result;
+﻿namespace Movieverse.Domain.Common.Result;
 
 public enum StatusCode
 {

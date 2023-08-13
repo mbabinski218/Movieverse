@@ -1,6 +1,6 @@
-﻿namespace Movieverse.Application.Common.Result;
+﻿using System.Runtime.InteropServices;
 
-using System.Runtime.InteropServices;
+namespace Movieverse.Domain.Common.Result;
 
 public readonly struct Error
 {

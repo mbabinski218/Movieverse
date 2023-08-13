@@ -1,10 +1,10 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Common.Result;
 using Movieverse.Application.Interfaces;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Models;
+using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.Common.Types;
 using Movieverse.Domain.ValueObjects.Id;
 using Movieverse.Infrastructure.Persistence;

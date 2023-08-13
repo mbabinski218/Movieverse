@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Movieverse.Domain.Common.Models;
 
-public abstract class IdentityAggregateRoot : IdentityUser<Guid>, IHasDomainEvent
+public abstract class IdentityAggregateRoot : IdentityUser<Guid>, IAggregateRoot, IHasDomainEvent
 {
+	public DateTimeOffset CreatedAt { get; set; }
+	public DateTimeOffset? UpdatedAt { get; set; }
 	private readonly List<IDomainEvent> _domainEvents = new();
 	
 	[NotMapped]

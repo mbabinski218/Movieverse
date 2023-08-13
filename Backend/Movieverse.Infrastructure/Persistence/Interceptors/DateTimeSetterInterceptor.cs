@@ -36,18 +36,15 @@ public sealed class DateTimeSetterInterceptor : SaveChangesInterceptor
 			.ToList()
 			.ForEach(entry =>
 			{
-				if (entry.Entity is not AggregateRoot entity)
-				{
-					return;
-				}
+				if (entry.Entity is not IAggregateRoot entity) return;
 
 				if (entry.State is EntityState.Added)
 				{
-					entity.CreatedAt = DateTimeOffset.Now;
+					entity.CreatedAt = DateTimeOffset.UtcNow;
 				}
 				else
 				{
-					entity.UpdatedAt = DateTimeOffset.Now;
+					entity.UpdatedAt = DateTimeOffset.UtcNow;
 				}
 			});
 	}

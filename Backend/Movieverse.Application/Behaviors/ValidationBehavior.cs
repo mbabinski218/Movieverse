@@ -1,6 +1,6 @@
-﻿using Movieverse.Application.Common.Result;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
+using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Application.Behaviors;
 

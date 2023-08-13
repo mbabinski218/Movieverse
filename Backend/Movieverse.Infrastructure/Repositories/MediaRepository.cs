@@ -1,5 +1,5 @@
-﻿using Movieverse.Application.Common.Result;
-using Movieverse.Application.Interfaces;
+﻿using Movieverse.Application.Interfaces;
+using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Infrastructure.Repositories;
 

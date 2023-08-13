@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
+using Movieverse.Contracts.Commands.User;
 
-namespace Movieverse.Application.Commands.UserCommands.Register;
+namespace Movieverse.Application.CommandHandlers.UserCommands.Register;
 
 public sealed class RegisterUserValidator : AbstractValidator<RegisterUserCommand>
 {

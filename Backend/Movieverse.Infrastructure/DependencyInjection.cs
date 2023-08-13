@@ -49,8 +49,8 @@ public static class DependencyInjection
 		services.AddScoped<IAppDbContext, AppDbContext>();
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
-		services.AddScoped<PublishDomainEventsInterceptor>();
 		services.AddScoped<DateTimeSetterInterceptor>();
+		services.AddScoped<PublishDomainEventsInterceptor>();
 		
 		return services;
 	}

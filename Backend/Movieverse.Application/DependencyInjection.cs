@@ -34,13 +34,8 @@ public static class DependencyInjection
 
 	private static IServiceCollection AddSettings(this IServiceCollection services, IConfiguration configuration)
 	{
-		var emailServiceSettings = new EmailServiceSettings();
-		configuration.Bind(EmailServiceSettings.sectionName, emailServiceSettings);
-		services.AddSingleton(Options.Create(emailServiceSettings));
-		
-		var statisticsSettings = new StatisticsSettings();
-		configuration.Bind(StatisticsSettings.sectionName, statisticsSettings);
-		services.AddSingleton(Options.Create(statisticsSettings));
+		services.Configure<EmailServiceSettings>(configuration.GetSection(EmailServiceSettings.key));
+		services.Configure<StatisticsSettings>(configuration.GetSection(StatisticsSettings.key));
 
 		return services;
 	}

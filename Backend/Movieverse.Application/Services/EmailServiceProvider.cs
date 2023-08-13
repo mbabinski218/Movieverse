@@ -4,9 +4,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
-using Movieverse.Application.Common.Result;
 using Movieverse.Application.Common.Settings;
 using Movieverse.Application.Interfaces;
+using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Application.Services;
 

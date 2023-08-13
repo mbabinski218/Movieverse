@@ -1,11 +1,12 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Common.Result;
 using Movieverse.Application.Interfaces;
+using Movieverse.Contracts.Commands.User;
 using Movieverse.Domain.AggregateRoots;
+using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.DomainEvents;
 
-namespace Movieverse.Application.Commands.UserCommands.Register;
+namespace Movieverse.Application.CommandHandlers.UserCommands.Register;
 
 public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result>
 {

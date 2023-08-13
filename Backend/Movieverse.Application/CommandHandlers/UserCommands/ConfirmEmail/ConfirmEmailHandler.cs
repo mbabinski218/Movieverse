@@ -1,10 +1,11 @@
 ﻿using System.Web;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Common.Result;
 using Movieverse.Application.Interfaces;
+using Movieverse.Contracts.Commands.User;
+using Movieverse.Domain.Common.Result;
 
-namespace Movieverse.Application.Commands.UserCommands.ConfirmEmail;
+namespace Movieverse.Application.CommandHandlers.UserCommands.ConfirmEmail;
 
 public sealed class ConfirmEmailHandler : IRequestHandler<ConfirmEmailCommand, Result>
 {

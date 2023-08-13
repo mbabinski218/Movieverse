@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Movieverse.Domain.Common;
 
 namespace Movieverse.Application.Common;
 
-public sealed class PaginatedList<TKey>
+public sealed class PaginatedList<TKey> : IPaginatedList<TKey>
 {
 	public List<TKey> Items { get; init; } = null!;
 	public int? PageNumber { get; init; }

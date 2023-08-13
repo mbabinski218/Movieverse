@@ -2,7 +2,7 @@
 
 public sealed class EmailServiceSettings
 {
-	public const string sectionName = "EmailService";
+	public const string key = "EmailService";
 	public string Host { get; init; } = null!;
 	public int Port { get; init; }
 	public string UserName { get; init; } = null!;

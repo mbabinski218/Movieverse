@@ -3,8 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Movieverse.Application.Commands.MediaCommands.UpdateStatistics;
 using Movieverse.Application.Common.Settings;
+using Movieverse.Contracts.Commands.Media;
 
 namespace Movieverse.Application.Services;
 

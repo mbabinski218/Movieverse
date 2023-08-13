@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Movieverse.Application.Common.Result;
+using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.API.Common.Extensions;
 

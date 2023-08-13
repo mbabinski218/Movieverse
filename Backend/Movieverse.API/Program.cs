@@ -23,6 +23,7 @@ service.AddApplication(configuration);
 
 service.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 service.AddScoped<IHttpService, HttpService>();
+builder.Services.AddScoped<ExceptionHandlingMiddleware>();
 
 service.Configure<RouteOptions>(options =>
 {

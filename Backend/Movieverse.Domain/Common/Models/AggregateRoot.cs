@@ -1,6 +1,6 @@
 ﻿namespace Movieverse.Domain.Common.Models;
 
-public abstract class AggregateRoot : BaseEntity<Guid>
+public abstract class AggregateRoot : BaseEntity<Guid>, IAggregateRoot
 {
 	public DateTimeOffset CreatedAt { get; set; }
 	public DateTimeOffset? UpdatedAt { get; set; }

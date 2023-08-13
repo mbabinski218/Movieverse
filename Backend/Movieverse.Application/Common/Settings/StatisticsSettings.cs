@@ -2,6 +2,6 @@
 
 public sealed class StatisticsSettings
 {
-	public const string sectionName = "Statistics";
+	public const string key = "Statistics";
 	public string UpdateInterval { get; init; } = null!;
 }

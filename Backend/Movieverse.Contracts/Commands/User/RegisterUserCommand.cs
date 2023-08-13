@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Movieverse.Application.Common.Result;
+using Movieverse.Domain.Common.Result;
 
-namespace Movieverse.Application.Commands.UserCommands.Register;
+namespace Movieverse.Contracts.Commands.User;
 
 public sealed record RegisterUserCommand(
 	string Email,

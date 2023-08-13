@@ -1,10 +1,11 @@
 ﻿using System.Web;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Common.Result;
 using Movieverse.Application.Interfaces;
+using Movieverse.Contracts.Commands.User;
+using Movieverse.Domain.Common.Result;
 
-namespace Movieverse.Application.Commands.UserCommands.ResendEmailConfirmation;
+namespace Movieverse.Application.CommandHandlers.UserCommands.ResendEmailConfirmation;
 
 public sealed class ResendEmailConfirmationHandler : IRequestHandler<ResendEmailConfirmationCommand, Result>
 {

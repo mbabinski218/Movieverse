@@ -1,4 +1,4 @@
-﻿using Movieverse.Application.Common.Result;
+﻿using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Application.Interfaces;
 

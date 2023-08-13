@@ -1,4 +1,4 @@
-﻿namespace Movieverse.Application.Common.Result;
+﻿namespace Movieverse.Domain.Common.Result;
 
 public interface IResult
 {
@@ -38,7 +38,7 @@ public readonly struct Result<TSuccess> : IResult
 	private readonly Error? _error;
 	
 	public TSuccess Value => _success!;
-    public Error Error => _error!.Value;
+	public Error Error => _error!.Value;
 	
 	public bool IsSuccessful { get; }
 	
