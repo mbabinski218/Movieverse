@@ -5,7 +5,7 @@ namespace Movieverse.Infrastructure.Repositories;
 
 public sealed class MediaRepository : IMediaRepository
 {
-	public Task<Result> UpdateStatistics()
+	public Task<Result> UpdateStatisticsAsync()
 	{
 		throw new NotImplementedException();
 	}

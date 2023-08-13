@@ -1,7 +1,8 @@
-﻿using System.Globalization;
+﻿using MediatR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Movieverse.Application.Commands.MediaCommands.UpdateStatistics;
 using Movieverse.Application.Common.Settings;
 
 namespace Movieverse.Application.Services;
@@ -9,14 +10,14 @@ namespace Movieverse.Application.Services;
 public sealed class StatisticsUpdateWorkerService : BackgroundService
 {
 	private readonly ILogger<StatisticsUpdateWorkerService> _logger;
-	//private readonly IMediaRepository _mediaRepository;
+	private readonly IMediator _mediator;
 	private readonly PeriodicTimer? _timer;
 
-	public StatisticsUpdateWorkerService(ILogger<StatisticsUpdateWorkerService> logger, /*IMediaRepository? mediaRepository,*/ 
+	public StatisticsUpdateWorkerService(ILogger<StatisticsUpdateWorkerService> logger, IMediator mediator,
 		IOptions<StatisticsSettings> settings)
 	{
 		_logger = logger;
-		//_mediaRepository = mediaRepository;
+		_mediator = mediator;
 
 		if (TimeSpan.TryParse(settings.Value.UpdateInterval, out var interval))
 		{
@@ -31,17 +32,11 @@ public sealed class StatisticsUpdateWorkerService : BackgroundService
 			_logger.LogError("Invalid statistics update interval. Worker service will not start");
 			return;
 		}
-			
 		_logger.LogInformation("Statistics update worker service started.");
+			
 		while (await _timer.WaitForNextTickAsync(stoppingToken) && !stoppingToken.IsCancellationRequested)
 		{
-			_logger.LogInformation("Updating statistics...");
-			// var result = await _mediaRepository.UpdateStatistics();
-			//
-			// if (!result.IsSuccessful)
-			// {
-			// 	_logger.LogError("Statistics update failed: {error}", string.Join(",", result.Error.Messages));
-			// }
+			await _mediator.Send(new UpdateStatisticsCommand(), stoppingToken);
 		}
 		
 		_logger.LogInformation("Statistics update worker service stopped.");

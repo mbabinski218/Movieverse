@@ -4,5 +4,5 @@ namespace Movieverse.Application.Interfaces;
 
 public interface IMediaRepository
 {
-	public Task<Result> UpdateStatistics();
+	public Task<Result> UpdateStatisticsAsync();
 }
