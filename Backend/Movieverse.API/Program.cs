@@ -1,34 +1,35 @@
+using NLog.Extensions.Logging;
 using Movieverse.API.Common.Extensions;
 using Movieverse.API.Common.Middlewares;
+using Movieverse.API.Common.Settings;
 using Movieverse.API.Services;
-using NLog.Extensions.Logging;
-using Movieverse.Infrastructure;
 using Movieverse.Application;
 using Movieverse.Application.Interfaces;
+using Movieverse.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-var service = builder.Services;
+var services = builder.Services;
 var logging = builder.Logging;
+
+var defaultSettings = new DefaultSettings();
+configuration.Bind(DefaultSettings.key, defaultSettings);
 
 logging.ClearProviders();
 logging.AddNLog();
 
-service.AddControllers();
-service.AddEndpointsApiExplorer();
-service.AddSwaggerGen();
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
-service.AddInfrastructure(configuration);
-service.AddApplication(configuration);
+services.AddApplication(configuration);
+services.AddInfrastructure(configuration, defaultSettings.DatabaseName);
 
-service.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-service.AddScoped<IHttpService, HttpService>();
-builder.Services.AddScoped<ExceptionHandlingMiddleware>();
+services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+services.AddScoped<IHttpService, HttpService>();
+services.AddScoped<ExceptionHandlingMiddleware>();
 
-service.Configure<RouteOptions>(options =>
-{
-    options.LowercaseUrls = true;
-});
+services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
 var app = builder.Build();
 

@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Models;

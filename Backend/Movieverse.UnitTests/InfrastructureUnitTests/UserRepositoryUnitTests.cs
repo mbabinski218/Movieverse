@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using NSubstitute;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using Movieverse.Infrastructure.Persistence;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Models;

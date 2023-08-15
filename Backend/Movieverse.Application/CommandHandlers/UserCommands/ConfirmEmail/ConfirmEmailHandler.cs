@@ -24,10 +24,7 @@ public sealed class ConfirmEmailHandler : IRequestHandler<ConfirmEmailCommand, R
 		
 		var user = await _userRepository.FindByIdAsync(request.Id);
 
-		if (!user.IsSuccessful)
-		{
-			return user.Error;
-		}
+		if (!user.IsSuccessful) return user.Error;
 		
 		var decodedToken = HttpUtility.UrlDecode(request.Token);
 		

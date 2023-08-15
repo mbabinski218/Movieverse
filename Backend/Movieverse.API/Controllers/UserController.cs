@@ -33,5 +33,4 @@ public sealed class UserController : ApiController
 		await mediator.Send(command, cancellationToken).Then(
 		Ok,
 		err => StatusCode(err.Code, err.Messages));
-	
 } 

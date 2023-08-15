@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movieverse.Application", "M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movieverse.Contracts", "Movieverse.Contracts\Movieverse.Contracts.csproj", "{ED832842-1BB7-4158-BB29-A3DB591220AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movieverse.Consumer", "Movieverse.Consumer\Movieverse.Consumer.csproj", "{5B60E344-B65B-4B99-AEB0-BB67A4591A87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{ED832842-1BB7-4158-BB29-A3DB591220AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED832842-1BB7-4158-BB29-A3DB591220AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED832842-1BB7-4158-BB29-A3DB591220AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B60E344-B65B-4B99-AEB0-BB67A4591A87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B60E344-B65B-4B99-AEB0-BB67A4591A87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B60E344-B65B-4B99-AEB0-BB67A4591A87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B60E344-B65B-4B99-AEB0-BB67A4591A87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

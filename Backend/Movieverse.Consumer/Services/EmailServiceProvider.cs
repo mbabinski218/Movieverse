@@ -1,14 +1,13 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
-using Movieverse.Application.Common.Settings;
-using Movieverse.Application.Interfaces;
+using Movieverse.Consumer.Common.Settings;
+using Movieverse.Consumer.Interfaces;
 using Movieverse.Domain.Common.Result;
 
-namespace Movieverse.Application.Services;
+namespace Movieverse.Consumer.Services;
 
 public sealed class EmailServiceProvider : IEmailServiceProvider
 {

@@ -15,19 +15,19 @@ namespace Movieverse.Infrastructure;
 
 public static class DependencyInjection
 {
-	public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+	public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, string databaseName)
 	{
-		services.AddPersistence(configuration);
+		services.AddPersistence(configuration, databaseName);
 		services.AddAuthentication(configuration);
 		services.AddRepositories();
 		
 		return services;
 	}
 	
-	private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
+	private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration, string databaseName)
 	{
 		services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
-			GetNpgsqlDataSource(configuration.GetConnectionString("MovieverseDb"))));
+			GetNpgsqlDataSource(configuration.GetConnectionString(databaseName))));
 
 		services.AddIdentity<User, IdentityUserRole>(options =>
 			{

@@ -1,4 +1,4 @@
-﻿namespace Movieverse.Application.Common.Settings;
+﻿namespace Movieverse.Consumer.Common.Settings;
 
 public sealed class EmailServiceSettings
 {
