@@ -11,5 +11,5 @@ public sealed class Routes
 {
 	public string Origin { get; init; } = null!;
 	public string AllowedHosts { get; init; } = null!;
-	public string HealthCheckUrl { get; init; } = null!;
+	public string HealthCheckEndpoint { get; init; } = null!;
 }

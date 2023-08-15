@@ -12,6 +12,5 @@ public sealed class AmazonSQS
 	public string Host { get; init; } = null!;
 	public string AccessKey { get; init; } = null!;
 	public string SecretKey { get; init; } = null!;
-	public string TopicArn { get; init; } = null!;
 	public string TopicName { get; init; } = null!;
 }

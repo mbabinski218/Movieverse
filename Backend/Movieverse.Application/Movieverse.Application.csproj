@@ -7,6 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AspNetCore.HealthChecks.Aws.Sns" Version="7.0.0" />
+      <PackageReference Include="AspNetCore.HealthChecks.Aws.Sqs" Version="7.0.0" />
       <PackageReference Include="FluentValidation" Version="11.6.0" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.6.0" />
       <PackageReference Include="MassTransit.AmazonSQS" Version="8.0.16" />

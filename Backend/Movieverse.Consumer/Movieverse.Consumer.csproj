@@ -8,6 +8,7 @@
   </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="7.1.0" />
       <PackageReference Include="MailKit" Version="4.1.0" />
       <PackageReference Include="MassTransit.AmazonSQS" Version="8.0.16" />
       <PackageReference Include="NLog.Extensions.Logging" Version="5.3.3" />

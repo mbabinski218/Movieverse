@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
+using Amazon;
+using Amazon.Runtime;
 using FluentValidation;
 using MassTransit;
 using MediatR;
@@ -22,6 +24,7 @@ public static class DependencyInjection
 		
 		return services;
 	}
+	
 	private static IServiceCollection AddServices(this IServiceCollection services)
 	{
 		services.AddHostedService<StatisticsUpdateWorkerService>()
@@ -39,32 +42,56 @@ public static class DependencyInjection
 	
 	private static IServiceCollection AddMediators(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.AddMediatR(cfg =>
-		{
-			cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-			
-			cfg.AddOpenRequestPreProcessor(typeof(LoggingBehavior<>));
-			cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-		});
-        
+		services.AddMediatR();
 		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 		var queueSettings = new QueuesSettings();
 		configuration.Bind(QueuesSettings.key, queueSettings);
 		
+		services.AddMassTransit(queueSettings);
+		
+		return services;
+	}
+
+	private static IServiceCollection AddMediatR(this IServiceCollection services)
+	{
+		services.AddMediatR(cfg =>
+		{
+			cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+
+			cfg.AddOpenRequestPreProcessor(typeof(LoggingBehavior<>));
+			cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+		});
+
+		return services;
+	}
+	
+	private static IServiceCollection AddMassTransit(this IServiceCollection services, QueuesSettings settings)
+	{
+		var credentials = new BasicAWSCredentials(settings.AmazonSQS.AccessKey, settings.AmazonSQS.SecretKey);
+		var regionEndpoint = RegionEndpoint.GetBySystemName(settings.AmazonSQS.Host);
+		
 		services.AddMassTransit(busCfg =>
 		{
 			busCfg.UsingAmazonSqs((_, sqsCfg) =>
 			{
-				sqsCfg.Host(queueSettings.AmazonSQS.Host, hostCfg =>
+				sqsCfg.Host(settings.AmazonSQS.Host, hostCfg =>
 				{
-					hostCfg.SecretKey(queueSettings.AmazonSQS.SecretKey);
-					hostCfg.AccessKey(queueSettings.AmazonSQS.AccessKey);
+					hostCfg.Credentials(credentials);
 				});
                 
-				sqsCfg.MessageTopology.SetEntityNameFormatter(new EntityNameFormatter(queueSettings.AmazonSQS.TopicName));
+				sqsCfg.MessageTopology.SetEntityNameFormatter(new EntityNameFormatter(settings.AmazonSQS.TopicName));
 			});
 		});
+
+		services.AddHealthChecks()
+			.AddSnsTopicsAndSubscriptions(options =>
+			{
+				options.Credentials = credentials;
+				options.RegionEndpoint = regionEndpoint;
+
+				options.AddTopicAndSubscriptions(settings.AmazonSQS.TopicName);
+			}, "aws-sns");
 		
 		return services;
 	}

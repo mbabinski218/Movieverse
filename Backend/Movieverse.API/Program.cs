@@ -1,3 +1,5 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using NLog.Extensions.Logging;
 using Movieverse.API.Common.Extensions;
 using Movieverse.API.Common.Middlewares;
@@ -44,6 +46,10 @@ await app.SeedDatabase();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
+app.MapHealthChecks(defaultSettings.Routes.HealthCheckEndpoint, new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

@@ -26,8 +26,11 @@ public static class DependencyInjection
 	
 	private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration, string databaseName)
 	{
-		services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
-			GetNpgsqlDataSource(configuration.GetConnectionString(databaseName))));
+		var connectionString = configuration.GetConnectionString(databaseName);
+		ArgumentNullException.ThrowIfNull(connectionString, nameof(connectionString));
+		
+		services.AddDbContext<AppDbContext>(options => options.UseNpgsql(GetNpgsqlDataSource(connectionString)));
+		services.AddHealthChecks().AddNpgSql(connectionString, name:"database");
 
 		services.AddIdentity<User, IdentityUserRole>(options =>
 			{
