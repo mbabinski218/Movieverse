@@ -72,25 +72,11 @@ public sealed class UserRepository : IUserRepository
 		var result = await _userManager.ConfirmEmailAsync(user, token);
 		return result.Succeeded ? Result.Ok() : GenerateError(result);
 	}
-
-	private static Func<AppDbContext, Task<User?>> TestCompiledQuery = EF.CompileAsyncQuery((AppDbContext context) =>
-		context.Users
-			.Include(x => x.MediaInfos)
-			.Where(x => x.Information.Age > 10)
-			.FirstOrDefault(x => x.Information.FirstName == "Mateusz"));
+    
 	
 	public async Task<Result> Test()
 	{
-		var data = await _dbContext.Database.SqlQueryRaw<User>(
-			"""
-				SELECT * FROM Users
-				INNER JOIN MediaInfos ON Users.Id = MediaInfos.UserId
-				WHERE Information.Age > 10
-				AND Information.FirstName = 'Mateusz')
-			""").FirstOrDefaultAsync();
-
-		data.Id = Guid.NewGuid();
-		return Result.Ok();
+		return await Task.FromResult(Result.Ok());
 	}
 
 	private static Error GenerateError(IdentityResult? result)

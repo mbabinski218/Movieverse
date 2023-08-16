@@ -16,13 +16,11 @@ public static class AppDbContextMock
 		var options = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("Movieverse").Options;
 		
 		var publishDomainEventsInterceptor = new PublishDomainEventsInterceptor(
-			Substitute.For<IPublisher>(), Substitute.For<ILogger<PublishDomainEventsInterceptor>>());
+			Substitute.For<IPublisher>());
 		
-		var dateTimeSetterInterceptor = new DateTimeSetterInterceptor(Substitute.For<ILogger<DateTimeSetterInterceptor>>());
-		
-		var logger = Substitute.For<ILogger<AppDbContext>>();
+		var dateTimeSetterInterceptor = new DateTimeSetterInterceptor();
 
-		var db = new AppDbContext(options, publishDomainEventsInterceptor, dateTimeSetterInterceptor, logger);
+		var db = new AppDbContext(options, publishDomainEventsInterceptor, dateTimeSetterInterceptor);
 		
 		db.Medias = Substitute.For<DbSet<Media>>();
 		db.Movies = Substitute.For<DbSet<Movie>>();

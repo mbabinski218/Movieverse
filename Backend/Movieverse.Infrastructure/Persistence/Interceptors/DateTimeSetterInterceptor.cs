@@ -7,13 +7,6 @@ namespace Movieverse.Infrastructure.Persistence.Interceptors;
 
 public sealed class DateTimeSetterInterceptor : SaveChangesInterceptor
 {
-	private readonly ILogger<DateTimeSetterInterceptor> _logger;
-
-	public DateTimeSetterInterceptor(ILogger<DateTimeSetterInterceptor> logger)
-	{
-		_logger = logger;
-	}
-
 	public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
 	{
 		DateTimeSetter(eventData.Context);
@@ -26,10 +19,8 @@ public sealed class DateTimeSetterInterceptor : SaveChangesInterceptor
 		return await base.SavingChangesAsync(eventData, result, cancellationToken);
 	}
 
-	private void DateTimeSetter(DbContext? context)
+	private static void DateTimeSetter(DbContext? context)
 	{
-		_logger.LogDebug("Setting date time...");
-		
 		context?.ChangeTracker
 			.Entries()
 			.Where(entry => entry.State is EntityState.Added or EntityState.Modified)
@@ -38,13 +29,14 @@ public sealed class DateTimeSetterInterceptor : SaveChangesInterceptor
 			{
 				if (entry.Entity is not IAggregateRoot entity) return;
 
-				if (entry.State is EntityState.Added)
+				switch (entry.State)
 				{
-					entity.CreatedAt = DateTimeOffset.UtcNow;
-				}
-				else
-				{
-					entity.UpdatedAt = DateTimeOffset.UtcNow;
+					case EntityState.Added:
+						entity.CreatedAt = DateTimeOffset.UtcNow;
+						break;
+					case EntityState.Modified:
+						entity.UpdatedAt = DateTimeOffset.UtcNow;
+						break;
 				}
 			});
 	}

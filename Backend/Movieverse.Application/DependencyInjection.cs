@@ -7,6 +7,7 @@ using Amazon.Runtime;
 using FluentValidation;
 using MassTransit;
 using MediatR;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Movieverse.Application.Behaviors;
 using Movieverse.Application.Common;
 using Movieverse.Application.Common.Settings;

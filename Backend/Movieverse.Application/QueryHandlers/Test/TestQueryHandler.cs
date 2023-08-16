@@ -16,6 +16,6 @@ public sealed class TestQueryHandler : IRequestHandler<TestQuery, Result>
 
 	public async Task<Result> Handle(TestQuery request, CancellationToken cancellationToken)
 	{
-		return await _userRepository.Test(); 
+		return await _userRepository.Test();
 	}
 }

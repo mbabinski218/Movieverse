@@ -24,21 +24,16 @@ public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Gui
 	// Configuration
 	private readonly PublishDomainEventsInterceptor _publishDomainEventsInterceptor;
 	private readonly DateTimeSetterInterceptor _dateTimeSetterInterceptor;
-
-	private readonly ILogger<AppDbContext> _logger;
-
+	
 	public AppDbContext(DbContextOptions<AppDbContext> options, PublishDomainEventsInterceptor publishDomainEventsInterceptor,
-		DateTimeSetterInterceptor dateTimeSetterInterceptor, ILogger<AppDbContext> logger) : base(options)
+		DateTimeSetterInterceptor dateTimeSetterInterceptor) : base(options)
 	{
 		_publishDomainEventsInterceptor = publishDomainEventsInterceptor;
 		_dateTimeSetterInterceptor = dateTimeSetterInterceptor;
-		_logger = logger;
 	}
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		_logger.LogDebug("Model building...");
-
 		base.OnModelCreating(modelBuilder);
 
 		modelBuilder.HasPostgresEnum<Role>();
@@ -48,8 +43,6 @@ public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Gui
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 	{
-		_logger.LogDebug("Configuring database...");
-
 		base.OnConfiguring(optionsBuilder);
 
 		optionsBuilder.AddInterceptors(_publishDomainEventsInterceptor, _dateTimeSetterInterceptor);
