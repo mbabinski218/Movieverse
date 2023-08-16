@@ -12,14 +12,14 @@ namespace Movieverse.UnitTests.InfrastructureUnitTests;
 [TestFixture]
 public class UserRepositoryUnitTests
 {
-	private IAppDbContext _dbContext = null!;
+	private AppDbContext _dbContext = null!;
 	private UserManager<User> _userManager = null!;
 	private RoleManager<IdentityUserRole> _roleManager = null!;
 	
 	[SetUp]
 	public void SetUp()
 	{
-		_dbContext = Substitute.For<IAppDbContext>();
+		_dbContext = AppDbContextMock.Get();
 		_userManager = UserManagerMock.Get<User>();
 		_roleManager = RoleManagerMock.Get<IdentityUserRole>();
 	}

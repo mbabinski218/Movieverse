@@ -48,8 +48,7 @@ public static class DependencyInjection
 			})
 			.AddDefaultTokenProviders()
 			.AddEntityFrameworkStores<AppDbContext>();
-		
-		services.AddScoped<IAppDbContext, AppDbContext>();
+        
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 		services.AddScoped<DateTimeSetterInterceptor>();

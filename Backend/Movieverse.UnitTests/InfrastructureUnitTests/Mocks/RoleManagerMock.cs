@@ -15,7 +15,6 @@ public static class RoleManagerMock
 			new RoleValidator<TRole>()
 		};
 
-		return Substitute.For<RoleManager<TRole>>(
-			store, roleValidators, null, null, null);
+		return Substitute.For<RoleManager<TRole>>(store, roleValidators, null, null, null);
 	}
 }

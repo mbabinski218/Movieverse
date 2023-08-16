@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Movieverse.Application.Interfaces;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Models;
@@ -12,11 +13,11 @@ namespace Movieverse.Infrastructure.Repositories;
 
 public sealed class UserRepository : IUserRepository
 {
-	private readonly IAppDbContext _dbContext;
+	private readonly AppDbContext _dbContext;
 	private readonly UserManager<User> _userManager;
 	private readonly RoleManager<IdentityUserRole> _roleManager;
 
-	public UserRepository(IAppDbContext dbContext, UserManager<User> userManager, RoleManager<IdentityUserRole> roleManager)
+	public UserRepository(AppDbContext dbContext, UserManager<User> userManager, RoleManager<IdentityUserRole> roleManager)
 	{
 		_dbContext = dbContext;
 		_userManager = userManager;
@@ -70,6 +71,26 @@ public sealed class UserRepository : IUserRepository
 	{
 		var result = await _userManager.ConfirmEmailAsync(user, token);
 		return result.Succeeded ? Result.Ok() : GenerateError(result);
+	}
+
+	private static Func<AppDbContext, Task<User?>> TestCompiledQuery = EF.CompileAsyncQuery((AppDbContext context) =>
+		context.Users
+			.Include(x => x.MediaInfos)
+			.Where(x => x.Information.Age > 10)
+			.FirstOrDefault(x => x.Information.FirstName == "Mateusz"));
+	
+	public async Task<Result> Test()
+	{
+		var data = await _dbContext.Database.SqlQueryRaw<User>(
+			"""
+				SELECT * FROM Users
+				INNER JOIN MediaInfos ON Users.Id = MediaInfos.UserId
+				WHERE Information.Age > 10
+				AND Information.FirstName = 'Mateusz')
+			""").FirstOrDefaultAsync();
+
+		data.Id = Guid.NewGuid();
+		return Result.Ok();
 	}
 
 	private static Error GenerateError(IdentityResult? result)

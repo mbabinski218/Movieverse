@@ -10,7 +10,7 @@ using Movieverse.Domain.Common.Types;
 
 namespace Movieverse.Infrastructure.Persistence;
 
-public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Guid>, IAppDbContext
+public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Guid>
 {
 	// DbSet
 	public DbSet<Media> Medias { get; set; } = null!;
@@ -24,23 +24,23 @@ public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Gui
 	// Configuration
 	private readonly PublishDomainEventsInterceptor _publishDomainEventsInterceptor;
 	private readonly DateTimeSetterInterceptor _dateTimeSetterInterceptor;
-	
+
 	private readonly ILogger<AppDbContext> _logger;
-	
-	public AppDbContext(DbContextOptions<AppDbContext> options, PublishDomainEventsInterceptor publishDomainEventsInterceptor, 
+
+	public AppDbContext(DbContextOptions<AppDbContext> options, PublishDomainEventsInterceptor publishDomainEventsInterceptor,
 		DateTimeSetterInterceptor dateTimeSetterInterceptor, ILogger<AppDbContext> logger) : base(options)
 	{
 		_publishDomainEventsInterceptor = publishDomainEventsInterceptor;
 		_dateTimeSetterInterceptor = dateTimeSetterInterceptor;
 		_logger = logger;
 	}
-	
+
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		_logger.LogDebug("Model building...");
 
 		base.OnModelCreating(modelBuilder);
-		
+
 		modelBuilder.HasPostgresEnum<Role>();
 
 		modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -49,9 +49,9 @@ public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Gui
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 	{
 		_logger.LogDebug("Configuring database...");
-				
+
 		base.OnConfiguring(optionsBuilder);
-		
+
 		optionsBuilder.AddInterceptors(_publishDomainEventsInterceptor, _dateTimeSetterInterceptor);
 	}
 }
