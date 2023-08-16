@@ -41,7 +41,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-await app.SeedDatabase();
+//await app.SeedDatabase();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

@@ -73,23 +73,23 @@ public sealed class UserRepository : IUserRepository
 		return result.Succeeded ? Result.Ok() : GenerateError(result);
 	}
 
-	private static Func<AppDbContext, Task<User?>> TestCompiledQuery = EF.CompileAsyncQuery((AppDbContext context) =>
+	private static Func<AppDbContext, Task<string?>> TestCompiledQuery = EF.CompileAsyncQuery((AppDbContext context) =>
 		context.Users
-			.Include(x => x.MediaInfos)
 			.Where(x => x.Information.Age > 10)
-			.FirstOrDefault(x => x.Information.FirstName == "Mateusz"));
+			.Select(x => x.Information.FirstName)
+			.FirstOrDefault(x => x == "Mateusz"));
 	
 	public async Task<Result> Test()
 	{
-		var data = await _dbContext.Database.SqlQueryRaw<User>(
+		var data = await _dbContext.Database.SqlQueryRaw<string>(
 			"""
-				SELECT * FROM Users
-				INNER JOIN MediaInfos ON Users.Id = MediaInfos.UserId
-				WHERE Information.Age > 10
-				AND Information.FirstName = 'Mateusz')
+				SELECT "Users"."Information_FirstName" FROM "Users"
+				WHERE "Users"."Information_Age" > 10
+				AND "Users"."Information_FirstName" = 'Mateusz'
 			""").FirstOrDefaultAsync();
-
-		data.Id = Guid.NewGuid();
+		
+		//var data = await TestCompiledQuery(_dbContext);
+		//data = "aaaa";
 		return Result.Ok();
 	}
 
