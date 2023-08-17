@@ -7,8 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+    
+    <ItemGroup>
       <PackageReference Include="AspNetCore.HealthChecks.Aws.Sns" Version="7.0.0" />
       <PackageReference Include="AspNetCore.HealthChecks.Aws.Sqs" Version="7.0.0" />
+      <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="7.0.0" />
       <PackageReference Include="FluentValidation" Version="11.6.0" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.6.0" />
       <PackageReference Include="MassTransit.AmazonSQS" Version="8.0.16" />
@@ -17,23 +22,13 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Events\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Microsoft.Extensions.Hosting">
-        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\7.0.7\Microsoft.Extensions.Hosting.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Hosting.Abstractions">
-        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\7.0.7\Microsoft.Extensions.Hosting.Abstractions.dll</HintPath>
-      </Reference>
+      <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Movieverse.Contracts\Movieverse.Contracts.csproj" />
     </ItemGroup>
+
+
 
 </Project>

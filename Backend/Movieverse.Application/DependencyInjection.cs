@@ -7,11 +7,12 @@ using Amazon.Runtime;
 using FluentValidation;
 using MassTransit;
 using MediatR;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Movieverse.Application.Behaviors;
-using Movieverse.Application.Common;
+using Movieverse.Application.Caching;
+using Movieverse.Application.Common.Extensions;
 using Movieverse.Application.Common.Settings;
 using Movieverse.Application.Services;
+using StackExchange.Redis;
 
 namespace Movieverse.Application;
 
@@ -20,6 +21,7 @@ public static class DependencyInjection
 	public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddMediators(configuration);
+		services.AddCacheProvider(configuration);
 		services.AddSettings(configuration);
 		services.AddServices();
 		
@@ -41,13 +43,35 @@ public static class DependencyInjection
 		return services;
 	}
 	
+	private static IServiceCollection AddCacheProvider(this IServiceCollection services, IConfiguration configuration)
+	{
+		var cacheSettings = configuration.Map<CacheSettings>();
+		
+		var redisOptions = new ConfigurationOptions
+		{
+			EndPoints = { {cacheSettings.Redis.Url, cacheSettings.Redis.Port} },
+			User = cacheSettings.Redis.User,
+			Password = cacheSettings.Redis.Password
+		};
+		
+		services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(redisOptions));
+		services.AddRedisOutputCache(options =>
+		{
+			if (TimeSpan.TryParse(cacheSettings.ExpirationTime, out var expirationTime))
+			{
+				options.DefaultExpirationTimeSpan = expirationTime;
+			}
+		});
+		
+		return services;
+	}
+	
 	private static IServiceCollection AddMediators(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddMediatR();
 		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-		var queueSettings = new QueuesSettings();
-		configuration.Bind(QueuesSettings.key, queueSettings);
+		var queueSettings = configuration.Map<QueuesSettings>();
 		
 		services.AddMassTransit(queueSettings);
 		

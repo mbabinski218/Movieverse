@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Movieverse.Domain.Common;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Movieverse.Infrastructure.Persistence.Interceptors;
 

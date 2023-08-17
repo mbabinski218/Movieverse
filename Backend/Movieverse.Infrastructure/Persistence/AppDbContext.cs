@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Movieverse.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common.Models;

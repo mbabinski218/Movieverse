@@ -6,6 +6,7 @@ using Movieverse.API.Common.Middlewares;
 using Movieverse.API.Common.Settings;
 using Movieverse.API.Services;
 using Movieverse.Application;
+using Movieverse.Application.Common.Extensions;
 using Movieverse.Application.Interfaces;
 using Movieverse.Infrastructure;
 
@@ -14,8 +15,7 @@ var configuration = builder.Configuration;
 var services = builder.Services;
 var logging = builder.Logging;
 
-var defaultSettings = new DefaultSettings();
-configuration.Bind(DefaultSettings.key, defaultSettings);
+var defaultSettings = configuration.Map<DefaultSettings>();
 
 logging.ClearProviders();
 logging.AddNLog();
@@ -42,6 +42,8 @@ if (app.Environment.IsDevelopment())
 }
 
 await app.SeedDatabase();
+
+app.UseOutputCache();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

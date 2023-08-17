@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.Logging;
 using Movieverse.Domain.Common.Models;
 
 namespace Movieverse.Infrastructure.Persistence.Interceptors;

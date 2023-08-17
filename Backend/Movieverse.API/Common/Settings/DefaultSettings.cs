@@ -1,8 +1,10 @@
-﻿namespace Movieverse.API.Common.Settings;
+﻿using Movieverse.Application.Interfaces;
 
-public sealed class DefaultSettings
+namespace Movieverse.API.Common.Settings;
+
+public sealed class DefaultSettings : ISettings
 {
-	public const string key = "Defaults";
+	public string Key => "Defaults";
 	public string DatabaseName { get; init; } = null!;
 	public Routes Routes { get; init; } = null!;
 }

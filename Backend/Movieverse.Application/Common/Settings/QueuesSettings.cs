@@ -1,14 +1,15 @@
-﻿namespace Movieverse.Application.Common.Settings;
+﻿using Movieverse.Application.Interfaces;
 
-public sealed class QueuesSettings
+namespace Movieverse.Application.Common.Settings;
+
+public sealed class QueuesSettings : ISettings
 {
-	public const string key = "Queues";
+	public string Key => "Queues";
 	public AmazonSQS AmazonSQS { get; init; } = null!;
 }
 
 public sealed class AmazonSQS
 {
-	public const string key = "AmazonSQS";
 	public string Host { get; init; } = null!;
 	public string AccessKey { get; init; } = null!;
 	public string SecretKey { get; init; } = null!;

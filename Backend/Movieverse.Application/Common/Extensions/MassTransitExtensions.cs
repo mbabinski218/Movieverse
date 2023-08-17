@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 
-namespace Movieverse.Application.Common;
+namespace Movieverse.Application.Common.Extensions;
 
 public class EntityNameFormatter : IEntityNameFormatter
 {
