@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Movieverse.Application.Caching;
+namespace Movieverse.Application.Caching.Extensions;
 
 public static class OutputCacheServiceCollectionExtensions
 {

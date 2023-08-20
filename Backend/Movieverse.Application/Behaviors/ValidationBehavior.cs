@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
-using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Application.Behaviors;
 
 public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 	where TRequest : notnull
-	where TResponse : IResult
+	where TResponse : notnull
 {
 	private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -30,7 +29,6 @@ public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
 		var errors = validationResults
 			.Where(result => !result.IsValid)
 			.SelectMany(result => result.Errors)
-			.Select(e => e.ErrorMessage)
 			.ToList();
 
 		if (errors.Count == 0)
@@ -38,7 +36,6 @@ public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
 			return await next();
 		}
 
-		var result = Result.Fail(Error.ValidationError(errors));
-		return (TResponse)(IResult)result;
+		throw new ValidationException(errors);
 	}
 }

@@ -71,7 +71,12 @@ public sealed class UserRepository : IUserRepository
 		var result = await _userManager.ConfirmEmailAsync(user, token);
 		return result.Succeeded ? Result.Ok() : GenerateError(result);
 	}
-    
+
+	public async Task<Result> UpdateAsync(User user)
+	{
+		_dbContext.Users.Update(user);
+		return await Task.FromResult(Result.Ok());
+	}
 	
 	public async Task<Result> Test()
 	{

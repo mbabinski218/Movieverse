@@ -11,6 +11,8 @@ public sealed class AggregateRootId : BaseEntityId<Guid>
 	{
 	}
 	
+	public static AggregateRootId Create() => new(Guid.NewGuid());
+	
 	public static AggregateRootId Create(Guid value) => new(value);
 
 	public static implicit operator AggregateRootId(Guid value) => Create(value);

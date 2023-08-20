@@ -14,9 +14,11 @@
       <PackageReference Include="AspNetCore.HealthChecks.Aws.Sns" Version="7.0.0" />
       <PackageReference Include="AspNetCore.HealthChecks.Aws.Sqs" Version="7.0.0" />
       <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="7.0.0" />
-      <PackageReference Include="FluentValidation" Version="11.6.0" />
-      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.6.0" />
-      <PackageReference Include="MassTransit.AmazonSQS" Version="8.0.16" />
+      <PackageReference Include="FluentValidation" Version="11.7.1" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
+      <PackageReference Include="Mapster" Version="7.3.0" />
+      <PackageReference Include="MassTransit.AmazonSQS" Version="8.1.0" />
+      <PackageReference Include="MassTransit.Newtonsoft" Version="8.1.0" />
       <PackageReference Include="MediatR" Version="12.1.1" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
@@ -27,7 +29,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Movieverse.Contracts\Movieverse.Contracts.csproj" />
+
+
+
+
     </ItemGroup>
+
 
 
 

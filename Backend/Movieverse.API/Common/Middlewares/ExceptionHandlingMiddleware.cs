@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using FluentValidation;
 
 namespace Movieverse.API.Common.Middlewares;
 
@@ -23,6 +24,14 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(CreateJsonResponse("Not implemented yet."));
         }
+        catch (ValidationException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            context.Response.ContentType = "application/json";
+            
+            var errors = ex.Errors.Select(vf => vf.ErrorMessage);
+            await context.Response.WriteAsync(CreateJsonResponse(errors));
+        }
         catch (Exception ex)
         {
             var query = string.Join(", ", context.Request.Query.Keys);
@@ -37,5 +46,6 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         }
     }
     
+    private static string CreateJsonResponse(IEnumerable<string> messages) => JsonSerializer.Serialize(messages);
     private static string CreateJsonResponse(string message) => JsonSerializer.Serialize(new List<string>{ new(message) });
 }

@@ -1,7 +1,9 @@
-﻿namespace Movieverse.Application.Common.Settings;
+﻿using Movieverse.Application.Interfaces;
 
-public sealed class StatisticsSettings
+namespace Movieverse.Application.Common.Settings;
+
+public sealed class StatisticsSettings : ISettings
 {
-	public const string key = "Statistics";
+	public string Key => "Statistics";
 	public string UpdateInterval { get; init; } = null!;
 }

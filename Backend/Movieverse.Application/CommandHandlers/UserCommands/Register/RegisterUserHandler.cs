@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using MediatR;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Common;
 using Movieverse.Application.Interfaces;
@@ -13,19 +14,19 @@ namespace Movieverse.Application.CommandHandlers.UserCommands.Register;
 public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result>
 {
 	private readonly ILogger<RegisterUserHandler> _logger;
-	private readonly IUnitOfWork _unitOfWork;
 	private readonly IUserRepository _userRepository;
 	private readonly IBus _bus;
 	private readonly IHttpService _httpService;
+	private readonly IOutputCacheStore _outputCacheStore;
 
-	public RegisterUserHandler(ILogger<RegisterUserHandler> logger, IUnitOfWork unitOfWork, IUserRepository userRepository, IBus bus, 
-		IHttpService httpService)
+	public RegisterUserHandler(ILogger<RegisterUserHandler> logger, IUserRepository userRepository, IBus bus, IHttpService httpService, 
+		IOutputCacheStore outputCacheStore)
 	{
 		_logger = logger;
-		_unitOfWork = unitOfWork;
 		_userRepository = userRepository;
 		_bus = bus;
 		_httpService = httpService;
+		_outputCacheStore = outputCacheStore;
 	}
 
 	public async Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -38,8 +39,11 @@ public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, R
 		
 		var url = _httpService.Uri?.GetLeftPart(UriPartial.Authority);
 		var emailConfirmationLink = EmailHelper.CreateConfirmationLink(url, user.Id, token.Value);
+		
 		await _bus.Publish(new UserRegisteredMessage(user.Email!, emailConfirmationLink), cancellationToken);
-			
+
+		await _outputCacheStore.EvictByTagAsync(user.Id.ToString(), cancellationToken);
+		
 		_logger.LogDebug("User {email} registered successfully.", request.Email);
 		return Result.Ok();
 	}

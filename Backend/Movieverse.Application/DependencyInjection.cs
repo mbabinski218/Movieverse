@@ -5,10 +5,13 @@ using System.Reflection;
 using Amazon;
 using Amazon.Runtime;
 using FluentValidation;
+using Mapster;
+using MapsterMapper;
 using MassTransit;
 using MediatR;
 using Movieverse.Application.Behaviors;
-using Movieverse.Application.Caching;
+using Movieverse.Application.Caching.Extensions;
+using Movieverse.Application.Caching.Policies;
 using Movieverse.Application.Common.Extensions;
 using Movieverse.Application.Common.Settings;
 using Movieverse.Application.Services;
@@ -21,9 +24,10 @@ public static class DependencyInjection
 	public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddMediators(configuration);
-		services.AddCacheProvider(configuration);
 		services.AddSettings(configuration);
+		services.AddCacheProvider(configuration);
 		services.AddServices();
+		services.AddMapper();
 		
 		return services;
 	}
@@ -38,31 +42,32 @@ public static class DependencyInjection
 
 	private static IServiceCollection AddSettings(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.Configure<StatisticsSettings>(configuration.GetSection(StatisticsSettings.key));
-
+		services.AddOptions<StatisticsSettings>(configuration);
+		
 		return services;
 	}
 	
 	private static IServiceCollection AddCacheProvider(this IServiceCollection services, IConfiguration configuration)
 	{
 		var cacheSettings = configuration.Map<CacheSettings>();
-		
-		var redisOptions = new ConfigurationOptions
-		{
-			EndPoints = { {cacheSettings.Redis.Url, cacheSettings.Redis.Port} },
-			User = cacheSettings.Redis.User,
-			Password = cacheSettings.Redis.Password
-		};
-		
-		services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(redisOptions));
+
+		services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(
+			new ConfigurationOptions
+			{
+				EndPoints = { { cacheSettings.Redis.Url, cacheSettings.Redis.Port } },
+				Password = cacheSettings.Redis.Password
+			})
+		);
 		services.AddRedisOutputCache(options =>
 		{
-			if (TimeSpan.TryParse(cacheSettings.ExpirationTime, out var expirationTime))
+			options.AddBasePolicy(builder =>
 			{
-				options.DefaultExpirationTimeSpan = expirationTime;
-			}
+				builder.AddPolicy<DefaultOutputCachePolicy>();
+				builder.AddPolicy<ByIdOutputCachePolicy>();
+				builder.Expire(TimeSpan.Parse(cacheSettings.ExpirationTime));
+			}, true);
 		});
-		
+        
 		return services;
 	}
 	
@@ -70,10 +75,7 @@ public static class DependencyInjection
 	{
 		services.AddMediatR();
 		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
-		var queueSettings = configuration.Map<QueuesSettings>();
-		
-		services.AddMassTransit(queueSettings);
+		services.AddMassTransit(configuration);
 		
 		return services;
 	}
@@ -91,21 +93,25 @@ public static class DependencyInjection
 		return services;
 	}
 	
-	private static IServiceCollection AddMassTransit(this IServiceCollection services, QueuesSettings settings)
+	private static IServiceCollection AddMassTransit(this IServiceCollection services, IConfiguration configuration)
 	{
-		var credentials = new BasicAWSCredentials(settings.AmazonSQS.AccessKey, settings.AmazonSQS.SecretKey);
-		var regionEndpoint = RegionEndpoint.GetBySystemName(settings.AmazonSQS.Host);
+		var queueSettings = configuration.Map<QueuesSettings>();
+		
+		var credentials = new BasicAWSCredentials(queueSettings.AmazonSQS.AccessKey, queueSettings.AmazonSQS.SecretKey);
+		var regionEndpoint = RegionEndpoint.GetBySystemName(queueSettings.AmazonSQS.Host);
 		
 		services.AddMassTransit(busCfg =>
 		{
 			busCfg.UsingAmazonSqs((_, sqsCfg) =>
 			{
-				sqsCfg.Host(settings.AmazonSQS.Host, hostCfg =>
+				sqsCfg.Host(queueSettings.AmazonSQS.Host, hostCfg =>
 				{
 					hostCfg.Credentials(credentials);
 				});
                 
-				sqsCfg.MessageTopology.SetEntityNameFormatter(new EntityNameFormatter(settings.AmazonSQS.TopicName));
+				sqsCfg.UseNewtonsoftJsonSerializer();
+				
+				sqsCfg.MessageTopology.SetEntityNameFormatter(new EntityNameFormatter(queueSettings.AmazonSQS.TopicName));
 			});
 		});
 
@@ -115,8 +121,19 @@ public static class DependencyInjection
 				options.Credentials = credentials;
 				options.RegionEndpoint = regionEndpoint;
 
-				options.AddTopicAndSubscriptions(settings.AmazonSQS.TopicName);
+				options.AddTopicAndSubscriptions(queueSettings.AmazonSQS.TopicName);
 			}, "aws-sns");
+		
+		return services;
+	}
+	
+	private static IServiceCollection AddMapper(this IServiceCollection services)
+	{
+		var config = TypeAdapterConfig.GlobalSettings;
+		config.Scan(Assembly.GetExecutingAssembly());
+		
+		services.AddSingleton(config);
+		services.AddScoped<IMapper, Mapper>();
 		
 		return services;
 	}

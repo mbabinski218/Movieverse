@@ -13,6 +13,5 @@ public sealed class Redis
 {
 	public string Url { get; init; } = null!;
 	public int Port { get; init; }
-	public string User { get; init; } = null!;
 	public string Password { get; init; } = null!;
 }

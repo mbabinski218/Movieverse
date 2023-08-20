@@ -11,5 +11,6 @@ public interface IUserRepository
 	Task<Result<string>> GenerateEmailConfirmationTokenAsync(User user);
 	Task<Result<string>> RegisterAsync(User user, string password);
 	Task<Result> ConfirmEmailAsync(User user, string token);
+	Task<Result> UpdateAsync(User user);
 	Task<Result> Test();
 }

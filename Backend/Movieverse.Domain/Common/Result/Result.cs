@@ -5,6 +5,11 @@ public interface IResult
 	bool IsSuccessful { get; }
 }
 
+public interface IResult<T> : IResult
+{
+	
+}
+
 public readonly struct Result : IResult
 {
 	private readonly Error? _error;
@@ -32,7 +37,7 @@ public readonly struct Result : IResult
 		IsSuccessful ? success() : error(_error!.Value);
 }
 
-public readonly struct Result<TSuccess> : IResult
+public readonly struct Result<TSuccess> : IResult<TSuccess>
 {
 	private readonly TSuccess? _success;
 	private readonly Error? _error;
