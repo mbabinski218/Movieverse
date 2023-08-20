@@ -2,7 +2,7 @@
 
 namespace Movieverse.Infrastructure.Persistence;
 
-public sealed class UnitOfWork : IUnitOfWork
+public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
 {
 	private readonly AppDbContext _context;
 
@@ -15,9 +15,14 @@ public sealed class UnitOfWork : IUnitOfWork
 	{
 		return await _context.SaveChangesAsync(cancellationToken) > 0;
 	}
-	
+
 	public void Dispose()
 	{
 		_context.Dispose();
+	}
+
+	public async ValueTask DisposeAsync()
+	{
+		await _context.DisposeAsync();
 	}
 }

@@ -1,19 +1,31 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Movieverse.Domain.Common.Models;
 
 namespace Movieverse.Infrastructure.Persistence.Interceptors;
 
 public sealed class DateTimeSetterInterceptor : SaveChangesInterceptor
 {
+	private readonly ILogger<DateTimeSetterInterceptor> _logger;
+
+	public DateTimeSetterInterceptor(ILogger<DateTimeSetterInterceptor> logger)
+	{
+		_logger = logger;
+	}
+
 	public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
 	{
+		_logger.LogDebug("Setting DateTime...");
+		
 		DateTimeSetter(eventData.Context);
 		return base.SavingChanges(eventData, result);
 	}
 	
 	public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = new())
 	{
+		_logger.LogDebug("Setting DateTime...");
+		
 		DateTimeSetter(eventData.Context);
 		return await base.SavingChangesAsync(eventData, result, cancellationToken);
 	}

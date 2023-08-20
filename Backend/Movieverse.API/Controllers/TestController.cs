@@ -15,7 +15,7 @@ public sealed class TestController : ApiController
 	}
 	
 	[AllowAnonymous]
-	[OutputCache]
+	[OutputCache(NoStore = true)]
 	[HttpGet("query")]
 	public async Task<IActionResult> Query(CancellationToken cancellationToken) => 
 		await mediator.Send(new TestQuery(), cancellationToken).Then(

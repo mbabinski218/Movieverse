@@ -29,7 +29,9 @@ public static class DependencyInjection
 		var connectionString = configuration.GetConnectionString(databaseName);
 		ArgumentNullException.ThrowIfNull(connectionString, nameof(connectionString));
 		
-		services.AddDbContext<AppDbContext>(options => options.UseNpgsql(GetNpgsqlDataSource(connectionString)));
+		var dbDataSource = GetNpgsqlDataSource(connectionString); // DO NOT MOVE TO UseNpgsql DIRECTLY! - it will generate exception "More than twenty 'IServiceProvider' instances..."
+		
+		services.AddDbContext<AppDbContext>(options => options.UseNpgsql(dbDataSource));
 		services.AddHealthChecks().AddNpgSql(connectionString, name:"database");
 
 		services.AddIdentity<User, IdentityUserRole>(options =>

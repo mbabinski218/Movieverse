@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Infrastructure.Persistence;
@@ -15,9 +16,9 @@ public static class AppDbContextMock
 		var options = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("Movieverse").Options;
 		
 		var publishDomainEventsInterceptor = new PublishDomainEventsInterceptor(
-			Substitute.For<IPublisher>());
+			Substitute.For<IPublisher>(), Substitute.For<ILogger<PublishDomainEventsInterceptor>>());
 		
-		var dateTimeSetterInterceptor = new DateTimeSetterInterceptor();
+		var dateTimeSetterInterceptor = new DateTimeSetterInterceptor(Substitute.For<ILogger<DateTimeSetterInterceptor>>());
 
 		var db = new AppDbContext(options, publishDomainEventsInterceptor, dateTimeSetterInterceptor);
 		

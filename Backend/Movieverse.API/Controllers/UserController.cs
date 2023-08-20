@@ -26,6 +26,7 @@ public sealed class UserController : ApiController
 	
 
 	[AllowAnonymous]
+	[OutputCache(NoStore = true)]
 	[HttpPost("resend-email-confirmation")]
 	public async Task<ActionResult> ResendEmailConfirmation([FromQuery] ResendEmailConfirmationCommand command, CancellationToken cancellationToken) => 
 		await mediator.Send(command, cancellationToken).Then(
@@ -33,6 +34,7 @@ public sealed class UserController : ApiController
 			err => StatusCode(err.Code, err.Messages));
 	
 	[AllowAnonymous]
+	[OutputCache(NoStore = true)]
 	[HttpPost("confirm-email")]
 	public async Task<ActionResult> ConfirmEmail([FromQuery] ConfirmEmailCommand command, CancellationToken cancellationToken) =>
 		 await mediator.Send(command, cancellationToken).Then(
