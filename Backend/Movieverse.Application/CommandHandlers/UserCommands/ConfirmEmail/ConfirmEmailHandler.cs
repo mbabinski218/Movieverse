@@ -22,13 +22,13 @@ public sealed class ConfirmEmailHandler : IRequestHandler<ConfirmEmailCommand, R
 	{
 		_logger.LogDebug("Confirming email for user with id: {Id}", request.Id);
 		
-		var user = await _userRepository.FindByIdAsync(request.Id);
+		var user = await _userRepository.FindByIdAsync(request.Id, cancellationToken);
 
 		if (!user.IsSuccessful) return user.Error;
 		
 		var decodedToken = HttpUtility.UrlDecode(request.Token);
 		
-		var result = await _userRepository.ConfirmEmailAsync(user.Value, decodedToken);
+		var result = await _userRepository.ConfirmEmailAsync(user.Value, decodedToken, cancellationToken);
 		
 		return result.IsSuccessful ? Result.Ok() : result.Error;
 	}

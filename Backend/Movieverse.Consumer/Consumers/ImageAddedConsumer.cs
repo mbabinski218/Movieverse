@@ -12,6 +12,6 @@ public sealed class ImageAddedConsumer : IConsumer<ImageAddedMessage>
 
 	public Task Consume(ConsumeContext<ImageAddedMessage> context)
 	{
-		throw new NotImplementedException();
+		return Task.CompletedTask;
 	}
 }

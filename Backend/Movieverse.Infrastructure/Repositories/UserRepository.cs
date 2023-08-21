@@ -27,15 +27,15 @@ public sealed class UserRepository : IUserRepository
 		_logger = logger;
 	}
 
-	public async Task<Result<User>> FindByIdAsync(AggregateRootId id)
+	public async Task<Result<User>> FindByIdAsync(AggregateRootId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Find user with id: {id}", id.Value);
 		
-		var user = await _dbContext.Users.FindAsync(id.Value);
+		var user = await _dbContext.Users.FindAsync(new object?[] { id.Value }, cancellationToken);
 		return user is null ? Error.NotFound($"User with id: {id.Value} not found") : user;
 	}
 
-	public async Task<Result<User>> FindByEmailAsync(string email)
+	public async Task<Result<User>> FindByEmailAsync(string email, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Find user with email: {email}", email);
 		
@@ -43,7 +43,7 @@ public sealed class UserRepository : IUserRepository
 		return user is null ? Error.NotFound($"User with email: {email} not found") : user;
 	}
 
-	public async Task<Result<string>> GenerateEmailConfirmationTokenAsync(User user)
+	public async Task<Result<string>> GenerateEmailConfirmationTokenAsync(User user, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Generate email confirmation token for user with id: {id}", user.Id);
 		
@@ -51,7 +51,7 @@ public sealed class UserRepository : IUserRepository
 		return token;
 	}
 	
-	public async Task<Result<string>> RegisterAsync(User user, string password)
+	public async Task<Result<string>> RegisterAsync(User user, string password, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Register user with email: {email}", user.Email);
 		
@@ -74,11 +74,11 @@ public sealed class UserRepository : IUserRepository
 		result = await _userManager.AddClaimsAsync(user, claims);
 		
 		return result.Succeeded 
-			? await GenerateEmailConfirmationTokenAsync(user) 
+			? await GenerateEmailConfirmationTokenAsync(user, cancellationToken) 
 			: GenerateError(result);
 	}
 
-	public async Task<Result> ConfirmEmailAsync(User user, string token)
+	public async Task<Result> ConfirmEmailAsync(User user, string token, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Confirm email for user with id: {id}", user.Id);
 		
@@ -86,7 +86,7 @@ public sealed class UserRepository : IUserRepository
 		return result.Succeeded ? Result.Ok() : GenerateError(result);
 	}
 
-	public async Task<Result> UpdateAsync(User user)
+	public async Task<Result> UpdateAsync(User user, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Update user with id: {id}", user.Id);
 		

@@ -27,7 +27,7 @@ public sealed class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Resul
 
 	public async Task<Result<UserDto>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
 	{
-		var findResult = await _userRepository.FindByIdAsync(request.Id);
+		var findResult = await _userRepository.FindByIdAsync(request.Id, cancellationToken);
 
 		if (!findResult.IsSuccessful)
 		{
@@ -60,7 +60,7 @@ public sealed class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Resul
 			}
 		}
 		
-		var updateResult = await _userRepository.UpdateAsync(user);
+		var updateResult = await _userRepository.UpdateAsync(user, cancellationToken);
 
 		if (!updateResult.IsSuccessful)
 		{

@@ -14,6 +14,7 @@
       <PackageReference Include="AspNetCore.HealthChecks.Aws.Sns" Version="7.0.0" />
       <PackageReference Include="AspNetCore.HealthChecks.Aws.Sqs" Version="7.0.0" />
       <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="7.0.0" />
+      <PackageReference Include="AWSSDK.S3" Version="3.7.202.1" />
       <PackageReference Include="FluentValidation" Version="11.7.1" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
       <PackageReference Include="Mapster" Version="7.3.0" />
@@ -29,6 +30,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Movieverse.Contracts\Movieverse.Contracts.csproj" />
+
+
 
 
 

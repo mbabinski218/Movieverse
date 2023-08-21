@@ -5,7 +5,7 @@ namespace Movieverse.Domain.Common.Models;
 public class BaseEntity<TKey> : IHasDomainEvent
 	where TKey : notnull
 {
-	public TKey Id { get; } = default!;
+	public TKey Id { get; set; } = default!;
     
 	private readonly List<IDomainEvent> _domainEvents = new();
 	

@@ -20,7 +20,7 @@ public sealed class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, Resul
 
 	public async Task<Result<UserDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
 	{
-		var user = await _userRepository.FindByIdAsync(request.Id);
+		var user = await _userRepository.FindByIdAsync(request.Id, cancellationToken);
 
 		return user.IsSuccessful ? _mapper.Map<UserDto>(user.Value) : user.Error;
 	}

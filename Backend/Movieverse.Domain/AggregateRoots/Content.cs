@@ -1,4 +1,5 @@
 ﻿using Movieverse.Domain.Common.Models;
+using Movieverse.Domain.ValueObjects.Id;
 
 namespace Movieverse.Domain.AggregateRoots;
 
@@ -14,4 +15,16 @@ public class Content : AggregateRoot
 	{
 		
 	}
+	
+	// Methods
+	private Content(AggregateRootId id, string path, string contentType, string? title) : base(id)
+	{
+		Id = id;
+		Path = path;
+		ContentType = contentType;
+		Title = title;
+	}
+
+	public static Content Create(AggregateRootId id, string path, string contentType, string? title = null) => 
+		new(id, path, contentType, title);
 }

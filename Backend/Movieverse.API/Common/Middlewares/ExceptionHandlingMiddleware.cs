@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using FluentValidation;
+using Movieverse.Application.Common.Exceptions;
 
 namespace Movieverse.API.Common.Middlewares;
 
@@ -23,6 +24,13 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
             context.Response.StatusCode = StatusCodes.Status501NotImplemented;
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(CreateJsonResponse("Not implemented yet."));
+        }
+        catch (ResultException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            context.Response.ContentType = "application/json";
+            
+            await context.Response.WriteAsync(CreateJsonResponse(ex.Message));
         }
         catch (ValidationException ex)
         {

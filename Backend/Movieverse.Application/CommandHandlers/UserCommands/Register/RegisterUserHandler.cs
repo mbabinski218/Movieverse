@@ -33,7 +33,7 @@ public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, R
 	{
 		var user = User.Create(request.Email, request.UserName, request.FirstName, request.LastName, request.Age);
 		
-		var token = await _userRepository.RegisterAsync(user, request.Password);
+		var token = await _userRepository.RegisterAsync(user, request.Password, cancellationToken);
 
 		if (!token.IsSuccessful) return token.Error;
 		

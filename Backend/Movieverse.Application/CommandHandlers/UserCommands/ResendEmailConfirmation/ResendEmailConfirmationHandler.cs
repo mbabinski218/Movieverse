@@ -29,11 +29,11 @@ public sealed class ResendEmailConfirmationHandler : IRequestHandler<ResendEmail
 	{
 		_logger.LogDebug("Resending email confirmation link to: {email}", request.Email);
 		
-		var user = await _userRepository.FindByEmailAsync(request.Email);
+		var user = await _userRepository.FindByEmailAsync(request.Email, cancellationToken);
 
 		if (!user.IsSuccessful) return user.Error;
 
-		var token = await _userRepository.GenerateEmailConfirmationTokenAsync(user.Value);
+		var token = await _userRepository.GenerateEmailConfirmationTokenAsync(user.Value, cancellationToken);
 
 		if (!token.IsSuccessful) return token.Error;
 		

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using System.Reflection;
 using Amazon;
 using Amazon.Runtime;
+using Amazon.S3;
 using FluentValidation;
 using Mapster;
 using MapsterMapper;
@@ -14,6 +15,7 @@ using Movieverse.Application.Caching.Extensions;
 using Movieverse.Application.Caching.Policies;
 using Movieverse.Application.Common.Extensions;
 using Movieverse.Application.Common.Settings;
+using Movieverse.Application.Interfaces;
 using Movieverse.Application.Services;
 using StackExchange.Redis;
 
@@ -23,17 +25,20 @@ public static class DependencyInjection
 {
 	public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.AddMediators(configuration);
 		services.AddSettings(configuration);
+		services.AddMediators(configuration);
 		services.AddCacheProvider(configuration);
-		services.AddServices();
+		services.AddCloudStore(configuration);
 		services.AddMapper();
+		services.AddServices();
 		
 		return services;
 	}
 	
 	private static IServiceCollection AddServices(this IServiceCollection services)
 	{
+		services.AddSingleton<IImageService, ImageService>();
+		
 		services.AddHostedService<StatisticsUpdateWorkerService>()
 			.Configure<HostOptions>(hostOptions => hostOptions.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore);
 
@@ -43,6 +48,7 @@ public static class DependencyInjection
 	private static IServiceCollection AddSettings(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddOptions<StatisticsSettings>(configuration);
+		services.AddOptions<CloudStoreSettings>(configuration);
 		
 		return services;
 	}
@@ -134,6 +140,19 @@ public static class DependencyInjection
 		
 		services.AddSingleton(config);
 		services.AddScoped<IMapper, Mapper>();
+		
+		return services;
+	}
+	
+	private static IServiceCollection AddCloudStore(this IServiceCollection services, IConfiguration configuration)
+	{
+		var settings = configuration.Map<CloudStoreSettings>();
+		
+		var credentials = new BasicAWSCredentials(settings.AmazonS3.AccessKey, settings.AmazonS3.SecretKey);
+		var regionEndpoint = RegionEndpoint.GetBySystemName(settings.AmazonS3.Host);
+		
+		var amazonS3Client = new AmazonS3Client(credentials, regionEndpoint);
+		services.AddSingleton<IAmazonS3>(amazonS3Client);
 		
 		return services;
 	}
