@@ -39,9 +39,10 @@ public sealed class ImageService : IImageService
 				InputStream = image.OpenReadStream(),
 				Metadata =
 				{
-					["originalName"] = Path.GetFileName(image.FileName),
-					["extension"] = Path.GetExtension(image.FileName),
-					["size"] = image.Length.ToString()
+					["x-amz-meta-name"] = Path.GetFileName(image.FileName),
+					["x-amz-meta-extension"] = Path.GetExtension(image.FileName),
+					["x-amz-meta-size"] = image.Length.ToString(),
+					["x-amz-meta-resized"] = false.ToString()
 				}
 			};
 

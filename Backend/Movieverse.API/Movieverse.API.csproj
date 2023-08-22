@@ -6,6 +6,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
       <UserSecretsId>24636792-332c-40db-b380-c113cd37f2b0</UserSecretsId>
       <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+      <Version>0.0.1</Version>
+      <Title>Movieverse.API</Title>
+      <Authors>Movieverse</Authors>
   </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

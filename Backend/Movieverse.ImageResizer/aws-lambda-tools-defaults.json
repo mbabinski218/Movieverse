@@ -1,0 +1,10 @@
+{
+  "Information": [],
+  "profile": "movieverse-lambda",
+  "region": "eu-central-1",
+  "configuration": "Release",
+  "function-runtime": "dotnet6",
+  "function-memory-size": 256,
+  "function-timeout": 30,
+  "function-handler": "Movieverse.ImageResizer::Movieverse.ImageResizer.Function::FunctionHandler"
+}
