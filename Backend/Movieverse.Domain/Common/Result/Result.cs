@@ -3,6 +3,7 @@
 public interface IResult
 {
 	bool IsSuccessful { get; }
+	bool IsUnsuccessful => !IsSuccessful;
 }
 
 public interface IResult<T> : IResult

@@ -17,7 +17,7 @@ public sealed class ResultException : Exception
 	
 	public static void ThrowIfUnsuccessful(IResult result, string? msg = null)
 	{
-		if (!result.IsSuccessful)
+		if (result.IsUnsuccessful)
 		{
 			Throw(msg);
 		}
