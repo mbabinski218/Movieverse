@@ -10,6 +10,8 @@ using Mapster;
 using MapsterMapper;
 using MassTransit;
 using MediatR;
+using Movieverse.Application.Authorization;
+using Movieverse.Application.Authorization.Requirements;
 using Movieverse.Application.Behaviors;
 using Movieverse.Application.Caching.Extensions;
 using Movieverse.Application.Caching.Policies;
@@ -17,6 +19,7 @@ using Movieverse.Application.Common.Extensions;
 using Movieverse.Application.Common.Settings;
 using Movieverse.Application.Interfaces;
 using Movieverse.Application.Services;
+using Movieverse.Domain.Common.Types;
 using StackExchange.Redis;
 
 namespace Movieverse.Application;
@@ -29,6 +32,7 @@ public static class DependencyInjection
 		services.AddMediators(configuration);
 		services.AddCacheProvider(configuration);
 		services.AddCloudStore(configuration);
+		services.AddAuthorization(configuration);
 		services.AddMapper();
 		services.AddServices();
 		
@@ -57,13 +61,15 @@ public static class DependencyInjection
 	{
 		var cacheSettings = configuration.Map<CacheSettings>();
 
-		services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(
+		var connectionMultiplexer = ConnectionMultiplexer.Connect(
 			new ConfigurationOptions
 			{
 				EndPoints = { { cacheSettings.Redis.Url, cacheSettings.Redis.Port } },
 				Password = cacheSettings.Redis.Password
-			})
-		);
+			});
+		
+		services.AddSingleton<IConnectionMultiplexer>(connectionMultiplexer);
+		
 		services.AddRedisOutputCache(options =>
 		{
 			options.AddBasePolicy(builder =>
@@ -73,6 +79,9 @@ public static class DependencyInjection
 				builder.Expire(TimeSpan.Parse(cacheSettings.ExpirationTime));
 			}, true);
 		});
+
+		services.AddHealthChecks()
+			.AddRedis(connectionMultiplexer, "redis");
         
 		return services;
 	}
@@ -153,6 +162,26 @@ public static class DependencyInjection
 		
 		var amazonS3Client = new AmazonS3Client(credentials, regionEndpoint);
 		services.AddSingleton<IAmazonS3>(amazonS3Client);
+		
+		return services;
+	}
+	
+	private static IServiceCollection AddAuthorization(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.AddAuthorization(options =>
+		{
+			options.AddPolicy(Policies.administrator, policy => 
+				policy.Requirements.Add(new RoleRequirement(UserRole.Administrator)));
+			
+			options.AddPolicy(Policies.critic, policy =>
+				policy.Requirements.Add(new RoleRequirement(UserRole.Critic)));
+			
+			options.AddPolicy(Policies.atLeastPro, policy =>
+				policy.Requirements.Add(new OneOfRoleRequirement(UserRole.Pro, UserRole.Critic, UserRole.Administrator)));
+			
+			options.AddPolicy(Policies.atLeastUser, policy =>
+				policy.Requirements.Add(new OneOfRoleRequirement(UserRole.User, UserRole.Pro, UserRole.Critic, UserRole.Administrator)));
+		});
 		
 		return services;
 	}

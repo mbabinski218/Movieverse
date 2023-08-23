@@ -20,10 +20,10 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
 		builder.HasKey(p => p.Id);
 		
 		builder.Property(p => p.FunFacts)
-			.HasMaxLength(Constants.maxDescriptionLength);
+			.HasMaxLength(Constants.descriptionLength);
 		
 		builder.Property(p => p.Biography)
-			.HasMaxLength(Constants.maxDescriptionLength);
+			.HasMaxLength(Constants.descriptionLength);
 
 		builder.OwnsOne(p => p.Information);
 
@@ -51,10 +51,10 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
 		builder.OwnsOne(u => u.Information, informationBuilder =>
 		{
 			informationBuilder.Property(i => i.FirstName)
-				.HasMaxLength(Constants.maxNameLength);
+				.HasMaxLength(Constants.nameLength);
 			
 			informationBuilder.Property(i => i.LastName)
-				.HasMaxLength(Constants.maxNameLength);
+				.HasMaxLength(Constants.nameLength);
 		});
 	}
 
@@ -63,10 +63,10 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
 		builder.OwnsOne(p => p.LifeHistory, lifeHistoryConfiguration =>
 		{
 			lifeHistoryConfiguration.Property(lh => lh.BirthPlace)
-				.HasMaxLength(Constants.maxLocationLength);
+				.HasMaxLength(Constants.locationLength);
 			
 			lifeHistoryConfiguration.Property(lh => lh.DeathPlace)
-				.HasMaxLength(Constants.maxLocationLength);
+				.HasMaxLength(Constants.locationLength);
 		});
 	}
 }

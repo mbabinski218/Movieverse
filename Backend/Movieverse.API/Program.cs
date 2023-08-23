@@ -48,10 +48,12 @@ app.UseOutputCache();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
+
 app.MapHealthChecks(defaultSettings.Routes.HealthCheckEndpoint, new HealthCheckOptions
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-});
+}).CacheOutput(policy => policy.NoCache());
+
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

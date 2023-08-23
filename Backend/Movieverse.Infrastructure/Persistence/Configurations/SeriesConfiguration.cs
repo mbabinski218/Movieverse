@@ -32,7 +32,7 @@ public sealed class SeriesConfiguration : IEntityTypeConfiguration<Series>
 				episodesBuilder.HasKey(nameof(Episode.Id));
 
 				episodesBuilder.Property(e => e.Title)
-					.HasMaxLength(Constants.maxTitleLength);
+					.HasMaxLength(Constants.titleLength);
 
 				episodesBuilder.OwnsOne(e => e.BasicStatistics);
 				
@@ -63,13 +63,13 @@ public sealed class SeriesConfiguration : IEntityTypeConfiguration<Series>
 						.HasConversion(EfExtensions.aggregateRootIdConverter);
 					
 					reviewBuilder.Property(r => r.UserName)
-						.HasMaxLength(Constants.maxNameLength);
+						.HasMaxLength(Constants.nameLength);
 			
 					reviewBuilder.Property(r => r.Title)
-						.HasMaxLength(Constants.maxTitleLength);
+						.HasMaxLength(Constants.titleLength);
 			
 					reviewBuilder.Property(r => r.Content)
-						.HasMaxLength(Constants.maxReviewLength);
+						.HasMaxLength(Constants.reviewLength);
 				});
 			});
 		});
@@ -80,19 +80,19 @@ public sealed class SeriesConfiguration : IEntityTypeConfiguration<Series>
 		builder.OwnsOne(s => s.Details, detailsConfiguration =>
 		{
 			detailsConfiguration.Property(d => d.Language)
-				.HasMaxLength(Constants.maxLanguageLength);
+				.HasMaxLength(Constants.languageLength);
 
 			detailsConfiguration.Property(d => d.FilmingLocations)
-				.HasMaxLength(Constants.maxLocationLength);
+				.HasMaxLength(Constants.locationLength);
 
 			detailsConfiguration.Property(d => d.Storyline)
-				.HasMaxLength(Constants.maxDescriptionLength);
+				.HasMaxLength(Constants.descriptionLength);
 
 			detailsConfiguration.Property(d => d.Tagline)
-				.HasMaxLength(Constants.maxDescriptionLength);
+				.HasMaxLength(Constants.descriptionLength);
 
 			detailsConfiguration.Property(d => d.CountryOfOrigin)
-				.HasMaxLength(Constants.maxLocationLength);
+				.HasMaxLength(Constants.locationLength);
 		});
 	}
 }

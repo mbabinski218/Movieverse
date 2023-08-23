@@ -19,7 +19,7 @@ public sealed class PlatformConfiguration : IEntityTypeConfiguration<Platform>
 		builder.HasKey(p => p.Id);
 
 		builder.Property(p => p.Name)
-			.HasMaxLength(Constants.maxNameLength);
+			.HasMaxLength(Constants.nameLength);
 
 		builder.Property(p => p.Price)
 			.HasPrecision(Constants.precision);

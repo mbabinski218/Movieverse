@@ -85,9 +85,9 @@ public sealed class AwardConfiguration : IEntityTypeConfiguration<Award>
 			.HasConversion(EfExtensions.nullableAggregateRootIdConverter);
 		
 		builder.Property(a => a.Name)
-			.HasMaxLength(Constants.maxNameLength);
+			.HasMaxLength(Constants.nameLength);
 		
 		builder.Property(a => a.Description)
-			.HasMaxLength(Constants.maxDescriptionLength);
+			.HasMaxLength(Constants.descriptionLength);
 	}
 }

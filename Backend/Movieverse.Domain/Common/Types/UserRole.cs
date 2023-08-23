@@ -6,7 +6,6 @@ namespace Movieverse.Domain.Common.Types;
 public enum UserRole
 {
 	Administrator,
-	Moderator,
 	Critic,
 	Pro,
 	User

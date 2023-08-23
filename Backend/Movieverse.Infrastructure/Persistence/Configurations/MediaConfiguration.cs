@@ -28,7 +28,7 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 		builder.HasKey(m => m.Id);
 
 		builder.Property(m => m.Title)
-			.HasMaxLength(Constants.maxTitleLength);
+			.HasMaxLength(Constants.titleLength);
 
 		builder.Property(m => m.PosterId)
 			.HasConversion(EfExtensions.nullableAggregateRootIdConverter);
@@ -97,13 +97,13 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 				.HasConversion(EfExtensions.aggregateRootIdConverter);
 			
 			reviewBuilder.Property(r => r.UserName)
-				.HasMaxLength(Constants.maxNameLength);
+				.HasMaxLength(Constants.nameLength);
 			
 			reviewBuilder.Property(r => r.Title)
-				.HasMaxLength(Constants.maxTitleLength);
+				.HasMaxLength(Constants.titleLength);
 			
 			reviewBuilder.Property(r => r.Content)
-				.HasMaxLength(Constants.maxReviewLength);
+				.HasMaxLength(Constants.reviewLength);
 		});
 	}
 	
@@ -130,37 +130,37 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 		builder.OwnsOne(m => m.Details, detailsConfiguration =>
 		{
 			detailsConfiguration.Property(d => d.Language)
-				.HasMaxLength(Constants.maxLanguageLength);
+				.HasMaxLength(Constants.languageLength);
 			
 			detailsConfiguration.Property(d => d.FilmingLocations)
-				.HasMaxLength(Constants.maxLocationLength);
+				.HasMaxLength(Constants.locationLength);
 			
 			detailsConfiguration.Property(d => d.Storyline)
-				.HasMaxLength(Constants.maxDescriptionLength);
+				.HasMaxLength(Constants.descriptionLength);
 			
 			detailsConfiguration.Property(d => d.Tagline)
-				.HasMaxLength(Constants.maxDescriptionLength);
+				.HasMaxLength(Constants.descriptionLength);
 			
 			detailsConfiguration.Property(d => d.CountryOfOrigin)
-				.HasMaxLength(Constants.maxLocationLength);	
+				.HasMaxLength(Constants.locationLength);	
 		});
 		
 		builder.OwnsOne(m => m.TechnicalSpecs, technicalSpecsConfiguration =>
 		{
 			technicalSpecsConfiguration.Property(t => t.Camera)
-				.HasMaxLength(Constants.maxTechnicalSpecsLength);
+				.HasMaxLength(Constants.technicalSpecsLength);
 
 			technicalSpecsConfiguration.Property(t => t.Color)
-				.HasMaxLength(Constants.maxTechnicalSpecsLength);
+				.HasMaxLength(Constants.technicalSpecsLength);
 			
 			technicalSpecsConfiguration.Property(t => t.AspectRatio)
-				.HasMaxLength(Constants.maxTechnicalSpecsLength);
+				.HasMaxLength(Constants.technicalSpecsLength);
 			
 			technicalSpecsConfiguration.Property(t => t.NegativeFormat)
-				.HasMaxLength(Constants.maxTechnicalSpecsLength);
+				.HasMaxLength(Constants.technicalSpecsLength);
 			
 			technicalSpecsConfiguration.Property(t => t.SoundMix)
-				.HasMaxLength(Constants.maxTechnicalSpecsLength);
+				.HasMaxLength(Constants.technicalSpecsLength);
 		});
 	}
 }

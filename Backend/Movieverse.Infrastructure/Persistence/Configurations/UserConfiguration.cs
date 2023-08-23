@@ -23,7 +23,7 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 		builder.HasKey(u => u.Id);
 
 		builder.Property(u => u.UserName)
-			.HasMaxLength(Constants.maxNameLength);
+			.HasMaxLength(Constants.nameLength);
 
 		builder.Property(u => u.AvatarId)
 			.HasConversion(EfExtensions.nullableAggregateRootIdConverter);
@@ -50,10 +50,10 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 		builder.OwnsOne(u => u.Information, informationBuilder =>
 		{
 			informationBuilder.Property(i => i.FirstName)
-				.HasMaxLength(Constants.maxNameLength);
+				.HasMaxLength(Constants.nameLength);
 			
 			informationBuilder.Property(i => i.LastName)
-				.HasMaxLength(Constants.maxNameLength);
+				.HasMaxLength(Constants.nameLength);
 		});
 	}
 }

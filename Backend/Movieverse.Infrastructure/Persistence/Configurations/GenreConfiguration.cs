@@ -18,10 +18,10 @@ public sealed class GenreConfiguration : IEntityTypeConfiguration<Genre>
 		builder.HasKey(g => g.Id);
 
 		builder.Property(g => g.Name)
-			.HasMaxLength(Constants.maxNameLength);
+			.HasMaxLength(Constants.nameLength);
 		
 		builder.Property(g => g.Description)
-			.HasMaxLength(Constants.maxDescriptionLength);
+			.HasMaxLength(Constants.descriptionLength);
 	}
 	
 	private static void ConfigureGenreMediaIdsTable(EntityTypeBuilder<Genre> builder)

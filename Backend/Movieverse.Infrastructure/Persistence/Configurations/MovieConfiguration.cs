@@ -16,10 +16,10 @@ public sealed class MovieConfiguration : IEntityTypeConfiguration<Movie>
 	private static void ConfigureMovieTable(EntityTypeBuilder<Movie> builder)
 	{
 		builder.Property(m => m.SequelTitle)
-			.HasMaxLength(Constants.maxTitleLength);
+			.HasMaxLength(Constants.titleLength);
 		
 		builder.Property(m => m.PrequelTitle)
-			.HasMaxLength(Constants.maxTitleLength);
+			.HasMaxLength(Constants.titleLength);
 
 		builder.Property(m => m.SequelId)
 			.HasConversion(EfExtensions.nullableAggregateRootIdConverter);

@@ -17,12 +17,12 @@ public sealed class ContentConfiguration : IEntityTypeConfiguration<Content>
 		builder.HasKey(c => c.Id);
 
 		builder.Property(c => c.Title)
-			.HasMaxLength(Constants.maxTitleLength);
+			.HasMaxLength(Constants.titleLength);
 
 		builder.Property(c => c.Path)
-			.HasMaxLength(Constants.maxPathLength);
+			.HasMaxLength(Constants.pathLength);
 
 		builder.Property(c => c.ContentType)
-			.HasMaxLength(Constants.maxContentTypeLenght);
+			.HasMaxLength(Constants.contentTypeLenght);
 	}
 }
