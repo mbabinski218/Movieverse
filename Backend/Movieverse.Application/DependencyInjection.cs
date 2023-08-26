@@ -51,8 +51,8 @@ public static class DependencyInjection
 
 	private static IServiceCollection AddSettings(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.AddOptions<StatisticsSettings>(configuration);
-		services.AddOptions<CloudStoreSettings>(configuration);
+		services.BindSettings<StatisticsSettings>(configuration);
+		services.BindSettings<CloudStoreSettings>(configuration);
 		
 		return services;
 	}

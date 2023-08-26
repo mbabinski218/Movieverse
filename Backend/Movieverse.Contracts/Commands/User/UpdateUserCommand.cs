@@ -10,7 +10,6 @@ public sealed record UpdateUserCommand(
 	[FromRoute] Guid Id,
 	string? UserName,
 	string? Email,
-	string? PhoneNumber,
 	InformationDto? Information,
 	IFormFile? Avatar
     ) : IRequest<Result<UserDto>>;

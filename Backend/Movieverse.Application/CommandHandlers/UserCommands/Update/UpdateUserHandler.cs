@@ -38,7 +38,6 @@ public sealed class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Resul
 		
 		if (request.UserName is not null) user.UserName = request.UserName;
 		if (request.Email is not null) user.Email = request.Email;
-		if (request.PhoneNumber is not null) user.PhoneNumber = request.PhoneNumber;
 		if (request.Information is not null)
 		{
 			if (request.Information.FirstName is not null) user.Information.FirstName = request.Information.FirstName;

@@ -24,6 +24,14 @@ public sealed class UserController : ApiController
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
 	
+	[AllowAnonymous]
+	[OutputCache(NoStore = true)]
+	[HttpPost("login")]
+	public async Task<ActionResult> Login([FromBody] LoginUserCommand command, CancellationToken cancellationToken) =>
+		await mediator.Send(command, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
 
 	[AllowAnonymous]
 	[OutputCache(NoStore = true)]

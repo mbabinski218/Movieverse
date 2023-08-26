@@ -2,9 +2,11 @@
 using NSubstitute;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Movieverse.Application.Interfaces;
 using Movieverse.Infrastructure.Persistence;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Models;
+using Movieverse.Infrastructure.Authentication;
 using Movieverse.Infrastructure.Repositories;
 using Movieverse.UnitTests.InfrastructureUnitTests.Mocks;
 
@@ -17,6 +19,10 @@ public class UserRepositoryUnitTests
 	private AppDbContext _dbContext = null!;
 	private UserManager<User> _userManager = null!;
 	private RoleManager<IdentityUserRole> _roleManager = null!;
+	private SignInManager<User> _signInManager = null!;
+	private ITokenProvider _tokenProvider = null!;
+	private GoogleAuthentication _googleAuthentication = null!;
+	private FacebookAuthentication _facebookAuthentication = null!;
 	
 	[SetUp]
 	public void SetUp()
@@ -25,6 +31,10 @@ public class UserRepositoryUnitTests
 		_dbContext = AppDbContextMock.Get();
 		_userManager = UserManagerMock.Get<User>();
 		_roleManager = RoleManagerMock.Get<IdentityUserRole>();
+		_signInManager = SignInManagerMock.Get<User>();
+		_tokenProvider = Substitute.For<ITokenProvider>();
+		_googleAuthentication = Substitute.For<GoogleAuthentication>();
+		_facebookAuthentication = Substitute.For<FacebookAuthentication>();
 	}
 	
 	[Test]
@@ -36,7 +46,7 @@ public class UserRepositoryUnitTests
 		var id = Guid.Parse(guid);
 		var user = EntityMock.CreateUser(id);
 		_dbContext.Users.FindAsync(id).Returns(user);
-		var userRepository = new UserRepository(_logger, _dbContext, _userManager, _roleManager);
+		var userRepository = new UserRepository(_logger, _dbContext, _userManager, _roleManager, _tokenProvider, _googleAuthentication, _facebookAuthentication);
 		
 		// Act
 		var result = await userRepository.FindByIdAsync(id);
@@ -60,7 +70,7 @@ public class UserRepositoryUnitTests
 		var goodUser = EntityMock.CreateUser(goodId);
 		_dbContext.Users.FindAsync(goodId).Returns(goodUser);
 		_dbContext.Users.FindAsync(Arg.Any<string>()).Returns(null as User);
-		var userRepository = new UserRepository(_logger, _dbContext, _userManager, _roleManager);
+		var userRepository = new UserRepository(_logger, _dbContext, _userManager, _roleManager, _tokenProvider, _googleAuthentication, _facebookAuthentication);
 		
 		// Act
 		var result = await userRepository.FindByIdAsync(badId);

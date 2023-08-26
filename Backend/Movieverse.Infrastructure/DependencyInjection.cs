@@ -1,11 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Movieverse.Application.Common.Extensions;
+using Movieverse.Application.Common.Settings;
 using Movieverse.Application.Interfaces;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Types;
+using Movieverse.Infrastructure.Authentication;
 using Movieverse.Infrastructure.Persistence;
 using Movieverse.Infrastructure.Persistence.Interceptors;
 using Movieverse.Infrastructure.Repositories;
@@ -17,9 +23,17 @@ public static class DependencyInjection
 {
 	public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, string databaseName)
 	{
+		services.AddSettings(configuration);
 		services.AddPersistence(configuration, databaseName);
 		services.AddAuthentication(configuration);
 		services.AddRepositories();
+		
+		return services;
+	}
+	
+	private static IServiceCollection AddSettings(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.BindSettings<AuthenticationSettings>(configuration);
 		
 		return services;
 	}
@@ -34,7 +48,7 @@ public static class DependencyInjection
 		services.AddDbContext<AppDbContext>(options => options.UseNpgsql(dbDataSource));
 		services.AddHealthChecks().AddNpgSql(connectionString, name:"database");
 
-		services.AddIdentity<User, IdentityUserRole>(options =>
+		services.AddIdentityCore<User>(options =>
 			{
 				options.User.RequireUniqueEmail = true;
 
@@ -48,6 +62,7 @@ public static class DependencyInjection
 
 				options.SignIn.RequireConfirmedEmail = true;
 			})
+			.AddRoles<IdentityUserRole>()
 			.AddDefaultTokenProviders()
 			.AddEntityFrameworkStores<AppDbContext>();
         
@@ -61,7 +76,37 @@ public static class DependencyInjection
 
 	private static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
 	{
+		var authenticationSettings = configuration.Map<AuthenticationSettings>();
 		
+		services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+			.AddJwtBearer(options =>
+			{
+				options.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuer = true,
+					ValidateAudience = true,
+					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.Token.Secret))
+				};
+			})
+			.AddGoogle(options =>
+			{
+				options.ClientId = authenticationSettings.Google.ClientId;
+				options.ClientSecret = authenticationSettings.Google.ClientSecret;
+			})
+			.AddFacebook(options =>
+			{
+				options.AppId = authenticationSettings.Facebook.AppId;
+				options.AppSecret = authenticationSettings.Facebook.AppSecret;
+			});
+
+		services.AddSingleton<ITokenProvider, TokenProvider>();
+		services.AddScoped<GoogleAuthentication>();
+		services.AddScoped<FacebookAuthentication>();
 		
 		return services;
 	}

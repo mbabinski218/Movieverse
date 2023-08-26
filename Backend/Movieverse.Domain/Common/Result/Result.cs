@@ -3,7 +3,7 @@
 public interface IResult
 {
 	bool IsSuccessful { get; }
-	bool IsUnsuccessful => !IsSuccessful;
+	bool IsUnsuccessful { get; }
 }
 
 public interface IResult<T> : IResult
@@ -16,6 +16,7 @@ public readonly struct Result : IResult
 	private readonly Error? _error;
 	public Error Error => _error!.Value;
 	public bool IsSuccessful { get; }
+	public bool IsUnsuccessful => !IsSuccessful;
 
 	public Result()
 	{
@@ -47,7 +48,8 @@ public readonly struct Result<TSuccess> : IResult<TSuccess>
 	public Error Error => _error!.Value;
 	
 	public bool IsSuccessful { get; }
-	
+	public bool IsUnsuccessful => !IsSuccessful;
+
 	private Result(TSuccess value)
 	{
 		IsSuccessful = true;
