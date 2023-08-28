@@ -1,5 +1,7 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Localization;
+using Movieverse.API.Common;
 using NLog.Extensions.Logging;
 using Movieverse.API.Common.Extensions;
 using Movieverse.API.Common.Middlewares;
@@ -33,6 +35,9 @@ services.AddScoped<ExceptionHandlingMiddleware>();
 
 services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
+services.AddCors(options => options.AddPolicy("corsapp", corsBuilder =>
+    corsBuilder.WithOrigins(defaultSettings.Routes.Origin).AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -46,7 +51,15 @@ await app.SeedDatabase();
 app.UseOutputCache();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseRequestLocalization();
+app.UseRequestLocalization(options =>
+{
+    options.SupportedCultures = defaultSettings.SupportedCultures;
+    options.SupportedUICultures = defaultSettings.SupportedCultures;
+    options.RequestCultureProviders.Insert(0, new AppRequestCultureProvider(defaultSettings.Culture));
+});
+
+app.UseCors("corsapp");
+app.UseAuthentication();
 
 app.UseHttpsRedirection();
 
@@ -57,4 +70,5 @@ app.MapHealthChecks(defaultSettings.Routes.HealthCheckEndpoint, new HealthCheckO
 
 app.UseAuthorization();
 app.MapControllers();
+
 app.Run();
