@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Resources;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.ValueObjects.Id;
@@ -39,7 +40,7 @@ public sealed class ContentRepository : IContentRepository
 		_logger.LogDebug("Getting content type for content with id {Id}", id);
 		
 		var image = await FindAsync(id, cancellationToken);
-		return image is not null ? image.ContentType : Error.NotFound("Content not found.");
+		return image is not null ? image.ContentType : Error.NotFound(ContentResources.ContentNotFound);
 	}
 
 	public async Task<Result<string>> GetPathAsync(AggregateRootId id, CancellationToken cancellationToken)
@@ -47,7 +48,7 @@ public sealed class ContentRepository : IContentRepository
 		_logger.LogDebug("Getting path for content with id {Id}", id);
 
 		var image = await FindAsync(id, cancellationToken);
-		return image is not null ? image.Path : Error.NotFound("Content not found.");
+		return image is not null ? image.Path : Error.NotFound(ContentResources.ContentNotFound);
 	}
 	
 	private async Task<Content?> FindAsync(AggregateRootId id, CancellationToken cancellationToken) =>
