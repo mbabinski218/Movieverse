@@ -84,4 +84,7 @@
     <data name="FailedToLoginWithRefreshToken" xml:space="preserve">
         <value>Failed to login with refresh token</value>
     </data>
+    <data name="YouAreNotLoggedIn" xml:space="preserve">
+        <value>You are not logged in</value>
+    </data>
 </root>

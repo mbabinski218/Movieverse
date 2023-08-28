@@ -18,4 +18,5 @@ public interface IUserRepository
 	Task<Result<TokensDto>> LoginWithFacebookAsync(string idToken, CancellationToken cancellationToken = default);
 	Task<Result> ConfirmEmailAsync(User user, string token, CancellationToken cancellationToken = default);
 	Task<Result> UpdateAsync(User user, CancellationToken cancellationToken = default);
+	Task<Result> LogoutAsync(User user, CancellationToken cancellationToken = default);
 }

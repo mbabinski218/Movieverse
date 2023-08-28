@@ -4,9 +4,9 @@ using Movieverse.Contracts.Commands.User;
 
 namespace Movieverse.Application.CommandHandlers.UserCommands.Register;
 
-public sealed class RegisterUserValidator : AbstractValidator<RegisterUserCommand>
+public sealed class RegisterValidator : AbstractValidator<RegisterCommand>
 {
-	public RegisterUserValidator()
+	public RegisterValidator()
 	{
 		RuleFor(u => u.Email)
 			.NotEmpty().WithMessage(UserResources.EnterEmail)

@@ -11,14 +11,14 @@ using Movieverse.Domain.ValueObjects.Id;
 
 namespace Movieverse.Application.CommandHandlers.UserCommands.Update;
 
-public sealed class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserDto>>
+public sealed class UpdateHandler : IRequestHandler<UpdateCommand, Result<UserDto>>
 {
 	private readonly IUserRepository _userRepository;
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
 	private readonly IOutputCacheStore _outputCacheStore;
 
-	public UpdateUserHandler(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper, IOutputCacheStore outputCacheStore)
+	public UpdateHandler(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper, IOutputCacheStore outputCacheStore)
 	{
 		_userRepository = userRepository;
 		_unitOfWork = unitOfWork;
@@ -26,7 +26,7 @@ public sealed class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Resul
 		_outputCacheStore = outputCacheStore;
 	}
 
-	public async Task<Result<UserDto>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+	public async Task<Result<UserDto>> Handle(UpdateCommand request, CancellationToken cancellationToken)
 	{
 		var findResult = await _userRepository.FindByIdAsync(request.Id, cancellationToken);
 

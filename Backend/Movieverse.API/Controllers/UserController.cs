@@ -19,7 +19,7 @@ public sealed class UserController : ApiController
 	[AllowAnonymous]
 	[OutputCache(NoStore = true)]
 	[HttpPost("register")]
-	public async Task<ActionResult> Register([FromBody] RegisterUserCommand command, CancellationToken cancellationToken) =>
+	public async Task<ActionResult> Register([FromBody] RegisterCommand command, CancellationToken cancellationToken) =>
 		 await mediator.Send(command, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
@@ -27,10 +27,18 @@ public sealed class UserController : ApiController
 	[AllowAnonymous]
 	[OutputCache(NoStore = true)]
 	[HttpPost("login")]
-	public async Task<ActionResult> Login([FromBody] LoginUserCommand command, CancellationToken cancellationToken) =>
+	public async Task<ActionResult> Login([FromBody] LoginCommand command, CancellationToken cancellationToken) =>
 		await mediator.Send(command, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
+	
+		[AllowAnonymous]
+    	[OutputCache(NoStore = true)]
+    	[HttpPost("logout")]
+    	public async Task<ActionResult> Logout(CancellationToken cancellationToken) =>
+    		await mediator.Send(new LogoutCommand(), cancellationToken).Then(
+    			Ok,
+    			err => StatusCode(err.Code, err.Messages));
 	
 
 	[AllowAnonymous]
@@ -61,7 +69,7 @@ public sealed class UserController : ApiController
 	[AllowAnonymous]
 	[OutputCache(NoStore = true)]
 	[HttpPut("{Id:guid}")]
-	public async Task<ActionResult<UserDto>> Update([FromForm] UpdateUserCommand command, CancellationToken cancellationToken) =>
+	public async Task<ActionResult<UserDto>> Update([FromForm] UpdateCommand command, CancellationToken cancellationToken) =>
 		await mediator.Send(command, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));

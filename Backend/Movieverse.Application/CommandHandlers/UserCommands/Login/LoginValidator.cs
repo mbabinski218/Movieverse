@@ -5,9 +5,9 @@ using Movieverse.Domain.Common.Types;
 
 namespace Movieverse.Application.CommandHandlers.UserCommands.Login;
 
-public class LoginUserValidator : AbstractValidator<LoginUserCommand>
+public class LoginValidator : AbstractValidator<LoginCommand>
 {
-	public LoginUserValidator()
+	public LoginValidator()
 	{
 		RuleFor(l=>l.GrantType)
 			.NotEmpty().WithMessage(UserResources.EnterAuthenticator)

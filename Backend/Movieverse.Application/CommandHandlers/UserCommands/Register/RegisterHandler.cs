@@ -11,15 +11,15 @@ using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Application.CommandHandlers.UserCommands.Register;
 
-public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result>
+public sealed class RegisterHandler : IRequestHandler<RegisterCommand, Result>
 {
-	private readonly ILogger<RegisterUserHandler> _logger;
+	private readonly ILogger<RegisterHandler> _logger;
 	private readonly IUserRepository _userRepository;
 	private readonly IBus _bus;
 	private readonly IHttpService _httpService;
 	private readonly IOutputCacheStore _outputCacheStore;
 
-	public RegisterUserHandler(ILogger<RegisterUserHandler> logger, IUserRepository userRepository, IBus bus, IHttpService httpService, 
+	public RegisterHandler(ILogger<RegisterHandler> logger, IUserRepository userRepository, IBus bus, IHttpService httpService, 
 		IOutputCacheStore outputCacheStore)
 	{
 		_logger = logger;
@@ -29,7 +29,7 @@ public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, R
 		_outputCacheStore = outputCacheStore;
 	}
 
-	public async Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+	public async Task<Result> Handle(RegisterCommand request, CancellationToken cancellationToken)
 	{
 		var user = User.Create(request.Email, request.UserName, request.FirstName, request.LastName, request.Age);
 		

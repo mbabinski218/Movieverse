@@ -256,5 +256,14 @@ namespace Movieverse.Application.Resources {
                 return ResourceManager.GetString("WrongEmailFormat", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not logged in.
+        /// </summary>
+        public static string YouAreNotLoggedIn {
+            get {
+                return ResourceManager.GetString("YouAreNotLoggedIn", resourceCulture);
+            }
+        }
     }
 }

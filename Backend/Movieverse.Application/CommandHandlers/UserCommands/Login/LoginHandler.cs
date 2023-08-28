@@ -9,18 +9,18 @@ using Movieverse.Domain.Common.Types;
 
 namespace Movieverse.Application.CommandHandlers.UserCommands.Login;
 
-public sealed class LoginUserHandler : IRequestHandler<LoginUserCommand, Result<TokensDto>>
+public sealed class LoginHandler : IRequestHandler<LoginCommand, Result<TokensDto>>
 {
-	private readonly ILogger<LoginUserHandler> _logger;
+	private readonly ILogger<LoginHandler> _logger;
 	private readonly IUserRepository _userRepository;
 
-	public LoginUserHandler(ILogger<LoginUserHandler> logger, IUserRepository userRepository)
+	public LoginHandler(ILogger<LoginHandler> logger, IUserRepository userRepository)
 	{
 		_logger = logger;
 		_userRepository = userRepository;
 	}
 
-	public async Task<Result<TokensDto>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+	public async Task<Result<TokensDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
 	{
 		_logger.LogDebug("Login user with email: {email}", request.Email);
 

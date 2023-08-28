@@ -6,7 +6,7 @@ using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Contracts.Commands.User;
 
-public sealed record UpdateUserCommand(
+public sealed record UpdateCommand(
 	[FromRoute] Guid Id,
 	string? UserName,
 	string? Email,

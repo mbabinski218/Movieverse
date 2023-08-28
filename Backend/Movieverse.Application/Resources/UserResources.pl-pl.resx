@@ -77,4 +77,7 @@
     <data name="UserUpdateFailed" xml:space="preserve">
         <value>Błąd przy aktualizacji danych użytkownika</value>
     </data>
+    <data name="YouAreNotLoggedIn" xml:space="preserve">
+        <value>Nie jesteś zalogowany</value>
+    </data>
 </root>

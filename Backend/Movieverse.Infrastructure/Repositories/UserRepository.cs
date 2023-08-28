@@ -142,6 +142,8 @@ public sealed class UserRepository : IUserRepository
 			return authClaims.Error;
 		}
 		
+		await RemoveTokens(user, cancellationToken).ConfigureAwait(false);
+		
 		var accessToken = _tokenProvider.GenerateAccessToken(authClaims.Value);
 		var refreshToken = _tokenProvider.GenerateRefreshToken();
 
@@ -178,9 +180,16 @@ public sealed class UserRepository : IUserRepository
 				await _userManager.RemoveAuthenticationTokenAsync(user, authenticator, "RefreshToken").ConfigureAwait(false);
 				return Error.Unauthorized(UserResources.InvalidRefreshToken);
 			}
+			
+			await RemoveTokens(user, cancellationToken).ConfigureAwait(false);
 
-			var authClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
-			var accessToken = _tokenProvider.GenerateAccessToken(authClaims);
+			var authClaims = await GetClaims(user).ConfigureAwait(false);
+			if (authClaims.IsUnsuccessful)
+			{
+				return authClaims.Error;
+			}
+			
+			var accessToken = _tokenProvider.GenerateAccessToken(authClaims.Value);
 			var newRefreshToken = _tokenProvider.GenerateRefreshToken();
 
 			await _userManager.RemoveAuthenticationTokenAsync(user, authenticator, "RefreshToken").ConfigureAwait(false);
@@ -225,6 +234,8 @@ public sealed class UserRepository : IUserRepository
 			return authClaims.Error;
 		}
 		
+		await RemoveTokens(user, cancellationToken).ConfigureAwait(false);
+		
 		var accessToken = _tokenProvider.GenerateAccessToken(authClaims.Value);
 		var refreshToken = _tokenProvider.GenerateRefreshToken();
 
@@ -241,13 +252,8 @@ public sealed class UserRepository : IUserRepository
 	public async Task<Result> LogoutAsync(User user, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Logout user with id: {id}", user.Id);
-		
-		foreach (var authenticator in GrantTypeExtensions.GetNames())
-		{
-			await _userManager.RemoveAuthenticationTokenAsync(user, authenticator, "RefreshToken").ConfigureAwait(false);
-		}
-		
-		return Result.Ok();
+
+		return await RemoveTokens(user, cancellationToken).ConfigureAwait(false);
 	}
 	
 	public async Task<Result> AddRoleAsync(User user, UserRole role, CancellationToken cancellationToken = default)
@@ -256,6 +262,16 @@ public sealed class UserRepository : IUserRepository
 		
 		var result = await _userManager.AddToRoleAsync(user, role.ToString()).ConfigureAwait(false);
 		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRole);
+	}
+
+	private async Task<Result> RemoveTokens(User user, CancellationToken cancellationToken = default)
+	{
+		foreach (var authenticator in GrantTypeExtensions.GetNames())
+		{
+			await _userManager.RemoveAuthenticationTokenAsync(user, authenticator, "RefreshToken").ConfigureAwait(false);
+		}
+		
+		return Result.Ok();
 	}
 	
 	private static IEnumerable<Claim> CreateClaims(User user)

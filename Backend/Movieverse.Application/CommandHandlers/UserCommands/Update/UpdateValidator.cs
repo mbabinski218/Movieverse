@@ -4,9 +4,9 @@ using Movieverse.Contracts.Commands.User;
 
 namespace Movieverse.Application.CommandHandlers.UserCommands.Update;
 
-public sealed class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
+public sealed class UpdateValidator : AbstractValidator<UpdateCommand>
 {
-	public UpdateUserValidator()
+	public UpdateValidator()
 	{
 		RuleFor(u => u.Email)
 			.EmailAddress().WithMessage(UserResources.WrongEmailFormat);
