@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.User;
 
 namespace Movieverse.Application.CommandHandlers.UserCommands.Register;
@@ -8,21 +9,21 @@ public sealed class RegisterUserValidator : AbstractValidator<RegisterUserComman
 	public RegisterUserValidator()
 	{
 		RuleFor(u => u.Email)
-			.NotEmpty().WithMessage("Enter email address")
-			.EmailAddress().WithMessage("Wrong email format");
+			.NotEmpty().WithMessage(UserResources.EnterEmail)
+			.EmailAddress().WithMessage(UserResources.WrongEmailFormat);
 
 		RuleFor(u => u.UserName)
-			.NotEmpty().WithMessage("Enter username");
+			.NotEmpty().WithMessage(UserResources.EnterUserName);
 
 		RuleFor(u => u.Password)
-			.NotEmpty().WithMessage("Enter password")
-			.Equal(u => u.ConfirmPassword).WithMessage("Passwords must be the same");
+			.NotEmpty().WithMessage(UserResources.EnterPassword)
+			.Equal(u => u.ConfirmPassword).WithMessage(UserResources.PasswordsMustBeTheSame);
 
 		RuleFor(u => u.ConfirmPassword)
-			.NotEmpty().WithMessage("Confirm password");
+			.NotEmpty().WithMessage(UserResources.ConfirmPassword);
 		
 		RuleFor(u => u.Age)
-			.NotEmpty().WithMessage("Enter age")
-			.Must(a => a > 0).WithMessage("Age must be greater than 0");
+			.NotEmpty().WithMessage(UserResources.EnterAge)
+			.Must(a => a > 0).WithMessage(UserResources.AgeMustBeGreaterThanZero);
 	}
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Resources;
 using Movieverse.Contracts.DataTransferObjects.User;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Models;
@@ -43,7 +44,7 @@ public sealed class UserRepository : IUserRepository
 		_logger.LogDebug("Find user with id: {id}", id.Value);
 		
 		var user = await _dbContext.Users.FindAsync(new object?[] { id.Value }, cancellationToken).ConfigureAwait(false);
-		return user is null ? Error.NotFound($"User with id: {id.Value} not found") : user;
+		return user is null ? Error.NotFound(UserResources.UserDoesNotExist) : user;
 	}
 
 	public async Task<Result<User>> FindByEmailAsync(string email, CancellationToken cancellationToken = default)
@@ -51,7 +52,7 @@ public sealed class UserRepository : IUserRepository
 		_logger.LogDebug("Find user with email: {email}", email);
 		
 		var user = await _userManager.FindByEmailAsync(email).ConfigureAwait(false);
-		return user is null ? Error.NotFound($"User with email: {email} not found") : user;
+		return user is null ? Error.NotFound(UserResources.UserDoesNotExist) : user;
 	}
 
 	public async Task<Result<string>> GenerateEmailConfirmationTokenAsync(User user, CancellationToken cancellationToken = default)
@@ -78,14 +79,14 @@ public sealed class UserRepository : IUserRepository
 		if (!result.Succeeded)
 		{
 			Helper.LogError(_logger, result);
-			Error.Invalid("Failed to register user");
+			return Error.Invalid(UserResources.FailedToRegisterUser);
 		}
 		
 		result = await _userManager.AddToRoleAsync(user, UserRole.User.ToString()).ConfigureAwait(false);
 		if (!result.Succeeded)
 		{
 			Helper.LogError(_logger, result);
-			Error.Invalid("Failed to register user");
+			return Error.Invalid(UserResources.FailedToRegisterUser);
 		}
 
 		var claims = CreateClaims(user);
@@ -93,7 +94,7 @@ public sealed class UserRepository : IUserRepository
 		if (!result.Succeeded)
 		{
 			Helper.LogError(_logger, result);
-			Error.Invalid("Failed to register user");
+			return Error.Invalid(UserResources.FailedToRegisterUser);
 		}
 
 		return await GenerateEmailConfirmationTokenAsync(user, cancellationToken).ConfigureAwait(false);
@@ -107,7 +108,7 @@ public sealed class UserRepository : IUserRepository
 		if (!result.Succeeded)
 		{
 			Helper.LogError(_logger, result);
-			Error.Invalid("Failed to register user");
+			return Error.Invalid(UserResources.FailedToRegisterUser);
 		}
 
 		return Result.Ok();
@@ -127,12 +128,12 @@ public sealed class UserRepository : IUserRepository
 
 		if (!await _userManager.IsEmailConfirmedAsync(user).ConfigureAwait(false))
 		{
-			return Error.Unauthorized("Email is not confirmed");
+			return Error.Unauthorized(UserResources.EmailIsNotConfirmed);
 		}
 
 		if (!await _userManager.CheckPasswordAsync(user, password).ConfigureAwait(false))
 		{
-			return Error.Unauthorized("Invalid password");
+			return Error.Unauthorized(UserResources.InvalidPassword);
 		}
 		
 		var authClaims = await GetClaims(user).ConfigureAwait(false);
@@ -156,10 +157,9 @@ public sealed class UserRepository : IUserRepository
 	public async Task<Result<User>> FindByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
 	{
 		var userToken = await getUserTokenByRefreshTokenAsync(_dbContext, refreshToken).ConfigureAwait(false);
-		var aaa = _dbContext.UserTokens.FirstOrDefault(t => t.Value == refreshToken);
 		if (userToken is null)
 		{
-			return Error.NotFound("User does not exist");
+			return Error.NotFound(UserResources.UserDoesNotExist);
 		}
 		
 		return await FindByIdAsync(userToken.UserId, cancellationToken).ConfigureAwait(false);
@@ -176,7 +176,7 @@ public sealed class UserRepository : IUserRepository
 			if (userRefreshToken != refreshToken)
 			{
 				await _userManager.RemoveAuthenticationTokenAsync(user, authenticator, "RefreshToken").ConfigureAwait(false);
-				return Error.Unauthorized("Invalid refresh token");
+				return Error.Unauthorized(UserResources.InvalidRefreshToken);
 			}
 
 			var authClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
@@ -189,7 +189,7 @@ public sealed class UserRepository : IUserRepository
 			return new TokensDto(accessToken, newRefreshToken);
 		}
 		
-		return Error.Unauthorized("Failed to login with refresh token");
+		return Error.Unauthorized(UserResources.FailedToLoginWithRefreshToken);
 	}
 	
 	public async Task<Result<TokensDto>> LoginWithGoogleAsync(string idToken, CancellationToken cancellationToken = default)
@@ -255,7 +255,7 @@ public sealed class UserRepository : IUserRepository
 		_logger.LogDebug("Add role {role} to user with id: {id}", role, user.Id);
 		
 		var result = await _userManager.AddToRoleAsync(user, role.ToString()).ConfigureAwait(false);
-		return result.Succeeded ? Result.Ok() : Error.Invalid("Failed to add role");
+		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRole);
 	}
 	
 	private static IEnumerable<Claim> CreateClaims(User user)
@@ -281,7 +281,7 @@ public sealed class UserRepository : IUserRepository
 			if (role is null)
 			{
 				_logger.LogError("Role {role} does not exist", userRole);
-				return Error.Invalid("Cloud not sign in");
+				return Error.Invalid(UserResources.CloudNotSignIn);
 			}
 			
 			var claims = await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);

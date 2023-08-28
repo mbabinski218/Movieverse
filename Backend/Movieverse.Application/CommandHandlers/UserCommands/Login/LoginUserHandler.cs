@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.User;
 using Movieverse.Contracts.DataTransferObjects.User;
 using Movieverse.Domain.Common.Result;
@@ -53,7 +54,7 @@ public sealed class LoginUserHandler : IRequestHandler<LoginUserCommand, Result<
 				return await _userRepository.LoginWithFacebookAsync(request.IdToken!, cancellationToken).ConfigureAwait(false);
 			
 			default:
-				return Error.Invalid("Invalid grant type");
+				return Error.Invalid(UserResources.InvalidGrantType);
 		};
 	}
 }

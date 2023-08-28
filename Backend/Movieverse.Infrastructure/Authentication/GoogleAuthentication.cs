@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Movieverse.Application.Common.Settings;
+using Movieverse.Application.Resources;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Infrastructure.Persistence;
@@ -41,7 +42,7 @@ public sealed class GoogleAuthentication
 		var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, _validationSettings);
 		if (payload is null)
 		{
-			return Error.Unauthorized("Failed to authenticate via Google");
+			return Error.Unauthorized(UserResources.FailedToAuthenticateViaGoogle);
 		}
 
 		return await _dbContext.Users.AnyAsync(x => x.Email == payload.Email)

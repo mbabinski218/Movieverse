@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Movieverse.Application.Resources;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Result;
@@ -27,7 +28,7 @@ public static class Helper
 			if (role is null)
 			{
 				logger.LogError("Role {role} does not exist", userRole);
-				return Error.Invalid("Cloud not sign in");
+				return Error.Invalid(UserResources.CloudNotSignIn);
 			}
 			
 			var claims = await roleManager.GetClaimsAsync(role).ConfigureAwait(false);

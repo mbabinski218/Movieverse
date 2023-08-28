@@ -46,6 +46,7 @@ await app.SeedDatabase();
 app.UseOutputCache();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseRequestLocalization();
 
 app.UseHttpsRedirection();
 

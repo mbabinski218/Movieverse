@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Movieverse.Application.Resources;
 
 namespace Movieverse.Application.CommandHandlers.UserCommands.ResendEmailConfirmation;
 
@@ -7,7 +8,7 @@ public sealed class ResendEmailConfirmationValidator : AbstractValidator<Contrac
 	public ResendEmailConfirmationValidator()
 	{
 		RuleFor(u => u.Email)
-			.NotEmpty().WithMessage("Enter email address")
-			.EmailAddress().WithMessage("Wrong email format");
+			.NotEmpty().WithMessage(UserResources.EnterEmail)
+			.EmailAddress().WithMessage(UserResources.WrongEmailFormat);
 	}
 }

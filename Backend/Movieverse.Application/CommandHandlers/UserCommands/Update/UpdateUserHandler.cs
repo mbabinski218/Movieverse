@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.OutputCaching;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.User;
 using Movieverse.Contracts.DataTransferObjects.User;
 using Movieverse.Domain.Common.Result;
@@ -68,7 +69,7 @@ public sealed class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Resul
 
 		if (!await _unitOfWork.SaveChangesAsync(cancellationToken))
 		{
-			return Error.Invalid("User update failed.");
+			return Error.Invalid(UserResources.UserUpdateFailed);
 		}
 		
 		await _outputCacheStore.EvictByTagAsync(request.Id.ToString(), cancellationToken);
