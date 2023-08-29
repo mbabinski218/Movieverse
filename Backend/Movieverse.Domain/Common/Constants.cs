@@ -11,5 +11,5 @@ public static class Constants
 	public const int languageLength = 30;
 	public const int locationLength = 150;
 	public const int technicalSpecsLength = 50;
-	public const int precision = 2;
+	public const int precision = 4;
 }

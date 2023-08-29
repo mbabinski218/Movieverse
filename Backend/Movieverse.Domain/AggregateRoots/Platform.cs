@@ -26,5 +26,8 @@ public class Platform : AggregateRoot
 	}
 
 	public static Platform Create(string name, AggregateRootId logoId, decimal price)
-		=> new(AggregateRootId.Create(Guid.NewGuid()), name, logoId, price);
+		=> new(AggregateRootId.Create(), name, logoId, price);
+	
+	public static Platform Create(AggregateRootId id, string name, AggregateRootId logoId, decimal price)
+		=> new(id, name, logoId, price);
 }

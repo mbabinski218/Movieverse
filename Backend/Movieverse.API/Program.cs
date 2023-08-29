@@ -1,6 +1,5 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Localization;
 using Movieverse.API.Common;
 using NLog.Extensions.Logging;
 using Movieverse.API.Common.Extensions;

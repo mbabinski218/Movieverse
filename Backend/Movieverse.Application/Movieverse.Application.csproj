@@ -41,6 +41,10 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>ContentResources.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="Resources\PlatformResources.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>PlatformResources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -53,6 +57,11 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>ContentResources.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\PlatformResources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>PlatformResources.resx</DependentUpon>
       </Compile>
     </ItemGroup>
     

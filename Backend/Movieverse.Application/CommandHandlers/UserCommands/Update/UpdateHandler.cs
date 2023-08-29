@@ -1,6 +1,7 @@
 ﻿using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.User;
@@ -13,23 +14,27 @@ namespace Movieverse.Application.CommandHandlers.UserCommands.Update;
 
 public sealed class UpdateHandler : IRequestHandler<UpdateCommand, Result<UserDto>>
 {
+	private readonly ILogger<UpdateHandler> _logger;
 	private readonly IUserRepository _userRepository;
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
 	private readonly IOutputCacheStore _outputCacheStore;
 
-	public UpdateHandler(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper, IOutputCacheStore outputCacheStore)
+	public UpdateHandler(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper, IOutputCacheStore outputCacheStore, 
+		ILogger<UpdateHandler> logger)
 	{
 		_userRepository = userRepository;
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
 		_outputCacheStore = outputCacheStore;
+		_logger = logger;
 	}
 
 	public async Task<Result<UserDto>> Handle(UpdateCommand request, CancellationToken cancellationToken)
 	{
-		var findResult = await _userRepository.FindByIdAsync(request.Id, cancellationToken);
-
+		_logger.LogDebug("Updating user {id}...", request.Id);
+		
+		var findResult = await _userRepository.FindByIdAsync(request.Id, cancellationToken).ConfigureAwait(false);
 		if (!findResult.IsSuccessful)
 		{
 			return findResult.Error;
@@ -60,20 +65,21 @@ public sealed class UpdateHandler : IRequestHandler<UpdateCommand, Result<UserDt
 			}
 		}
 		
-		var updateResult = await _userRepository.UpdateAsync(user, cancellationToken);
-
+		var updateResult = await _userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 		if (!updateResult.IsSuccessful)
 		{
 			return updateResult.Error;
 		}
 
-		if (!await _unitOfWork.SaveChangesAsync(cancellationToken))
+		if (!await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false))
 		{
+			_logger.LogDebug("User {id} could not be updated.", request.Id);
 			return Error.Invalid(UserResources.UserUpdateFailed);
 		}
 		
-		await _outputCacheStore.EvictByTagAsync(request.Id.ToString(), cancellationToken);
+		await _outputCacheStore.EvictByTagAsync(request.Id.ToString(), cancellationToken).ConfigureAwait(false);
 		
+		_logger.LogDebug("User {id} updated successfully.", request.Id);
         return _mapper.Map<UserDto>(user);
 	}
 }

@@ -17,7 +17,7 @@ public sealed class FacebookAuthentication
 		_appSecret = authenticationSettings.Value.Facebook.AppSecret;
 	}
 
-	public async Task<Result<TokensDto>> AuthenticateAsync(string idToken)
+	public Task<Result<TokensDto>> AuthenticateAsync(string idToken)
 	{
 		throw new NotImplementedException();
 	}

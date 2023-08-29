@@ -15,14 +15,16 @@ public sealed class DatabaseSeeder : IDatabaseSeeder
 	private readonly AppDbContext _dbContext;
 	private readonly RoleManager<IdentityUserRole> _roleManager;
 	private readonly IUserRepository _userRepository;
+	private readonly IPlatformRepository _platformRepository;
 
 	public DatabaseSeeder(ILogger<DatabaseSeeder> logger, AppDbContext dbContext, RoleManager<IdentityUserRole> roleManager, 
-		IUserRepository userRepository)
+		IUserRepository userRepository, IPlatformRepository platformRepository)
 	{
 		_logger = logger;
 		_dbContext = dbContext;
 		_roleManager = roleManager;
 		_userRepository = userRepository;
+		_platformRepository = platformRepository;
 	}
 
 	public async Task SeedAsync()
@@ -34,6 +36,7 @@ public sealed class DatabaseSeeder : IDatabaseSeeder
 
 		await SeedRoles();
 		await SeedUsers();
+		await SeedPlatforms();
 	}
 
 	private async Task SeedRoles()
@@ -73,5 +76,15 @@ public sealed class DatabaseSeeder : IDatabaseSeeder
 		await _userRepository.RegisterAsync(user, "string");
 		user = User.Create("string8@string.pl", "@23fsdaf", "Paweł", "Kowalski", 18);
 		await _userRepository.RegisterAsync(user, "string");
+	}
+	
+	private async Task SeedPlatforms()
+	{
+		if (await _dbContext.Platforms.AnyAsync(u => u.Name == "Netflix").ConfigureAwait(false)) return;
+		
+		var platform = Platform.Create(Guid.Parse("8d789796-2980-422b-b69b-c27a732c23b1"),"Netflix",Guid.Parse("9c902bc9-c9bd-4510-93d2-d8fa9cdabb6b"), 50.99m);
+		await _platformRepository.AddAsync(platform);
+		platform = Platform.Create(Guid.Parse("21680ab0-6640-4a69-b4c0-c6cc7976431c"),"HBO",Guid.Parse("fab57010-44d3-4d05-a4be-0a9df4b942cb"), 30m);
+		await _platformRepository.AddAsync(platform);
 	}
 }
