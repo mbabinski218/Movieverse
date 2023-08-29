@@ -22,6 +22,7 @@ public class Genre : AggregateRoot
 	{
 		Name = name;
 		Description = description;
+		MediaCount = 0;
 	}
 
 	public static Genre Create(string name, string description)
