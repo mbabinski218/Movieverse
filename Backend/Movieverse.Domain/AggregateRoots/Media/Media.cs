@@ -28,5 +28,11 @@ public class Media : AggregateRoot
 		
 	}
 	
+	protected Media(AggregateRootId id, string title)
+	{
+		Id = id;
+		Title = title;
+	}
+	
 	// Other
 }

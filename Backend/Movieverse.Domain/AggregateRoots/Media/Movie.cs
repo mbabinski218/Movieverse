@@ -16,5 +16,12 @@ public sealed class Movie : Media
 		
 	}
 	
+	private Movie(AggregateRootId id, string title) : base(id, title)
+	{
+		
+	}
+	
 	// Other
+	public static Movie Create(AggregateRootId id, string title) => new(id, title);
+	public static Movie Create(string title) => new(AggregateRootId.Create(), title);
 }

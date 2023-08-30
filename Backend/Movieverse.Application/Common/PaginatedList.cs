@@ -12,6 +12,21 @@ public sealed class PaginatedList<TKey> : IPaginatedList<TKey>
 	public bool HasPreviousPage => PageNumber > 1;
 	public bool HasNextPage => PageNumber < TotalPages;
 
+	public PaginatedList(List<TKey> items, short? pageNumber, short? pageSize)
+	{
+		Items = items;
+		PageNumber = pageNumber;
+		
+		var count = (short)items.Count;
+		TotalPages = pageSize == null ? null : (short)Math.Ceiling(count / (double)pageSize.Value);
+		TotalCount = count;
+	}
+
+	private PaginatedList()
+	{
+		
+	}
+	
 	public static async Task<PaginatedList<TKey>> CreateAsync(IQueryable<TKey> source, short? pageNumber, short? pageSize)
 	{
 		var count = (short)await source.CountAsync();

@@ -42,7 +42,7 @@ public sealed class GenreRepository : IGenreRepository
 		var genre = await _dbContext.Genres.FindAsync(new object?[] { id.Value }, cancellationToken).ConfigureAwait(false);
 		return genre is null ? Error.NotFound(GenreResources.GenreNotFound) : genre;
 	}
-
+	
 	public async Task<Result<IPaginatedList<GenreDto>>> GetAllAsync(short? pageNumber = null, short? pageSize = null, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting all genres from database");

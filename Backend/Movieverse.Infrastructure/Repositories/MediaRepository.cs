@@ -1,12 +1,93 @@
-﻿using Movieverse.Application.Interfaces;
+﻿using Mapster;
+using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Movieverse.Application.Common;
+using Movieverse.Application.Interfaces;
+using Movieverse.Contracts.DataTransferObjects.Media;
+using Movieverse.Domain.AggregateRoots.Media;
+using Movieverse.Domain.Common;
 using Movieverse.Domain.Common.Result;
+using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Infrastructure.Persistence;
 
 namespace Movieverse.Infrastructure.Repositories;
 
 public sealed class MediaRepository : IMediaRepository
 {
-	public Task<Result> UpdateStatisticsAsync()
+	private readonly ILogger<MediaRepository> _logger;
+	private readonly AppDbContext _dbContext;
+	private readonly IMapper _mapper;
+	
+	public MediaRepository(ILogger<MediaRepository> logger, AppDbContext dbContext, IMapper mapper)
+	{
+		_logger = logger;
+		_dbContext = dbContext;
+		_mapper = mapper;
+	}
+
+	public async Task<Result<Media>> FindAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Finding media with id {id}...", id.ToString());
+		
+		var media = await _dbContext.Medias.FindAsync(new object?[] { id.Value }, cancellationToken).ConfigureAwait(false);
+		return media is null ? Error.NotFound("Not found") : media;
+	}
+	
+	public Task<Result> UpdateStatisticsAsync(CancellationToken cancellationToken = default)
 	{
 		throw new NotImplementedException();
+	}
+
+	public async Task<bool> ExistsAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Checking if media with id {id} exists...", id.ToString());
+		
+		var media = await FindAsync(id, cancellationToken).ConfigureAwait(false);
+		return media.IsSuccessful;
+	}
+
+	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindMoviesByIdsAsync(List<AggregateRootId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Getting movies with ids {ids}...", string.Join(", ", ids.Select(id => id.ToString())));
+		
+		var idsList = ids.Select(id => id.Value).ToList();
+		
+		return await _dbContext.Movies
+			.Where(m => idsList.Contains(m.Id))
+			.AsNoTracking()
+			.ProjectToType<MediaInfoDto>()
+			.ToPaginatedListAsync(pageNumber, pageSize)
+			.ConfigureAwait(false);
+	}
+
+	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindSeriesByIdsAsync(List<AggregateRootId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Getting series with ids {ids}...", string.Join(", ", ids.Select(id => id.ToString())));
+		
+		var idsList = ids.Select(id => id.Value).ToList();
+		
+		return await _dbContext.Series
+			.Where(s => idsList.Contains(s.Id))
+			.AsNoTracking()
+			.ProjectToType<MediaInfoDto>()
+			.ToPaginatedListAsync(pageNumber, pageSize)
+			.ConfigureAwait(false);
+	}
+
+	public async Task<Result> AddMovieAsync(Movie media, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Adding media with id {id}...", media.Id.ToString());
+		
+		await _dbContext.Movies.AddAsync(media, cancellationToken).ConfigureAwait(false);
+		return Result.Ok();
+	}
+	
+	public async Task<Result> AddSeriesAsync(Series media, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Adding media with id {id}...", media.Id.ToString());
+		
+		await _dbContext.Series.AddAsync(media, cancellationToken).ConfigureAwait(false);
+		return Result.Ok();
 	}
 }

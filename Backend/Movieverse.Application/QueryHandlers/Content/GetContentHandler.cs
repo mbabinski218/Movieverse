@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Movieverse.Application.Interfaces;
 using Movieverse.Contracts.DataTransferObjects.Content;
-using Movieverse.Contracts.Queries;
+using Movieverse.Contracts.Queries.Content;
 using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Application.QueryHandlers.Content;

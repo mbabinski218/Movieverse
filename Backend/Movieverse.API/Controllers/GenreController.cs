@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.OutputCaching;
 using Movieverse.API.Common;
 using Movieverse.API.Common.Extensions;
 using Movieverse.Contracts.Commands.Genre;
-using Movieverse.Contracts.Queries;
+using Movieverse.Contracts.Queries.Genre;
 
 namespace Movieverse.API.Controllers;
 

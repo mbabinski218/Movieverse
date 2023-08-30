@@ -9,4 +9,5 @@ public interface IPlatformRepository
 	Task<Result> AddAsync(Platform platform, CancellationToken cancellationToken = default);
 	Task<Result> UpdateAsync(Platform platform, CancellationToken cancellationToken = default);
 	Task<Result<Platform>> FindByIdAsync(AggregateRootId id, CancellationToken cancellationToken = default);
+	Task<Result<List<AggregateRootId>>> GetAllMediaIdsAsync(AggregateRootId id, CancellationToken cancellationToken = default);
 }

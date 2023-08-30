@@ -6,7 +6,7 @@ using Movieverse.API.Common;
 using Movieverse.API.Common.Extensions;
 using Movieverse.Contracts.Commands.User;
 using Movieverse.Contracts.DataTransferObjects.User;
-using Movieverse.Contracts.Queries;
+using Movieverse.Contracts.Queries.User;
 
 namespace Movieverse.API.Controllers;
 

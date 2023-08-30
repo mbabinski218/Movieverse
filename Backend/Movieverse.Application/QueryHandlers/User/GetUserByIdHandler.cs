@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
 using Movieverse.Contracts.DataTransferObjects.User;
-using Movieverse.Contracts.Queries;
+using Movieverse.Contracts.Queries.User;
 using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Application.QueryHandlers.User;

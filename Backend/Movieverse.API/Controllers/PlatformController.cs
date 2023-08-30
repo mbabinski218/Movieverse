@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.OutputCaching;
 using Movieverse.API.Common;
 using Movieverse.API.Common.Extensions;
 using Movieverse.Contracts.Commands.Platform;
-using Movieverse.Contracts.Queries;
+using Movieverse.Contracts.Queries.Platform;
 
 namespace Movieverse.API.Controllers;
 
@@ -35,6 +35,22 @@ public sealed class PlatformController : ApiController
 	[OutputCache]
 	[HttpGet("{Id:guid}")]
 	public async Task<ActionResult> Get([FromRoute] GetPlatformQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
+	[OutputCache(NoStore = true)]
+	[HttpPost("{Id:guid}/media")]
+	public async Task<ActionResult> AddMedia([FromQuery] AddMediaToPlatformCommand query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
+	[OutputCache]
+	[HttpGet("{Id:guid}/media")]
+	public async Task<ActionResult> GetAllMedia([FromQuery] GetAllMediaQuery query, CancellationToken cancellationToken) =>
 		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
