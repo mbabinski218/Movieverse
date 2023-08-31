@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="FirstNameIsTooLong" xml:space="preserve">
+        <value>First name is too long</value>
+    </data>
+    <data name="LastNameIsTooLong" xml:space="preserve">
+        <value>Last name is too long</value>
+    </data>
+    <data name="BiographyIsTooLong" xml:space="preserve">
+        <value>Biography is too long</value>
+    </data>
+    <data name="FunFactsAreTooLong" xml:space="preserve">
+        <value>FunFacts are too long</value>
+    </data>
+    <data name="AgeMustBeGreaterThanZero" xml:space="preserve">
+        <value>Age must be greater than zero</value>
+    </data>
+    <data name="CouldNotCreatePerson" xml:space="preserve">
+        <value>Could not create person</value>
+    </data>
+    <data name="UserAlreadyHavePersonality" xml:space="preserve">
+        <value>User already have a personality</value>
+    </data>
+    <data name="PersonDoesNotExist" xml:space="preserve">
+        <value>Person does not exist</value>
+    </data>
+</root>

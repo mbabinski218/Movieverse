@@ -80,4 +80,7 @@
     <data name="YouAreNotLoggedIn" xml:space="preserve">
         <value>Nie jesteś zalogowany</value>
     </data>
+    <data name="UserAlreadyHavePersonality" xml:space="preserve">
+        <value>Użytkownik ma już osobowość</value>
+    </data>
 </root>

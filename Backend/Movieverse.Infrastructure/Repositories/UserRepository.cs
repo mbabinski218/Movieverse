@@ -9,6 +9,7 @@ using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.Common.Types;
+using Movieverse.Domain.ValueObjects;
 using Movieverse.Domain.ValueObjects.Id;
 using Movieverse.Infrastructure.Authentication;
 using Movieverse.Infrastructure.Common;
@@ -255,7 +256,36 @@ public sealed class UserRepository : IUserRepository
 
 		return await RemoveTokens(user, cancellationToken).ConfigureAwait(false);
 	}
-	
+
+	public async Task<Result<Information>> GetInformationAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	{
+		var user = await FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
+		if (user.IsUnsuccessful)
+		{
+			return user.Error;
+		}
+		
+		return user.Value.Information;
+	}
+
+	public async Task<Result> AddPersonalityAsync(AggregateRootId id, AggregateRootId personId, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Add personality with id: {personId} to user with id: {id}", personId, id);
+		
+		var user = await FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
+		if(user.IsUnsuccessful)
+		{
+			return user.Error;
+		}
+		if(user.Value.PersonId is not null)
+		{
+			return Error.Invalid(UserResources.UserAlreadyHavePersonality);
+		}
+		
+		user.Value.PersonId = personId;
+		return Result.Ok();
+	}
+
 	public async Task<Result> AddRoleAsync(User user, UserRole role, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Add role {role} to user with id: {id}", role, user.Id);

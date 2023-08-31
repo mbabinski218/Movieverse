@@ -1,6 +1,7 @@
 ﻿using Movieverse.Contracts.DataTransferObjects.User;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
+using Movieverse.Domain.ValueObjects;
 using Movieverse.Domain.ValueObjects.Id;
 
 namespace Movieverse.Application.Interfaces;
@@ -19,4 +20,6 @@ public interface IUserRepository
 	Task<Result> ConfirmEmailAsync(User user, string token, CancellationToken cancellationToken = default);
 	Task<Result> UpdateAsync(User user, CancellationToken cancellationToken = default);
 	Task<Result> LogoutAsync(User user, CancellationToken cancellationToken = default);
+	Task<Result<Information>> GetInformationAsync(AggregateRootId id, CancellationToken cancellationToken = default);
+	Task<Result> AddPersonalityAsync(AggregateRootId id, AggregateRootId personId, CancellationToken cancellationToken = default);
 }

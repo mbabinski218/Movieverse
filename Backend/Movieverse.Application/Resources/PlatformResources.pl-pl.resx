@@ -36,4 +36,10 @@ Nie można utworzyć platformy</value>
     <data name="PickImage" xml:space="preserve">
         <value>Dodaj zdjęcie</value>
     </data>
+    <data name="CouldNotAddMediaToPlatform" xml:space="preserve">
+        <value>Nie można dodać mediów</value>
+    </data>
+    <data name="InformationCannotBeNull" xml:space="preserve">
+        <value>Informację nie mogą być puste</value>
+    </data>
 </root>

@@ -18,6 +18,19 @@ public class Person : AggregateRoot
 	{
 		
 	}
+
+	private Person(AggregateRootId id, Information information, LifeHistory lifeHistory, string? biography, string? funFacts) : base(id)
+	{
+		Information = information;
+		LifeHistory = lifeHistory;
+		Biography = biography;
+		FunFacts = funFacts;
+	}
 	
 	// Other
+	public static Person Create(AggregateRootId id, Information information, LifeHistory lifeHistory, string? biography, string? funFacts) =>
+		new(id, information, lifeHistory, biography, funFacts);
+	
+	public static Person Create(Information information, LifeHistory lifeHistory, string? biography, string? funFacts) =>
+		new(AggregateRootId.Create(), information, lifeHistory, biography, funFacts);
 }

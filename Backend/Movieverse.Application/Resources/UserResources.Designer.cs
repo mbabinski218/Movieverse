@@ -222,6 +222,15 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User already have personality.
+        /// </summary>
+        public static string UserAlreadyHavePersonality {
+            get {
+                return ResourceManager.GetString("UserAlreadyHavePersonality", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User does not exist.
         /// </summary>
         public static string UserDoesNotExist {

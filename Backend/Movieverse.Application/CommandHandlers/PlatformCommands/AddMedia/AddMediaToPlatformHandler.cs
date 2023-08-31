@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.Platform;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.DomainEvents;
@@ -32,7 +33,7 @@ public sealed class AddMediaToPlatformHandler : IRequestHandler<AddMediaToPlatfo
 		
 		if (!await _mediaRepository.ExistsAsync(request.MediaId, cancellationToken).ConfigureAwait(false))
 		{
-			return Error.NotFound("Media does not exist");
+			return Error.NotFound(MediaResources.MediaDoesNotExist);
 		}
 		
 		var platform = await _platformRepository.FindByIdAsync(request.Id, cancellationToken).ConfigureAwait(false);
@@ -53,7 +54,7 @@ public sealed class AddMediaToPlatformHandler : IRequestHandler<AddMediaToPlatfo
 		if (!await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false))
 		{
 			_logger.LogError("Could not add media with id {MediaId} to platform with id {PlatformId}", request.MediaId, request.Id);
-			return Error.Invalid("Could not add media to platform");
+			return Error.Invalid(PlatformResources.CouldNotAddMediaToPlatform);
 		}
 		
 		await _outputCacheStore.EvictByTagAsync(request.Id.ToString(), cancellationToken).ConfigureAwait(false);

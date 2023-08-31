@@ -21,14 +21,14 @@ namespace Movieverse.Application.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class PlatformResources {
+    public class PersonResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal PlatformResources() {
+        internal PersonResources() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace Movieverse.Application.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Movieverse.Application.Resources.PlatformResources", typeof(PlatformResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Movieverse.Application.Resources.PersonResources", typeof(PersonResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,92 +60,74 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot create platform.
+        ///   Looks up a localized string similar to Age must be greater than zero.
         /// </summary>
-        public static string CannotCreatePlatform {
+        public static string AgeMustBeGreaterThanZero {
             get {
-                return ResourceManager.GetString("CannotCreatePlatform", resourceCulture);
+                return ResourceManager.GetString("AgeMustBeGreaterThanZero", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot update platform.
+        ///   Looks up a localized string similar to Biography is too long.
         /// </summary>
-        public static string CannotUpdatePlatform {
+        public static string BiographyIsTooLong {
             get {
-                return ResourceManager.GetString("CannotUpdatePlatform", resourceCulture);
+                return ResourceManager.GetString("BiographyIsTooLong", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not add media to platform.
+        ///   Looks up a localized string similar to Could not create person.
         /// </summary>
-        public static string CouldNotAddMediaToPlatform {
+        public static string CouldNotCreatePerson {
             get {
-                return ResourceManager.GetString("CouldNotAddMediaToPlatform", resourceCulture);
+                return ResourceManager.GetString("CouldNotCreatePerson", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter name.
+        ///   Looks up a localized string similar to First name is too long.
         /// </summary>
-        public static string EnterName {
+        public static string FirstNameIsTooLong {
             get {
-                return ResourceManager.GetString("EnterName", resourceCulture);
+                return ResourceManager.GetString("FirstNameIsTooLong", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter price.
+        ///   Looks up a localized string similar to FunFacts are too long.
         /// </summary>
-        public static string EnterPrice {
+        public static string FunFactsAreTooLong {
             get {
-                return ResourceManager.GetString("EnterPrice", resourceCulture);
+                return ResourceManager.GetString("FunFactsAreTooLong", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Information cannot be null.
+        ///   Looks up a localized string similar to Last name is too long.
         /// </summary>
-        public static string InformationCannotBeNull {
+        public static string LastNameIsTooLong {
             get {
-                return ResourceManager.GetString("InformationCannotBeNull", resourceCulture);
+                return ResourceManager.GetString("LastNameIsTooLong", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name too long (max 100).
+        ///   Looks up a localized string similar to Person does not exist.
         /// </summary>
-        public static string NameTooLong {
+        public static string PersonDoesNotExist {
             get {
-                return ResourceManager.GetString("NameTooLong", resourceCulture);
+                return ResourceManager.GetString("PersonDoesNotExist", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pick image.
+        ///   Looks up a localized string similar to User already have a personality.
         /// </summary>
-        public static string PickImage {
+        public static string UserAlreadyHavePersonality {
             get {
-                return ResourceManager.GetString("PickImage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Platform does not exist.
-        /// </summary>
-        public static string PlatformDoesNotExist {
-            get {
-                return ResourceManager.GetString("PlatformDoesNotExist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Price must be greater than or equal to zero.
-        /// </summary>
-        public static string PriceMustBeGreaterThanOrEqualToZero {
-            get {
-                return ResourceManager.GetString("PriceMustBeGreaterThanOrEqualToZero", resourceCulture);
+                return ResourceManager.GetString("UserAlreadyHavePersonality", resourceCulture);
             }
         }
     }

@@ -10,9 +10,4 @@ public sealed class LifeHistory : ValueObject
     public DateTimeOffset? DeathDate { get; set; }
     public DateTimeOffset? CareerStart { get; set; }
     public DateTimeOffset? CareerEnd { get; set; }
-
-    private LifeHistory()
-    {
-	    
-    }
 }
