@@ -60,11 +60,38 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not add media.
+        /// </summary>
+        public static string CouldNotAddMedia {
+            get {
+                return ResourceManager.GetString("CouldNotAddMedia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid media type.
+        /// </summary>
+        public static string InvalidMediaType {
+            get {
+                return ResourceManager.GetString("InvalidMediaType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Media does not exist.
         /// </summary>
         public static string MediaDoesNotExist {
             get {
                 return ResourceManager.GetString("MediaDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Media with title already exists.
+        /// </summary>
+        public static string MediaWithTitleAlreadyExists {
+            get {
+                return ResourceManager.GetString("MediaWithTitleAlreadyExists", resourceCulture);
             }
         }
     }

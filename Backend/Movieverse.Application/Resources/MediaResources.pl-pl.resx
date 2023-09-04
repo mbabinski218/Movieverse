@@ -14,4 +14,13 @@
     <data name="MediaDoesNotExist" xml:space="preserve">
         <value>Media nie istnieją</value>
     </data>
+    <data name="MediaWithTitleAlreadyExists" xml:space="preserve">
+        <value>Taki tytuł już istnieje</value>
+    </data>
+    <data name="CouldNotAddMedia" xml:space="preserve">
+        <value>Nie można dodać</value>
+    </data>
+    <data name="InvalidMediaType" xml:space="preserve">
+        <value>Zły typ mediów</value>
+    </data>
 </root>

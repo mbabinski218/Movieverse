@@ -11,6 +11,7 @@ public interface IMediaRepository
 	Task<Result<Media>> FindAsync(AggregateRootId id, CancellationToken cancellationToken = default);
 	Task<Result> UpdateStatisticsAsync(CancellationToken cancellationToken = default);
 	Task<bool> ExistsAsync(AggregateRootId id, CancellationToken cancellationToken = default);
+	Task<bool> TitleExistsAsync(string title, CancellationToken cancellationToken = default);
 	Task<Result<IPaginatedList<MediaInfoDto>>> FindMoviesByIdsAsync(List<AggregateRootId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default);
 	Task<Result<IPaginatedList<MediaInfoDto>>> FindSeriesByIdsAsync(List<AggregateRootId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default);
 	Task<Result> AddMovieAsync(Movie media, CancellationToken cancellationToken = default);

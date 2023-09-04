@@ -47,6 +47,13 @@ public sealed class MediaRepository : IMediaRepository
 		return media.IsSuccessful;
 	}
 
+	public async Task<bool> TitleExistsAsync(string title, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Checking if media with title {title} exists...", title);
+		
+		return await _dbContext.Medias.AnyAsync(m => m.Title == title, cancellationToken: cancellationToken).ConfigureAwait(false);
+	}
+
 	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindMoviesByIdsAsync(List<AggregateRootId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting movies with ids {ids}...", string.Join(", ", ids.Select(id => id.ToString())));
