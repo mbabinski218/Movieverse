@@ -23,4 +23,32 @@
     <data name="InvalidMediaType" xml:space="preserve">
         <value>Zły typ mediów</value>
     </data>
+    <data name="TitleTooShort" xml:space="preserve">
+        <value>Tytuł jest za krótki</value>
+    </data>
+    <data name="TitleTooLong" xml:space="preserve">
+        <value>Tytuł jest za długi</value>
+    </data>
+    <data name="CouldNotUpdateMedia" xml:space="preserve">
+        <value>Nie można zaktualizować</value>
+    </data>
+    <data name="DetailsTooLong" xml:space="preserve">
+        <value>
+Szczegóły za długie</value>
+    </data>
+    <data name="StorylineTooLong" xml:space="preserve">
+        <value>Opis fabuły jest za długa</value>
+    </data>
+    <data name="TaglineTooLong" xml:space="preserve">
+        <value>Slogan jest za długi</value>
+    </data>
+    <data name="TechnicalSpecsTooLong" xml:space="preserve">
+        <value>Dane techniczne są za długie</value>
+    </data>
+    <data name="MediaIsNotMovie" xml:space="preserve">
+        <value>Media to nie film</value>
+    </data>
+    <data name="MediaIsNotSeries" xml:space="preserve">
+        <value>Media to nie serial</value>
+    </data>
 </root>

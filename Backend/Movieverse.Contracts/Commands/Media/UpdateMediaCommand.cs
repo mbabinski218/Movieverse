@@ -14,10 +14,12 @@ public sealed record UpdateMediaCommand(
 	TechnicalSpecs? TechnicalSpecs,
 	IFormFile? Poster,
 	string? Trailer,
-	IEnumerable<IFormFile>? Images,
-	IEnumerable<string>? Videos,
-	IEnumerable<StaffDto>? Staff,
+	IEnumerable<IFormFile>? ImagesToAdd,
+	IEnumerable<string>? VideosToAdd,
+	IEnumerable<Guid>? ContentToRemove,
 	IEnumerable<Guid>? PlatformIds,
+	IEnumerable<Guid>? GenreIds,
+	IEnumerable<StaffDto>? Staff,
 	MovieInfoDto? MovieInfo,
 	SeriesInfoDto? SeriesInfo
 	) : IRequest<Result<MediaDto>>;

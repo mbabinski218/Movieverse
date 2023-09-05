@@ -5,9 +5,10 @@ namespace Movieverse.Contracts.DataTransferObjects.Media;
 
 public sealed class EpisodeDto
 {
-	public short? EpisodeNumber { get; set; }
+	public short EpisodeNumber { get; set; }
 	public string? Title { get; set; } = null!;
 	public Details? Details { get; set; } = null!;
-	public IEnumerable<IFormFile>? Images { get; set; }
-	public IEnumerable<string>? Videos { get; set; }
+	public IEnumerable<IFormFile>? ImagesToAdd { get; set; }
+	public IEnumerable<string>? VideosToAdd { get; set; }
+	public IEnumerable<Guid>? ContentToRemove { get; set; }
 }

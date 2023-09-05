@@ -19,11 +19,27 @@ public sealed class ContentRepository : IContentRepository
 		_dbContext = dbContext;
 	}
 
+	public async Task<Result<Content>> FindAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Finding content with id {id}...", id.ToString());
+		
+		var content = await _dbContext.Contents.FindAsync(new object?[] { id.Value }, cancellationToken).ConfigureAwait(false);
+		return content is null ? Error.NotFound(ContentResources.ContentNotFound) : content;
+	}
+
+	public async Task<Result> UpdateAsync(Content content, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Updating content with id {id}...", content.Id.ToString());
+
+		_dbContext.Contents.Update(content);
+		return await Task.FromResult(Result.Ok());
+	}
+
 	public async Task<Result<bool>> ExistsAsync(AggregateRootId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Checking if content with id {Id} exists", id);
 		
-		var image = await FindAsync(id, cancellationToken);
+		var image = await FindByIdAsync(id, cancellationToken);
 		return image is not null;
 	}
 
@@ -39,7 +55,7 @@ public sealed class ContentRepository : IContentRepository
 	{
 		_logger.LogDebug("Getting content type for content with id {Id}", id);
 		
-		var image = await FindAsync(id, cancellationToken);
+		var image = await FindByIdAsync(id, cancellationToken);
 		return image is not null ? image.ContentType : Error.NotFound(ContentResources.ContentNotFound);
 	}
 
@@ -47,10 +63,10 @@ public sealed class ContentRepository : IContentRepository
 	{
 		_logger.LogDebug("Getting path for content with id {Id}", id);
 
-		var image = await FindAsync(id, cancellationToken);
+		var image = await FindByIdAsync(id, cancellationToken);
 		return image is not null ? image.Path : Error.NotFound(ContentResources.ContentNotFound);
 	}
 	
-	private async Task<Content?> FindAsync(AggregateRootId id, CancellationToken cancellationToken) =>
+	private async Task<Content?> FindByIdAsync(AggregateRootId id, CancellationToken cancellationToken) =>
 		await _dbContext.Contents.FindAsync(new object?[] { id.Value }, cancellationToken);
 }

@@ -19,4 +19,13 @@ public class Staff : Entity
 	}
 	
 	// Other
+	public static Staff Create(Media media, AggregateRootId personId, Role role)
+	{
+		return new Staff
+		{
+			Media = media,
+			PersonId = personId,
+			Role = role
+		};
+	}
 }

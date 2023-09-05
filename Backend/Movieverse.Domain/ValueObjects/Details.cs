@@ -13,7 +13,7 @@ public sealed class Details : ValueObject
 	public string? Language { get; set; }
 	public string? FilmingLocations { get; set; }
 
-	private Details()
+	public Details()
 	{
 		
 	}

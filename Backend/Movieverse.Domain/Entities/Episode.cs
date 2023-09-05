@@ -21,5 +21,15 @@ public class Episode : Entity
 			
 	}
 	
+	private Episode(Season season, short episodeNumber, string title, Details details)
+	{
+		Season = season;
+		EpisodeNumber = episodeNumber;
+		Title = title;
+		Details = details;
+	}
+	
 	// Other
+	public static Episode Create(Season season, short episodeNumber, string title, Details details)
+		=> new (season, episodeNumber, title, details);
 }

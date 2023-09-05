@@ -10,7 +10,7 @@ public sealed class TechnicalSpecs : ValueObject
 	public string? Camera { get; set; }
 	public string? NegativeFormat { get; set; }
 
-	private TechnicalSpecs()
+	public TechnicalSpecs()
 	{
 		
 	}

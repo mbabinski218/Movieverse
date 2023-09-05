@@ -97,4 +97,12 @@ public sealed class MediaRepository : IMediaRepository
 		await _dbContext.Series.AddAsync(media, cancellationToken).ConfigureAwait(false);
 		return Result.Ok();
 	}
+
+	public async Task<Result> UpdateAsync(Media media, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Updating media with id {id}...", media.Id.ToString());
+
+		_dbContext.Medias.Update(media);
+		return await Task.FromResult(Result.Ok());
+	}
 }

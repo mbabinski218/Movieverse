@@ -16,4 +16,5 @@ public interface IMediaRepository
 	Task<Result<IPaginatedList<MediaInfoDto>>> FindSeriesByIdsAsync(List<AggregateRootId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default);
 	Task<Result> AddMovieAsync(Movie media, CancellationToken cancellationToken = default);
 	Task<Result> AddSeriesAsync(Series media, CancellationToken cancellationToken = default);
+	Task<Result> UpdateAsync(Media media, CancellationToken cancellationToken = default);
 }

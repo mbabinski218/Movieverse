@@ -30,4 +30,31 @@
     <data name="InvalidMediaType" xml:space="preserve">
         <value>Invalid media type</value>
     </data>
+    <data name="TitleTooShort" xml:space="preserve">
+        <value>Title too short</value>
+    </data>
+    <data name="TitleTooLong" xml:space="preserve">
+        <value>Title too long</value>
+    </data>
+    <data name="TaglineTooLong" xml:space="preserve">
+        <value>Tagline too long</value>
+    </data>
+    <data name="StorylineTooLong" xml:space="preserve">
+        <value>Storyline too long</value>
+    </data>
+    <data name="DetailsTooLong" xml:space="preserve">
+        <value>Details too long</value>
+    </data>
+    <data name="TechnicalSpecsTooLong" xml:space="preserve">
+        <value>Technical specs too long</value>
+    </data>
+    <data name="CouldNotUpdateMedia" xml:space="preserve">
+        <value>Could not update media</value>
+    </data>
+    <data name="MediaIsNotMovie" xml:space="preserve">
+        <value>Media is not movie</value>
+    </data>
+    <data name="MediaIsNotSeries" xml:space="preserve">
+        <value>Media is not series</value>
+    </data>
 </root>

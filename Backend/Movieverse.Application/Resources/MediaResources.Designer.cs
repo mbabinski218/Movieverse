@@ -69,6 +69,24 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not update media.
+        /// </summary>
+        public static string CouldNotUpdateMedia {
+            get {
+                return ResourceManager.GetString("CouldNotUpdateMedia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details too long.
+        /// </summary>
+        public static string DetailsTooLong {
+            get {
+                return ResourceManager.GetString("DetailsTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid media type.
         /// </summary>
         public static string InvalidMediaType {
@@ -87,11 +105,74 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Media is not movie.
+        /// </summary>
+        public static string MediaIsNotMovie {
+            get {
+                return ResourceManager.GetString("MediaIsNotMovie", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Media is not series.
+        /// </summary>
+        public static string MediaIsNotSeries {
+            get {
+                return ResourceManager.GetString("MediaIsNotSeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Media with title already exists.
         /// </summary>
         public static string MediaWithTitleAlreadyExists {
             get {
                 return ResourceManager.GetString("MediaWithTitleAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Storyline too long.
+        /// </summary>
+        public static string StorylineTooLong {
+            get {
+                return ResourceManager.GetString("StorylineTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tagline too long.
+        /// </summary>
+        public static string TaglineTooLong {
+            get {
+                return ResourceManager.GetString("TaglineTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Technical specs too long.
+        /// </summary>
+        public static string TechnicalSpecsTooLong {
+            get {
+                return ResourceManager.GetString("TechnicalSpecsTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title too long.
+        /// </summary>
+        public static string TitleTooLong {
+            get {
+                return ResourceManager.GetString("TitleTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title too short.
+        /// </summary>
+        public static string TitleTooShort {
+            get {
+                return ResourceManager.GetString("TitleTooShort", resourceCulture);
             }
         }
     }

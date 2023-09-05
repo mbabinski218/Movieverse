@@ -12,7 +12,7 @@ public sealed class BoxOffice : ValueObject
 	public decimal OpeningWeekendWorldwide { get; set; }
 	public ushort Theaters { get; set; }
 
-	private BoxOffice()
+	public BoxOffice()
 	{
 		
 	}

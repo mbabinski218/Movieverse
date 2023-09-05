@@ -18,4 +18,13 @@ public class Season : Entity
 	}
 	
 	// Other
+	public static Season Create(Series series, short seasonNumber, int episodeCount)
+	{
+		return new Season
+		{
+			Series = series,
+			SeasonNumber = (uint)seasonNumber,
+			EpisodeCount = (uint)episodeCount
+		};
+	}
 }

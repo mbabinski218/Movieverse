@@ -10,7 +10,7 @@ public sealed class BasicStatistics : ValueObject
 	public int CriticReviews { get; set; }
 	public int InWatchlistCount { get; set; }
 
-	private BasicStatistics()
+	public BasicStatistics()
 	{
 		
 	}
