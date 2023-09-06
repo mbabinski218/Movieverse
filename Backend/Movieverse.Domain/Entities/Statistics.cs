@@ -18,5 +18,11 @@ public class Statistics : Entity
 		
 	}
 	
+	public Statistics(Media media)
+	{
+		Media = media;
+		BoxOffice = new BoxOffice();
+	}
+	
 	// Other
 }

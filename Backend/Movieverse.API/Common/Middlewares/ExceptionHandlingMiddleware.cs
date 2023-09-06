@@ -45,8 +45,8 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
             var query = string.Join(", ", context.Request.Query.Keys);
             var body = await new StreamReader(context.Request.Body).ReadToEndAsync();
             
-            _logger.LogCritical("Request: {request} | Query: {query} | Body: {body} | Exception: {msg}",
-                context.Request.Path.ToString(), query, body, ex.Message);
+            _logger.LogCritical("Request: {request} | Query: {query} | Body: {body} | Exception: {msg} | StackTrace: {stack}",
+                context.Request.Path.ToString(), query, body, ex.Message, ex.StackTrace);
             
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/json";

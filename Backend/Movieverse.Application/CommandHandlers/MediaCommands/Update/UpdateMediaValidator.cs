@@ -2,6 +2,7 @@
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.Media;
 using Movieverse.Domain.Common;
+using Movieverse.Domain.Common.Types;
 
 namespace Movieverse.Application.CommandHandlers.MediaCommands.Update;
 
@@ -34,17 +35,12 @@ public sealed class UpdateMediaValidator : AbstractValidator<UpdateMediaCommand>
 		
 		RuleFor(m => m.Details!.CountryOfOrigin)
 			.Must(s => s!.Length <= Constants.locationLength)
-			.When(m => m.Details != null && m.Details.Language != null)
+			.When(m => m.Details != null && m.Details.CountryOfOrigin != null)
 			.WithMessage(MediaResources.DetailsTooLong);
 		
 		RuleFor(m => m.Details!.FilmingLocations)
 			.Must(s => s!.Length <= Constants.locationLength)
-			.When(m => m.Details != null && m.Details.Language != null)
-			.WithMessage(MediaResources.DetailsTooLong);
-		
-		RuleFor(m => m.Details!.FilmingLocations)
-			.Must(s => s!.Length <= Constants.locationLength)
-			.When(m => m.Details != null && m.Details.Language != null)
+			.When(m => m.Details != null && m.Details.FilmingLocations != null)
 			.WithMessage(MediaResources.DetailsTooLong);
 		
 		RuleFor(m => m.TechnicalSpecs!.Camera)
@@ -71,5 +67,14 @@ public sealed class UpdateMediaValidator : AbstractValidator<UpdateMediaCommand>
 			.Must(s => s!.Length <= Constants.technicalSpecsLength)
 			.When(m => m.TechnicalSpecs != null && m.TechnicalSpecs.SoundMix != null)
 			.WithMessage(MediaResources.TechnicalSpecsTooLong);
+		
+		RuleFor(m => m.Staff)
+			.Must(s =>
+			{
+				var roles = RoleExtensions.GetValues();
+				return s!.Select(x => x.Role).All(role => roles.Contains(role));
+			})
+			.When(m => m.Staff != null && m.Staff.Any())
+			.WithMessage(MediaResources.RoleDoesNotExist);
 	}
 }

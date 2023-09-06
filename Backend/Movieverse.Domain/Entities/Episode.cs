@@ -27,6 +27,7 @@ public class Episode : Entity
 		EpisodeNumber = episodeNumber;
 		Title = title;
 		Details = details;
+		BasicStatistics = new BasicStatistics();
 	}
 	
 	// Other

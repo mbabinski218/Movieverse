@@ -132,6 +132,15 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Role does not exist.
+        /// </summary>
+        public static string RoleDoesNotExist {
+            get {
+                return ResourceManager.GetString("RoleDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Storyline too long.
         /// </summary>
         public static string StorylineTooLong {

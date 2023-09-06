@@ -46,6 +46,8 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		var media = findResult.Value;
 
 		// Update media
+		if (request.Title is not null) media.Title = request.Title;
+		
 		if (request.Details is not null)
 		{
 			if (request.Details.Certificate is not null) media.Details.Certificate = request.Details.Certificate; 
@@ -111,9 +113,13 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		
 		if (request.PlatformIds is not null)
 		{
-			media.PlatformIds.Clear();
 			foreach (var platformId in request.PlatformIds)
 			{
+				if (media.PlatformIds.Contains(platformId))
+				{
+					continue;
+				}
+				
 				media.PlatformIds.Add(platformId);
 				media.AddDomainEvent(new PlatformToMediaAdded(media.Id, platformId));
 			}
@@ -121,9 +127,13 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		
 		if (request.GenreIds is not null)
 		{
-			media.GenreIds.Clear();
 			foreach (var genreId in request.GenreIds)
 			{
+				if (media.GenreIds.Contains(genreId))
+				{
+					continue;
+				}
+				
 				media.GenreIds.Add(genreId);
 				media.AddDomainEvent(new GenreToMediaAdded(media.Id, genreId));
 			}
@@ -133,6 +143,11 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		{
 			foreach (var staffDto in request.Staff)
 			{
+				if (media.Staff.Any(x => x.PersonId == staffDto.PersonId))
+				{
+					continue;
+				}
+				
 				var staff = Staff.Create(media, staffDto.PersonId, staffDto.Role);
 				media.Staff.Add(staff);
 				//TODO domain event staff added czy cos

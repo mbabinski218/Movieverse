@@ -51,4 +51,7 @@ Szczegóły za długie</value>
     <data name="MediaIsNotSeries" xml:space="preserve">
         <value>Media to nie serial</value>
     </data>
+    <data name="RoleDoesNotExist" xml:space="preserve">
+        <value>Rola nie istnieje</value>
+    </data>
 </root>

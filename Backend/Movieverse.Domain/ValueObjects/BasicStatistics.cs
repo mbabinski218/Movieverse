@@ -12,6 +12,10 @@ public sealed class BasicStatistics : ValueObject
 
 	public BasicStatistics()
 	{
-		
+		Rating = 0;
+		Votes = 0;
+		UserReviews = 0;
+		CriticReviews = 0;
+		InWatchlistCount = 0;
 	}
 }

@@ -32,6 +32,8 @@ public class Media : AggregateRoot
 	{
 		Id = id;
 		Title = title;
+		BasicStatistics = new BasicStatistics();
+		AdvancedStatistics = new Statistics(this);
 	}
 	
 	// Other

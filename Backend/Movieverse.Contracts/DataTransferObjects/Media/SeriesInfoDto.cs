@@ -2,5 +2,5 @@
 
 public sealed class SeriesInfoDto
 {
-	public IEnumerable<SeasonDto>? Seasons { get; set; }
+	public IEnumerable<PostSeasonDto>? Seasons { get; set; }
 }

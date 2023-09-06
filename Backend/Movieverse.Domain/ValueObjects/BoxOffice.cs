@@ -14,6 +14,12 @@ public sealed class BoxOffice : ValueObject
 
 	public BoxOffice()
 	{
-		
+		Budget = 0;
+		Revenue = 0;
+		GrossUs = 0;
+		GrossWorldwide = 0;
+		OpeningWeekendUs = 0;
+		OpeningWeekendWorldwide = 0;
+		Theaters = 0;
 	}
 }

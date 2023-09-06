@@ -19,7 +19,7 @@ public sealed record UpdateMediaCommand(
 	IEnumerable<Guid>? ContentToRemove,
 	IEnumerable<Guid>? PlatformIds,
 	IEnumerable<Guid>? GenreIds,
-	IEnumerable<StaffDto>? Staff,
+	IEnumerable<PostStaffDto>? Staff,
 	MovieInfoDto? MovieInfo,
 	SeriesInfoDto? SeriesInfo
 	) : IRequest<Result<MediaDto>>;
