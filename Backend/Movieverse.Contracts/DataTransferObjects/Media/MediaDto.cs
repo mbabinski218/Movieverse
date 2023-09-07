@@ -11,9 +11,9 @@ public class MediaDto
 	public BasicStatistics BasicStatistics { get; set; } = null!;
 	public Guid? PosterId { get; set; }
 	public Guid? TrailerId { get; set; }
-	public List<Guid> PlatformIds { get; private set; } = new();
-	public List<Guid> ContentIds { get; private set; } = new();
-	public List<Guid> GenreIds { get; private set; } = new();
-	public List<ReviewDto> Reviews { get; private set; } = new();
-	public List<StaffDto> Staff { get; private set; } = new();
+	public List<Guid> PlatformIds { get; set; } = new();
+	public List<Guid> ContentIds { get; set; } = new();
+	public List<Guid> GenreIds { get; set; } = new();
+	public ReviewDto? LatestReview { get; set; } = new();
+	public List<StaffDto> Staff { get; set; } = new();
 }
