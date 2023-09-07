@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Movieverse.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,7 @@ public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Gui
 		base.OnModelCreating(modelBuilder);
 
 		modelBuilder.HasPostgresEnum<Role>();
+		modelBuilder.Ignore<IdentityUserLogin<Guid>>();
 
 		modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 	}

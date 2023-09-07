@@ -9,6 +9,7 @@ public class Series : Media
 	public virtual List<Season> Seasons { get; private set; } = new();
 	public short SeasonCount { get; set; }
 	public short EpisodeCount { get; set; }
+	public DateTimeOffset? SeriesEnded { get; set; }
 
 	// EF Core
 	private Series()

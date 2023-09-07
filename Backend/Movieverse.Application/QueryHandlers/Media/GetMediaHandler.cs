@@ -1,6 +1,5 @@
 ﻿using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
 using Movieverse.Application.Resources;

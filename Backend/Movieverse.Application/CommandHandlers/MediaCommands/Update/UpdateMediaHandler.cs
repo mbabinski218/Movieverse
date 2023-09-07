@@ -171,6 +171,8 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		{
 			if (media is Series series)
 			{
+				if (request.SeriesInfo.SeriesEnded is not null) series.SeriesEnded = request.SeriesInfo.SeriesEnded;
+				
 				if (request.SeriesInfo.Seasons is not null)
 				{
 					foreach (var seasonDto in request.SeriesInfo.Seasons)

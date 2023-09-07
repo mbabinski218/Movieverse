@@ -7,9 +7,9 @@ public class Season : Entity
 {
 	// Map to table
 	public virtual Series Series { get; set; } = null!;
-	public uint SeasonNumber { get; set; }
+	public short SeasonNumber { get; set; }
 	public virtual List<Episode> Episodes { get; private set; } = new();
-	public uint? EpisodeCount { get; set; }
+	public short EpisodeCount { get; set; }
 
 	// EF Core
 	private Season()
@@ -18,13 +18,16 @@ public class Season : Entity
 	}
 	
 	// Other
-	public static Season Create(Series series, short seasonNumber, int episodeCount)
+	public static Season Create(Series series, int seasonNumber, int episodeCount = 0) =>
+		Create(series, (short)seasonNumber, (short)episodeCount);
+	
+	public static Season Create(Series series, short seasonNumber, short episodeCount = 0)
 	{
 		return new Season
 		{
 			Series = series,
-			SeasonNumber = (uint)seasonNumber,
-			EpisodeCount = (uint)episodeCount
+			SeasonNumber = seasonNumber,
+			EpisodeCount = episodeCount
 		};
 	}
 }
