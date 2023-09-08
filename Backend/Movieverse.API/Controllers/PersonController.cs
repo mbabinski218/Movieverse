@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Movieverse.API.Common;
 using Movieverse.API.Common.Extensions;
+using Movieverse.Application.Authorization;
 using Movieverse.Contracts.Commands.Person;
 using Movieverse.Contracts.Queries.Person;
 
@@ -15,7 +16,7 @@ public sealed class PersonController : ApiController
 	{
 	}
 	
-	[AllowAnonymous]
+	[PolicyAuthorize(Policies.atLeastUser)]
     [OutputCache(NoStore = true)]
     [HttpPost]
     public async Task<ActionResult> Create([FromForm] CreatePersonCommand command, CancellationToken cancellationToken) =>

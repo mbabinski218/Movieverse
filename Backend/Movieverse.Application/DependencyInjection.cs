@@ -10,7 +10,9 @@ using Mapster;
 using MapsterMapper;
 using MassTransit;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Movieverse.Application.Authorization;
+using Movieverse.Application.Authorization.Handlers;
 using Movieverse.Application.Authorization.Requirements;
 using Movieverse.Application.Behaviors;
 using Movieverse.Application.Caching.Extensions;
@@ -168,6 +170,10 @@ public static class DependencyInjection
 	
 	private static IServiceCollection AddAuthorization(this IServiceCollection services, IConfiguration configuration)
 	{
+		services.AddScoped<IAuthorizationHandler, RoleHandler>();
+		services.AddScoped<IAuthorizationHandler, OneOfRoleHandler>();
+		services.AddScoped<IAuthorizationHandler, PersonalDataHandler>();
+		
 		services.AddAuthorization(options =>
 		{
 			options.AddPolicy(Policies.administrator, policy => 
@@ -181,6 +187,9 @@ public static class DependencyInjection
 			
 			options.AddPolicy(Policies.atLeastUser, policy =>
 				policy.Requirements.Add(new OneOfRoleRequirement(UserRole.User, UserRole.Pro, UserRole.Critic, UserRole.Administrator)));
+			
+			options.AddPolicy(Policies.personalData, policy =>
+				policy.Requirements.Add(new PersonalDataRequirement()));
 		});
 		
 		return services;

@@ -5,28 +5,23 @@ using Movieverse.Domain.Common.Types;
 
 namespace Movieverse.Application.Authorization.Handlers;
 
-public sealed class RoleHandler : AuthorizationHandler<RoleRequirement>
+public sealed class PersonalDataHandler : AuthorizationHandler<PersonalDataRequirement>
 {
 	private readonly IHttpService _httpService;
 
-	public RoleHandler(IHttpService httpService)
+	public PersonalDataHandler(IHttpService httpService)
 	{
 		_httpService = httpService;
 	}
 	
-	protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, RoleRequirement requirement)
+	protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PersonalDataRequirement requirement)
 	{
-		var userRole = _httpService.Role;
-		if (userRole is null)
+		if (_httpService.Role == UserRole.Administrator || _httpService.IdHeader == _httpService.UserId)
 		{
+			context.Succeed(requirement);
 			return Task.CompletedTask;
 		}
 		
-		if (userRole == requirement.Role)
-		{
-			context.Succeed(requirement);
-		}
-
 		return Task.CompletedTask;
 	}
 }

@@ -61,7 +61,7 @@ app.UseCors("corsapp");
 app.UseAuthentication();
 
 app.UseHttpsRedirection();
-
+app.UseRouting();
 app.MapHealthChecks(defaultSettings.Routes.HealthCheckEndpoint, new HealthCheckOptions
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse

@@ -1,17 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Movieverse.API.Common;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
-public sealed class PolicyAuthorize : AuthorizeAttribute
+public sealed class PolicyAuthorizeAttribute : AuthorizeAttribute
 {
-	public PolicyAuthorize(string policy)
+	public PolicyAuthorizeAttribute(string policy)
 	{
 		Policy = policy;
-	}
-	
-	public PolicyAuthorize(params string[] policies)
-	{
-		Policy = string.Join(",", policies);
+		AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme;
 	}
 }

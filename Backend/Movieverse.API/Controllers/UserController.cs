@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Movieverse.API.Common;
 using Movieverse.API.Common.Extensions;
+using Movieverse.Application.Authorization;
 using Movieverse.Contracts.Commands.User;
 using Movieverse.Contracts.DataTransferObjects.User;
 using Movieverse.Contracts.Queries.User;
@@ -32,14 +33,13 @@ public sealed class UserController : ApiController
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
 	
-		[AllowAnonymous]
-    	[OutputCache(NoStore = true)]
-    	[HttpPost("logout")]
-    	public async Task<ActionResult> Logout(CancellationToken cancellationToken) =>
-    		await mediator.Send(new LogoutCommand(), cancellationToken).Then(
-    			Ok,
-    			err => StatusCode(err.Code, err.Messages));
-	
+	[PolicyAuthorize(Policies.atLeastUser)]
+    [OutputCache(NoStore = true)]
+    [HttpPost("logout")]
+    public async Task<ActionResult> Logout(CancellationToken cancellationToken) =>
+    	await mediator.Send(new LogoutCommand(), cancellationToken).Then(
+    		Ok,
+    		err => StatusCode(err.Code, err.Messages));
 
 	[AllowAnonymous]
 	[OutputCache(NoStore = true)]
@@ -58,7 +58,7 @@ public sealed class UserController : ApiController
 			err => StatusCode(err.Code, err.Messages));
 	
 	
-	[AllowAnonymous]
+	[PolicyAuthorize(Policies.personalData)]
 	[OutputCache]
 	[HttpGet("{Id:guid}")]
 	public async Task<ActionResult<UserDto>> Get([FromRoute] GetUserByIdQuery query, CancellationToken cancellationToken) => 
@@ -66,7 +66,8 @@ public sealed class UserController : ApiController
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
 	
-	[AllowAnonymous]
+	[PolicyAuthorize(Policies.atLeastUser)]
+	[PolicyAuthorize(Policies.personalData)]
 	[OutputCache(NoStore = true)]
 	[HttpPut("{Id:guid}")]
 	public async Task<ActionResult<UserDto>> Update([FromForm] UpdateCommand command, CancellationToken cancellationToken) =>

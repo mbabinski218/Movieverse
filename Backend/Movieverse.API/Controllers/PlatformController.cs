@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Movieverse.API.Common;
 using Movieverse.API.Common.Extensions;
+using Movieverse.Application.Authorization;
 using Movieverse.Contracts.Commands.Platform;
 using Movieverse.Contracts.Queries.Platform;
 
@@ -23,7 +24,7 @@ public sealed class PlatformController : ApiController
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
 	
-	[AllowAnonymous]
+	[PolicyAuthorize(Policies.administrator)]
 	[OutputCache(NoStore = true)]
 	[HttpPut("{Id:guid}")]
 	public async Task<ActionResult> Update([FromForm] UpdatePlatformCommand command, CancellationToken cancellationToken) =>
@@ -39,7 +40,7 @@ public sealed class PlatformController : ApiController
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
 	
-	[AllowAnonymous]
+	[PolicyAuthorize(Policies.atLeastPro)]
 	[OutputCache(NoStore = true)]
 	[HttpPost("{Id:guid}/media")]
 	public async Task<ActionResult> AddMedia([FromQuery] AddMediaToPlatformCommand query, CancellationToken cancellationToken) =>

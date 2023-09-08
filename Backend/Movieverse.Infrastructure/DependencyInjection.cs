@@ -87,9 +87,13 @@ public static class DependencyInjection
 			{
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
+					RequireAudience = true,
 					ValidateIssuer = true,
 					ValidateAudience = true,
 					ValidateIssuerSigningKey = true,
+					ValidateLifetime = true,
+					ValidIssuer = authenticationSettings.Token.Issuer,
+					ValidAudience = authenticationSettings.Token.Audience,
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.Token.Secret))
 				};
 			})

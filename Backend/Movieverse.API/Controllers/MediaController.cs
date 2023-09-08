@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Movieverse.API.Common;
 using Movieverse.API.Common.Extensions;
+using Movieverse.Application.Authorization;
 using Movieverse.Contracts.Commands.Media;
 using Movieverse.Contracts.Queries.Media;
 
@@ -15,7 +16,7 @@ public sealed class MediaController : ApiController
 	{
 	}
 	
-	[AllowAnonymous]
+	[PolicyAuthorize(Policies.atLeastPro)]
 	[OutputCache(NoStore = true)]
 	[HttpPost]
 	public async Task<ActionResult> Add([FromBody] AddMediaCommand command, CancellationToken cancellationToken) =>
@@ -23,7 +24,7 @@ public sealed class MediaController : ApiController
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
 	
-	[AllowAnonymous]
+	[PolicyAuthorize(Policies.atLeastPro)]
 	[OutputCache(NoStore = true)]
 	[HttpPut("{Id:guid}")]
 	public async Task<ActionResult> Update([FromForm] UpdateMediaCommand command, CancellationToken cancellationToken) =>
