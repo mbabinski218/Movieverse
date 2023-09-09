@@ -35,41 +35,22 @@ public sealed class SeriesConfiguration : IEntityTypeConfiguration<Series>
 					.HasMaxLength(Constants.titleLength);
 
 				episodesBuilder.OwnsOne(e => e.BasicStatistics);
-				
+
 				episodesBuilder.OwnsOne(e => e.Details);
 				
 				episodesBuilder.OwnsMany(e => e.ContentIds, contentIdsBuilder =>
 				{
 					contentIdsBuilder.ToTable($"{nameof(Episode)}{nameof(Media.ContentIds)}");
-			
+
 					contentIdsBuilder.WithOwner().HasForeignKey("EpisodeId");
 
 					contentIdsBuilder.Property<int>("Id");
 
 					contentIdsBuilder.HasKey("Id");
-			
+
 					contentIdsBuilder.Property(x => x.Value)
 						.ValueGeneratedNever()
 						.HasColumnName("ContentId");
-				});
-				
-				episodesBuilder.OwnsMany(e => e.Reviews, reviewBuilder =>
-				{
-					reviewBuilder.ToTable($"{nameof(Episode)}{nameof(Episode.Reviews)}");
-					
-					reviewBuilder.HasKey(nameof(Review.Id));
-
-					reviewBuilder.Property(r => r.UserId)
-						.HasConversion(EfExtensions.aggregateRootIdConverter);
-					
-					reviewBuilder.Property(r => r.UserName)
-						.HasMaxLength(Constants.nameLength);
-			
-					reviewBuilder.Property(r => r.Title)
-						.HasMaxLength(Constants.titleLength);
-			
-					reviewBuilder.Property(r => r.Content)
-						.HasMaxLength(Constants.reviewLength);
 				});
 			});
 		});

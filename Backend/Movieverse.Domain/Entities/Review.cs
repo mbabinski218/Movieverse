@@ -1,4 +1,5 @@
-﻿using Movieverse.Domain.Common.Models;
+﻿using Movieverse.Domain.AggregateRoots.Media;
+using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.ValueObjects.Id;
 
 namespace Movieverse.Domain.Entities;
@@ -6,6 +7,7 @@ namespace Movieverse.Domain.Entities;
 public class Review : Entity
 {
 	// Map to table
+	public virtual Media Media { get; private set; } = null!;
 	public AggregateRootId UserId { get; private set; } = null!;
 	public string UserName { get; set; } = null!;
 	public string Title { get; set; } = null!;

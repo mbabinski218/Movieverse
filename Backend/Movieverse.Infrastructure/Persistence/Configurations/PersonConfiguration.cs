@@ -11,6 +11,7 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
 	{
 		ConfigurePersonTable(builder);
 		ConfigurePersonContentIdsTable(builder);
+		ConfigurePersonMediaIdsTable(builder);
 		ConfigureInformation(builder);
 		ConfigureValueObjects(builder);
 	}
@@ -43,6 +44,22 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
 			contentIdsBuilder.Property(x => x.Value)
 				.ValueGeneratedNever()
 				.HasColumnName("ContentId");
+		});
+	}
+	
+	private static void ConfigurePersonMediaIdsTable(EntityTypeBuilder<Person> builder)
+	{
+		builder.OwnsMany(p => p.MediaIds, contentIdsBuilder =>
+		{
+			contentIdsBuilder.ToTable($"{nameof(Person)}{nameof(Person.MediaIds)}");
+			
+			contentIdsBuilder.WithOwner().HasForeignKey("PersonId");
+			
+			contentIdsBuilder.HasKey("Id");
+			
+			contentIdsBuilder.Property(x => x.Value)
+				.ValueGeneratedNever()
+				.HasColumnName("MediaId");
 		});
 	}
 	

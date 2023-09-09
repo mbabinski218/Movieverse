@@ -13,7 +13,6 @@ public class Episode : Entity
 	public Details Details { get; set; } = null!;
 	public BasicStatistics BasicStatistics { get; set; } = null!;
 	public virtual List<AggregateRootId> ContentIds { get; private set; } = new();
-	public virtual List<Review> Reviews { get; private set; } = new();
 	
 	// EF Core
 	private Episode()

@@ -89,19 +89,19 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 	{
 		builder.OwnsMany(m => m.Reviews, reviewBuilder =>
 		{
-			reviewBuilder.ToTable($"{nameof(Media)}{nameof(Media.Reviews)}");
-			
+			reviewBuilder.ToTable($"{nameof(Media.Reviews)}");
+		
 			reviewBuilder.HasKey(nameof(Review.Id));
-			
+		
 			reviewBuilder.Property(r => r.UserId)
 				.HasConversion(EfExtensions.aggregateRootIdConverter);
-			
+		
 			reviewBuilder.Property(r => r.UserName)
 				.HasMaxLength(Constants.nameLength);
-			
+		
 			reviewBuilder.Property(r => r.Title)
 				.HasMaxLength(Constants.titleLength);
-			
+		
 			reviewBuilder.Property(r => r.Content)
 				.HasMaxLength(Constants.reviewLength);
 		});

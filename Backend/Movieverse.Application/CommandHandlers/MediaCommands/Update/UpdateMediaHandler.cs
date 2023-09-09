@@ -150,7 +150,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 				
 				var staff = Staff.Create(media, staffDto.PersonId, staffDto.Role);
 				media.Staff.Add(staff);
-				//TODO domain event staff added czy cos
+				media.AddDomainEvent(new PersonToMediaAdded(media.Id, staff.PersonId));
 			}
 		}
 

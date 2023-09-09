@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Movieverse.Domain.Common.Types;
 using Movieverse.Infrastructure.Persistence;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Movieverse.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230909102909_Mov1")]
+    partial class Mov1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -711,12 +714,10 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.HasIndex("MediaId");
 
-                            b1.ToTable("Reviews", (string)null);
+                            b1.ToTable("MediaReviews", (string)null);
 
-                            b1.WithOwner("Media")
+                            b1.WithOwner()
                                 .HasForeignKey("MediaId");
-
-                            b1.Navigation("Media");
                         });
 
                     b.OwnsMany("Movieverse.Domain.Entities.Staff", "Staff", b1 =>
@@ -1368,6 +1369,66 @@ namespace Movieverse.Infrastructure.Migrations
                                                 .HasForeignKey("EpisodeId");
                                         });
 
+                                    b2.OwnsMany("Movieverse.Domain.Entities.Review", "Reviews", b3 =>
+                                        {
+                                            b3.Property<int>("Id")
+                                                .ValueGeneratedOnAdd()
+                                                .HasColumnType("integer");
+
+                                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b3.Property<int>("Id"));
+
+                                            b3.Property<bool>("Banned")
+                                                .HasColumnType("boolean");
+
+                                            b3.Property<bool>("ByCritic")
+                                                .HasColumnType("boolean");
+
+                                            b3.Property<string>("Content")
+                                                .IsRequired()
+                                                .HasMaxLength(3000)
+                                                .HasColumnType("character varying(3000)");
+
+                                            b3.Property<DateTimeOffset>("Date")
+                                                .HasColumnType("timestamp with time zone");
+
+                                            b3.Property<bool>("Deleted")
+                                                .HasColumnType("boolean");
+
+                                            b3.Property<int>("EpisodeId")
+                                                .HasColumnType("integer");
+
+                                            b3.Property<bool>("Modified")
+                                                .HasColumnType("boolean");
+
+                                            b3.Property<short>("Rating")
+                                                .HasColumnType("smallint");
+
+                                            b3.Property<bool>("Spoiler")
+                                                .HasColumnType("boolean");
+
+                                            b3.Property<string>("Title")
+                                                .IsRequired()
+                                                .HasMaxLength(200)
+                                                .HasColumnType("character varying(200)");
+
+                                            b3.Property<Guid>("UserId")
+                                                .HasColumnType("uuid");
+
+                                            b3.Property<string>("UserName")
+                                                .IsRequired()
+                                                .HasMaxLength(150)
+                                                .HasColumnType("character varying(150)");
+
+                                            b3.HasKey("Id");
+
+                                            b3.HasIndex("EpisodeId");
+
+                                            b3.ToTable("EpisodeReviews", (string)null);
+
+                                            b3.WithOwner()
+                                                .HasForeignKey("EpisodeId");
+                                        });
+
                                     b2.Navigation("BasicStatistics")
                                         .IsRequired();
 
@@ -1375,6 +1436,8 @@ namespace Movieverse.Infrastructure.Migrations
 
                                     b2.Navigation("Details")
                                         .IsRequired();
+
+                                    b2.Navigation("Reviews");
 
                                     b2.Navigation("Season");
                                 });

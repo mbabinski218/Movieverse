@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Movieverse.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230907193438_Mov1")]
-    partial class Mov1
+    [Migration("20230909124814_Mov6Mov8")]
+    partial class Mov6Mov8
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -714,10 +714,12 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.HasIndex("MediaId");
 
-                            b1.ToTable("MediaReviews", (string)null);
+                            b1.ToTable("Reviews", (string)null);
 
-                            b1.WithOwner()
+                            b1.WithOwner("Media")
                                 .HasForeignKey("MediaId");
+
+                            b1.Navigation("Media");
                         });
 
                     b.OwnsMany("Movieverse.Domain.Entities.Staff", "Staff", b1 =>
@@ -850,6 +852,31 @@ namespace Movieverse.Infrastructure.Migrations
                                 .HasForeignKey("PersonId");
                         });
 
+                    b.OwnsMany("Movieverse.Domain.ValueObjects.Id.AggregateRootId", "MediaIds", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<Guid>("PersonId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<Guid>("Value")
+                                .HasColumnType("uuid")
+                                .HasColumnName("MediaId");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("PersonId");
+
+                            b1.ToTable("PersonMediaIds", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("PersonId");
+                        });
+
                     b.OwnsOne("Movieverse.Domain.ValueObjects.LifeHistory", "LifeHistory", b1 =>
                         {
                             b1.Property<Guid>("PersonId")
@@ -890,6 +917,8 @@ namespace Movieverse.Infrastructure.Migrations
 
                     b.Navigation("LifeHistory")
                         .IsRequired();
+
+                    b.Navigation("MediaIds");
                 });
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Platform", b =>
@@ -1342,66 +1371,6 @@ namespace Movieverse.Infrastructure.Migrations
                                                 .HasForeignKey("EpisodeId");
                                         });
 
-                                    b2.OwnsMany("Movieverse.Domain.Entities.Review", "Reviews", b3 =>
-                                        {
-                                            b3.Property<int>("Id")
-                                                .ValueGeneratedOnAdd()
-                                                .HasColumnType("integer");
-
-                                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b3.Property<int>("Id"));
-
-                                            b3.Property<bool>("Banned")
-                                                .HasColumnType("boolean");
-
-                                            b3.Property<bool>("ByCritic")
-                                                .HasColumnType("boolean");
-
-                                            b3.Property<string>("Content")
-                                                .IsRequired()
-                                                .HasMaxLength(3000)
-                                                .HasColumnType("character varying(3000)");
-
-                                            b3.Property<DateTimeOffset>("Date")
-                                                .HasColumnType("timestamp with time zone");
-
-                                            b3.Property<bool>("Deleted")
-                                                .HasColumnType("boolean");
-
-                                            b3.Property<int>("EpisodeId")
-                                                .HasColumnType("integer");
-
-                                            b3.Property<bool>("Modified")
-                                                .HasColumnType("boolean");
-
-                                            b3.Property<short>("Rating")
-                                                .HasColumnType("smallint");
-
-                                            b3.Property<bool>("Spoiler")
-                                                .HasColumnType("boolean");
-
-                                            b3.Property<string>("Title")
-                                                .IsRequired()
-                                                .HasMaxLength(200)
-                                                .HasColumnType("character varying(200)");
-
-                                            b3.Property<Guid>("UserId")
-                                                .HasColumnType("uuid");
-
-                                            b3.Property<string>("UserName")
-                                                .IsRequired()
-                                                .HasMaxLength(150)
-                                                .HasColumnType("character varying(150)");
-
-                                            b3.HasKey("Id");
-
-                                            b3.HasIndex("EpisodeId");
-
-                                            b3.ToTable("EpisodeReviews", (string)null);
-
-                                            b3.WithOwner()
-                                                .HasForeignKey("EpisodeId");
-                                        });
-
                                     b2.Navigation("BasicStatistics")
                                         .IsRequired();
 
@@ -1409,8 +1378,6 @@ namespace Movieverse.Infrastructure.Migrations
 
                                     b2.Navigation("Details")
                                         .IsRequired();
-
-                                    b2.Navigation("Reviews");
 
                                     b2.Navigation("Season");
                                 });

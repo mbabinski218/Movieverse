@@ -7,6 +7,7 @@ using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Types;
+using Movieverse.Domain.Entities;
 
 namespace Movieverse.Infrastructure.Persistence;
 
@@ -38,7 +39,7 @@ public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Gui
 
 		modelBuilder.HasPostgresEnum<Role>();
 		modelBuilder.Ignore<IdentityUserLogin<Guid>>();
-
+		
 		modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 	}
 

@@ -12,6 +12,7 @@ public class Person : AggregateRoot
 	public string? Biography { get; set; }
 	public string? FunFacts { get; set; }
 	public virtual List<AggregateRootId> ContentIds { get; private set; } = new();
+	public virtual List<AggregateRootId> MediaIds { get; private set; } = new();
 
 	// EF Core
 	private Person()
