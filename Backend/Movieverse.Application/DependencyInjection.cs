@@ -20,6 +20,7 @@ using Movieverse.Application.Caching.Policies;
 using Movieverse.Application.Common.Extensions;
 using Movieverse.Application.Common.Settings;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Metrics;
 using Movieverse.Application.Services;
 using Movieverse.Domain.Common.Types;
 using StackExchange.Redis;
@@ -37,6 +38,7 @@ public static class DependencyInjection
 		services.AddAuthorization(configuration);
 		services.AddMapper();
 		services.AddServices();
+		services.AddMetrics();
 		
 		return services;
 	}
@@ -66,7 +68,7 @@ public static class DependencyInjection
 		var connectionMultiplexer = ConnectionMultiplexer.Connect(
 			new ConfigurationOptions
 			{
-				EndPoints = { { cacheSettings.Redis.Url, cacheSettings.Redis.Port } },
+				EndPoints = {{cacheSettings.Redis.Url, cacheSettings.Redis.Port}},
 				Password = cacheSettings.Redis.Password
 			});
 		
@@ -192,6 +194,14 @@ public static class DependencyInjection
 				policy.Requirements.Add(new PersonalDataRequirement()));
 		});
 		
+		return services;
+	}
+	
+	private static IServiceCollection AddMetrics(this IServiceCollection services)
+	{
+		services.AddSingleton<IMetricsService, MetricsService>();
+		services.AddSingleton<MetricsMiddleware>();
+
 		return services;
 	}
 }

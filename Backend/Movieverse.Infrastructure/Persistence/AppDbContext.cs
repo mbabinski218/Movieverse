@@ -7,7 +7,6 @@ using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Types;
-using Movieverse.Domain.Entities;
 
 namespace Movieverse.Infrastructure.Persistence;
 

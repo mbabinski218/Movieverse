@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common;
 using Movieverse.Domain.Entities;
-using Movieverse.Infrastructure.Common;
 
 namespace Movieverse.Infrastructure.Persistence.Configurations;
 

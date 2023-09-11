@@ -9,6 +9,7 @@ using Movieverse.API.Services;
 using Movieverse.Application;
 using Movieverse.Application.Common.Extensions;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Metrics;
 using Movieverse.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,8 +30,8 @@ services.AddApplication(configuration);
 services.AddInfrastructure(configuration, defaultSettings.DatabaseName);
 
 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-services.AddScoped<IHttpService, HttpService>();
-services.AddScoped<ExceptionHandlingMiddleware>();
+services.AddSingleton<IHttpService, HttpService>();
+services.AddSingleton<ExceptionHandlingMiddleware>();
 
 services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
@@ -47,6 +48,9 @@ if (app.Environment.IsDevelopment())
 
 await app.SeedDatabase();
 
+app.UseRouting();
+
+app.UseMetrics();
 app.UseOutputCache();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -61,7 +65,6 @@ app.UseCors("corsapp");
 app.UseAuthentication();
 
 app.UseHttpsRedirection();
-app.UseRouting();
 app.MapHealthChecks(defaultSettings.Routes.HealthCheckEndpoint, new HealthCheckOptions
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
