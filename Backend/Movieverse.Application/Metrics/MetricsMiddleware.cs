@@ -43,7 +43,7 @@ public sealed class MetricsMiddleware : IMiddleware
 		return next(context);
 	}
 	
-	private static bool TryGetMetrics(HttpContext httpContext, [MaybeNullWhen(false)] out Metrics metrics)
+	private static bool TryGetMetrics(HttpContext httpContext, [MaybeNullWhen(false)] out Meter meter)
 	{
 		var attribute = httpContext.GetEndpoint()
 			?.Metadata
@@ -51,11 +51,11 @@ public sealed class MetricsMiddleware : IMiddleware
 
 		if (attribute is null)
 		{
-			metrics = null!;
+			meter = null!;
 			return false;
 		}
 		
-		metrics = attribute.BuildMetrics();
+		meter = attribute.BuildMetrics();
 		return true;
 	}
 }

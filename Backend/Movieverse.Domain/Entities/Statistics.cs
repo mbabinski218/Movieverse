@@ -18,11 +18,17 @@ public class Statistics : Entity
 		
 	}
 	
-	public Statistics(Media media)
+	private Statistics(Media media)
 	{
 		Media = media;
 		BoxOffice = new BoxOffice();
 	}
 	
 	// Other
+	public static Statistics Create(Media media)
+	{
+		var statistics = new Statistics(media);
+		statistics.Popularity.Add(Entities.Popularity.Create(statistics, DateTimeOffset.UtcNow));
+		return statistics;
+	}
 }

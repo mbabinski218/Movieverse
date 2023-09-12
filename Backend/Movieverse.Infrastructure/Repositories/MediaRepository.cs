@@ -33,10 +33,16 @@ public sealed class MediaRepository : IMediaRepository
 		var media = await _dbContext.Medias.FindAsync(new object?[] { id.Value }, cancellationToken).ConfigureAwait(false);
 		return media is null ? Error.NotFound("Not found") : media;
 	}
-	
-	public Task<Result> UpdateStatisticsAsync(CancellationToken cancellationToken = default)
+
+	public async Task<Result<List<Media>>> GetAllAsync(CancellationToken cancellationToken = default)
 	{
-		throw new NotImplementedException();
+		_logger.LogDebug("Getting all media");
+
+		return await _dbContext.Medias
+			.Include(x => x.AdvancedStatistics)
+			.ThenInclude(x => x.Popularity)
+			.ToListAsync(cancellationToken)
+			.ConfigureAwait(false);
 	}
 
 	public async Task<bool> ExistsAsync(AggregateRootId id, CancellationToken cancellationToken = default)
@@ -103,6 +109,14 @@ public sealed class MediaRepository : IMediaRepository
 		_logger.LogDebug("Updating media with id {id}...", media.Id.ToString());
 
 		_dbContext.Medias.Update(media);
+		return await Task.FromResult(Result.Ok());
+	}
+
+	public async Task<Result> UpdateRangeAsync(List<Media> medias, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Updating {count} medias...", medias.Count.ToString());
+		
+		_dbContext.Medias.UpdateRange(medias);
 		return await Task.FromResult(Result.Ok());
 	}
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+﻿using Movieverse.Domain.ValueObjects.Id;
 
 namespace Movieverse.Application.Metrics;
 
@@ -7,5 +7,5 @@ public interface IMetricsService
 	void CounterLogic(string name);
 	void ResetCounter(string name, string additionalName);
 	void HistogramLogic(string name);
-	ImmutableDictionary<string, long> GetCounters(string? name = null);
+	Dictionary<AggregateRootId, long> GetCounters(string name);
 }

@@ -23,6 +23,11 @@ public class Series : Media
 	}
 	
 	// Other
-	public static Series Create(AggregateRootId id, string title, short? seasonCount = null) => new(id, title, seasonCount);
+	public static Series Create(AggregateRootId id, string title, short? seasonCount = null)
+	{
+		var series = new Series(id, title, seasonCount);
+		series.AdvancedStatistics = Statistics.Create(series);
+		return series;
+	}
 	public static Series Create(string title, short? seasonCount = null) => new(AggregateRootId.Create(), title, seasonCount);
 }

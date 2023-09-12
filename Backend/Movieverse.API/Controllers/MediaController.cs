@@ -34,7 +34,7 @@ public sealed class MediaController : ApiController
 			err => StatusCode(err.Code, err.Messages));
 	
 	[AllowAnonymous]
-	[Metrics(Metrics.mediaCounter, AdditionalAttributeType.Id)]
+	[Metrics(Meter.mediaCounter, AdditionalAttributeType.Id)]
 	[OutputCache]
 	[HttpGet("{Id:guid}")]
 	public async Task<ActionResult> Get([FromRoute] GetMediaQuery query, CancellationToken cancellationToken) =>

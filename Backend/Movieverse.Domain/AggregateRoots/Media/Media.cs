@@ -11,7 +11,7 @@ public class Media : AggregateRoot
 	public string Title { get; set; } = null!;
 	public Details Details { get; set; } = null!;
 	public TechnicalSpecs TechnicalSpecs { get; set; } = null!;
-	public int? CurrentPosition { get; set; }
+	public int CurrentPosition { get; set; }
 	public BasicStatistics BasicStatistics { get; set; } = null!;
 	public virtual Statistics AdvancedStatistics { get; set; } = null!;
 	public AggregateRootId? PosterId { get; set; }
@@ -32,9 +32,7 @@ public class Media : AggregateRoot
 	{
 		Id = id;
 		Title = title;
+		CurrentPosition = 0;
 		BasicStatistics = new BasicStatistics();
-		AdvancedStatistics = new Statistics(this);
 	}
-	
-	// Other
 }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Immutable;
+using Movieverse.Domain.ValueObjects.Id;
 
 namespace Movieverse.Application.Metrics;
 
@@ -27,8 +27,7 @@ public sealed class MetricsService : IMetricsService
 		throw new NotImplementedException();
 	}
 
-	public ImmutableDictionary<string, long> GetCounters(string? name = null)
-		=> name is null 
-			? counters.ToImmutableDictionary() 
-			: counters.Where(x => x.Key.StartsWith(name)).ToImmutableDictionary();
+	public Dictionary<AggregateRootId, long> GetCounters(string name)
+		=> counters.Where(x => x.Key.StartsWith(name))
+			.ToDictionary(x => AggregateRootId.Create(x.Key.Split(" ")[1]), x=> x.Value);
 }

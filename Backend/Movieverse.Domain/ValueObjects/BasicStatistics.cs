@@ -18,4 +18,28 @@ public sealed class BasicStatistics : ValueObject
 		CriticReviews = 0;
 		InWatchlistCount = 0;
 	}
+	
+	public static BasicStatistics operator +(BasicStatistics a, BasicStatistics b)
+	{
+		return new()
+		{
+			Rating = (short)(a.Rating + b.Rating),
+			Votes = a.Votes + b.Votes,
+			UserReviews = a.UserReviews + b.UserReviews,
+			CriticReviews = a.CriticReviews + b.CriticReviews,
+			InWatchlistCount = a.InWatchlistCount + b.InWatchlistCount
+		};
+	}
+	
+	public static BasicStatistics operator -(BasicStatistics a, BasicStatistics b)
+	{
+		return new()
+		{
+			Rating = (short)(a.Rating - b.Rating),
+			Votes = a.Votes - b.Votes,
+			UserReviews = a.UserReviews - b.UserReviews,
+			CriticReviews = a.CriticReviews - b.CriticReviews,
+			InWatchlistCount = a.InWatchlistCount - b.InWatchlistCount
+		};
+	}
 }

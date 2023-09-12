@@ -14,7 +14,7 @@ public enum AdditionalAttributeType : byte
 	Path
 }
 
-public sealed class Metrics
+public sealed class Meter
 {
 	public const string mediaCounter = "MediaCounter";
 
@@ -22,12 +22,12 @@ public sealed class Metrics
 	public AdditionalAttributeType AdditionalAttributeType { get; set; }
 	public MetricsType MetricsType { get; set; }
 
-	public Metrics()
+	public Meter()
 	{
 		
 	}
 	
-	public Metrics(string name, AdditionalAttributeType additionalAttributeType, MetricsType metricsType)
+	public Meter(string name, AdditionalAttributeType additionalAttributeType, MetricsType metricsType)
 	{
 		Name = name;
 		AdditionalAttributeType = additionalAttributeType;
@@ -37,6 +37,6 @@ public sealed class Metrics
 
 public static class MetricsExtensions
 {
-	public static Metrics BuildMetrics(this MetricsAttribute metricsAttribute) => 
+	public static Meter BuildMetrics(this MetricsAttribute metricsAttribute) => 
 		new(metricsAttribute.Name, metricsAttribute.AdditionalAttributeType, metricsAttribute.MetricsType);
 }
