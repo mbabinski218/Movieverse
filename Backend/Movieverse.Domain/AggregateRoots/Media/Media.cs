@@ -8,6 +8,8 @@ namespace Movieverse.Domain.AggregateRoots.Media;
 public class Media : AggregateRoot
 {
 	// Map to table
+	private readonly List<AggregateRootId> _platformIds = new();
+	
 	public string Title { get; set; } = null!;
 	public Details Details { get; set; } = null!;
 	public TechnicalSpecs TechnicalSpecs { get; set; } = null!;
@@ -16,7 +18,7 @@ public class Media : AggregateRoot
 	public virtual Statistics AdvancedStatistics { get; set; } = null!;
 	public AggregateRootId? PosterId { get; set; }
 	public AggregateRootId? TrailerId { get; set; }
-	public virtual List<AggregateRootId> PlatformIds { get; private set; } = new();
+	public IReadOnlyList<AggregateRootId> PlatformIds => _platformIds.AsReadOnly();
 	public virtual List<AggregateRootId> ContentIds { get; private set; } = new();
 	public virtual List<AggregateRootId> GenreIds { get; private set; } = new();
 	public virtual List<Review> Reviews { get; private set; } = new();
@@ -34,5 +36,10 @@ public class Media : AggregateRoot
 		Title = title;
 		CurrentPosition = 0;
 		BasicStatistics = new BasicStatistics();
+	}
+	
+	public void AddPlatformId(AggregateRootId platformId)
+	{
+		_platformIds.Add(platformId);
 	}
 }

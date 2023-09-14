@@ -60,4 +60,7 @@
     <data name="RoleDoesNotExist" xml:space="preserve">
         <value>Role does not exist</value>
     </data>
+    <data name="PlaceNotFound" xml:space="preserve">
+        <value>Place not found</value>
+    </data>
 </root>

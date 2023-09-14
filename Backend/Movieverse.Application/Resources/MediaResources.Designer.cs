@@ -132,6 +132,15 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Place not found.
+        /// </summary>
+        public static string PlaceNotFound {
+            get {
+                return ResourceManager.GetString("PlaceNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Role does not exist.
         /// </summary>
         public static string RoleDoesNotExist {

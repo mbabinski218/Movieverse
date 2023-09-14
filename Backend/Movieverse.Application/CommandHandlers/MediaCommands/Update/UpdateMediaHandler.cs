@@ -115,12 +115,12 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		{
 			foreach (var platformId in request.PlatformIds)
 			{
-				if (media.PlatformIds.Contains(platformId))
+				if (media.PlatformIds.Contains(AggregateRootId.Create(platformId)))
 				{
 					continue;
 				}
 				
-				media.PlatformIds.Add(platformId);
+				media.AddPlatformId(platformId);
 				media.AddDomainEvent(new PlatformToMediaAdded(media.Id, platformId));
 			}
 		}

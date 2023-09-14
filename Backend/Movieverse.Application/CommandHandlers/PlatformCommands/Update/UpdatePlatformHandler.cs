@@ -33,7 +33,7 @@ public sealed class UpdatePlatformHandler : IRequestHandler<UpdatePlatformComman
 	{
 		_logger.LogDebug("Updating platform {id}...", request.Id);
 		
-		var findResult = await _platformRepository.FindByIdAsync(request.Id, cancellationToken).ConfigureAwait(false);
+		var findResult = await _platformRepository.FindAsync(request.Id, cancellationToken).ConfigureAwait(false);
 		if (!findResult.IsSuccessful)
 		{
 			return findResult.Error;

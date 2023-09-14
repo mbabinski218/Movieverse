@@ -54,4 +54,7 @@ Szczegóły za długie</value>
     <data name="RoleDoesNotExist" xml:space="preserve">
         <value>Rola nie istnieje</value>
     </data>
+    <data name="PlaceNotFound" xml:space="preserve">
+        <value>Nie znaleziono</value>
+    </data>
 </root>

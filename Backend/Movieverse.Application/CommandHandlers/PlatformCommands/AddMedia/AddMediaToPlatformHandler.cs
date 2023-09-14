@@ -36,7 +36,7 @@ public sealed class AddMediaToPlatformHandler : IRequestHandler<AddMediaToPlatfo
 			return Error.NotFound(MediaResources.MediaDoesNotExist);
 		}
 		
-		var platform = await _platformRepository.FindByIdAsync(request.Id, cancellationToken).ConfigureAwait(false);
+		var platform = await _platformRepository.FindAsync(request.Id, cancellationToken).ConfigureAwait(false);
 		if (platform.IsUnsuccessful)
 		{
 			return platform.Error;

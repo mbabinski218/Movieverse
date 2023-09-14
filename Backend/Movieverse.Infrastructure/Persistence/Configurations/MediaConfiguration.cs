@@ -26,7 +26,7 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 		builder.UseTphMappingStrategy();
 		
 		builder.HasKey(m => m.Id);
-
+		
 		builder.Property(m => m.Title)
 			.HasMaxLength(Constants.titleLength);
 
@@ -46,11 +46,14 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 			platformIdsBuilder.WithOwner().HasForeignKey("MediaId");
 
 			platformIdsBuilder.HasKey("Id");
-			
+
 			platformIdsBuilder.Property(x => x.Value)
-				.ValueGeneratedNever()
-				.HasColumnName("PlatformId");
+				.HasColumnName("PlatformId")
+				.ValueGeneratedNever();
 		});
+		builder.Navigation(x => x.PlatformIds).HasField("_platformIds");
+		// builder.Metadata.FindNavigation(nameof(Media.PlatformIds))!
+		// 	.SetPropertyAccessMode(PropertyAccessMode.Field);
 	}
 	
 	private static void ConfigureMediaContentIdsTable(EntityTypeBuilder<Media> builder)

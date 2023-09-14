@@ -20,14 +20,21 @@ public sealed class PlatformRepository : IPlatformRepository
 		_dbContext = dbContext;
 	}
 
-	public async Task<Result<Platform>> FindByIdAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<Platform>> FindAsync(AggregateRootId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting platform with id {id}...", id.ToString());
 		
 		var platform = await _dbContext.Platforms.FindAsync(new object?[] { id.Value }, cancellationToken).ConfigureAwait(false);
 		return platform is null ? Error.NotFound(PlatformResources.PlatformDoesNotExist) : platform;
 	}
-	
+
+	public async Task<Result<IEnumerable<Platform>>> GetAllAsync(CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Getting all platforms...");
+
+		return await _dbContext.Platforms.AsNoTracking().ToListAsync(cancellationToken).ConfigureAwait(false);
+	}
+
 	public async Task<Result<List<AggregateRootId>>> GetAllMediaIdsAsync(AggregateRootId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting all media ids for platform with id {id}...", id.ToString());

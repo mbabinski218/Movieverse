@@ -44,6 +44,40 @@ public sealed class MediaRepository : IMediaRepository
 			.ToListAsync(cancellationToken)
 			.ConfigureAwait(false);
 	}
+	
+	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMediaAsync(AggregateRootId? platformId, short count, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Getting upcoming medias...");
+
+		var medias = await _dbContext.Medias
+			.Where(m => m.Details.ReleaseDate > DateTime.UtcNow)
+			.Where(m => platformId == null || m.PlatformIds.Any(p => p == platformId))
+			.AsNoTracking()
+			.OrderBy(m => m.Details.ReleaseDate)
+			.Take(count)
+			.ProjectToType<MediaDemoDto>()
+			.ToListAsync(cancellationToken)
+			.ConfigureAwait(false);
+		
+		return new();
+	}
+
+	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMoviesAsync(AggregateRootId? platformId, short count, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Getting upcoming movies...");
+
+		var movies = await _dbContext.Movies
+			.Where(m => m.Details.ReleaseDate > DateTime.UtcNow)
+			.Where(m => platformId == null || m.PlatformIds.Any(p => p == platformId))
+			.AsNoTracking()
+			.OrderBy(m => m.Details.ReleaseDate)
+			.Take(count)
+			.ProjectToType<MediaDemoDto>()
+			.ToListAsync(cancellationToken)
+			.ConfigureAwait(false);
+
+		return movies;
+	}
 
 	public async Task<bool> ExistsAsync(AggregateRootId id, CancellationToken cancellationToken = default)
 	{

@@ -29,6 +29,10 @@ public sealed class MediaMapper : IRegister
 			.Map(dest => dest.Rating, src => src.BasicStatistics.Rating)
 			.Map(dest => dest.StartYear, src => GetStartYear(src.Details.ReleaseDate));
 
+		config.NewConfig<Media, MediaDemoDto>()
+			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
+			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue());
+		
 		config.NewConfig<Media, MediaDto>()
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
 			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue())

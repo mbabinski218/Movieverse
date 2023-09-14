@@ -25,7 +25,7 @@ public sealed class GetPlatformHandler : IRequestHandler<GetPlatformQuery, Resul
 	{
 		_logger.LogDebug("Getting platform {id}...", request.Id);
 		
-		var platform = await _platformRepository.FindByIdAsync(request.Id, cancellationToken).ConfigureAwait(false);
+		var platform = await _platformRepository.FindAsync(request.Id, cancellationToken).ConfigureAwait(false);
 		return platform.IsSuccessful ? _mapper.Map<PlatformDto>(platform.Value) : platform.Error;
 	}
 }

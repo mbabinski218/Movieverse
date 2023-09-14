@@ -27,7 +27,7 @@ public sealed class MediaToPlatformAddedHandler : INotificationHandler<MediaToPl
 		var media = await _mediaRepository.FindAsync(notification.MediaId, cancellationToken).ConfigureAwait(false);
 		ResultException.ThrowIfUnsuccessful(media);
 		
-		media.Value.PlatformIds.Add(notification.PlatformId);
+		media.Value.AddPlatformId(notification.PlatformId);
 		await _outputCacheStore.EvictByTagAsync(notification.MediaId.ToString(), cancellationToken);
 	}
 }

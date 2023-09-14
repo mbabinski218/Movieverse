@@ -2,9 +2,9 @@
 
 namespace Movieverse.Domain.ValueObjects.Id;
 
-public class BaseEntityId<TKey> : ValueObject
+public abstract class BaseEntityId<TKey> : ValueObject
 {
-	public TKey Value { get; private set; } = default!;
+	public TKey Value { get; } = default!;
 	
 	protected BaseEntityId()
 	{
