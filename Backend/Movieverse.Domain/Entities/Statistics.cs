@@ -4,7 +4,7 @@ using Movieverse.Domain.ValueObjects;
 
 namespace Movieverse.Domain.Entities;
 
-public class Statistics : Entity
+public class Statistics : Entity<int>
 {
 	// Map to table
 	public virtual Media Media { get; private set; } = null!;

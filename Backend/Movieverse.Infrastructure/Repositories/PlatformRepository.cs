@@ -4,7 +4,7 @@ using Movieverse.Application.Interfaces;
 using Movieverse.Application.Resources;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Persistence;
 
 namespace Movieverse.Infrastructure.Repositories;
@@ -20,7 +20,7 @@ public sealed class PlatformRepository : IPlatformRepository
 		_dbContext = dbContext;
 	}
 
-	public async Task<Result<Platform>> FindAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<Platform>> FindAsync(PlatformId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting platform with id {id}...", id.ToString());
 		
@@ -35,7 +35,7 @@ public sealed class PlatformRepository : IPlatformRepository
 		return await _dbContext.Platforms.AsNoTracking().ToListAsync(cancellationToken).ConfigureAwait(false);
 	}
 
-	public async Task<Result<List<AggregateRootId>>> GetAllMediaIdsAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<List<MediaId>>> GetAllMediaIdsAsync(PlatformId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting all media ids for platform with id {id}...", id.ToString());
 		

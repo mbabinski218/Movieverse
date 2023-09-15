@@ -1,5 +1,5 @@
 ﻿using Movieverse.Domain.Entities;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Domain.AggregateRoots.Media;
 
@@ -17,17 +17,17 @@ public class Series : Media
 		
 	}
 	
-	private Series(AggregateRootId id, string title, short? seasonCount) : base(id, title)
+	private Series(MediaId id, string title, short? seasonCount) : base(id, title)
 	{
 		SeasonCount = seasonCount ?? 0;
 	}
 	
 	// Other
-	public static Series Create(AggregateRootId id, string title, short? seasonCount = null)
+	public static Series Create(MediaId id, string title, short? seasonCount = null)
 	{
 		var series = new Series(id, title, seasonCount);
 		series.AdvancedStatistics = Statistics.Create(series);
 		return series;
 	}
-	public static Series Create(string title, short? seasonCount = null) => new(AggregateRootId.Create(), title, seasonCount);
+	public static Series Create(string title, short? seasonCount = null) => new(MediaId.Create(), title, seasonCount);
 }

@@ -1,9 +1,9 @@
 ﻿using Movieverse.Domain.Common;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Domain.DomainEvents;
 
 public record PlatformToMediaAdded(
-	AggregateRootId MediaId,
-	AggregateRootId PlatformId
+	MediaId MediaId,
+	PlatformId PlatformId
 	) : IDomainEvent;

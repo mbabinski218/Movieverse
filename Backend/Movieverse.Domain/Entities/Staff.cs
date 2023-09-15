@@ -1,15 +1,15 @@
 ﻿using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Types;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Domain.Entities;
 
-public class Staff : Entity
+public class Staff : Entity<int>
 {
 	// Map to table
 	public virtual Media Media { get; private set; } = null!;
-	public AggregateRootId PersonId { get; private set; } = null!;
+	public PersonId PersonId { get; private set; } = null!;
 	public Role Role { get; set; }
 
 	// EF Core
@@ -19,7 +19,7 @@ public class Staff : Entity
 	}
 	
 	// Other
-	public static Staff Create(Media media, AggregateRootId personId, Role role)
+	public static Staff Create(Media media, PersonId personId, Role role)
 	{
 		return new Staff
 		{

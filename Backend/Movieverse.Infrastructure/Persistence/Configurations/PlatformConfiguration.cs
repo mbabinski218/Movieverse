@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common;
-using Movieverse.Infrastructure.Common;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Infrastructure.Persistence.Configurations;
 
@@ -17,6 +17,11 @@ public sealed class PlatformConfiguration : IEntityTypeConfiguration<Platform>
 	private static void ConfigurePlatformTable(EntityTypeBuilder<Platform> builder)
 	{
 		builder.HasKey(p => p.Id);
+		
+		builder.Property(p => p.Id)
+			.HasConversion(
+				x => x.Value, 
+				x => PlatformId.Create(x));
 
 		builder.Property(p => p.Name)
 			.HasMaxLength(Constants.nameLength);
@@ -25,7 +30,9 @@ public sealed class PlatformConfiguration : IEntityTypeConfiguration<Platform>
 			.HasPrecision(Constants.precision);
 
 		builder.Property(p => p.LogoId)
-			.HasConversion(EfExtensions.aggregateRootIdConverter);
+			.HasConversion(
+				x => x.Value, 
+				x => ContentId.Create(x));
 	}
 
 	private static void ConfigurePlatformMediaIdsTable(EntityTypeBuilder<Platform> builder)

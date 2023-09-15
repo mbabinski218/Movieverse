@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 using Movieverse.Application.Common.Settings;
 using Movieverse.Application.Interfaces;
 using Movieverse.Domain.Common.Result;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.Services;
 
@@ -23,7 +23,7 @@ public sealed class ImageService : IImageService
 		_cloudStoreSettings = cloudStoreSettings.Value;
 	}
 
-	public async Task<Result<PutObjectResponse>> UploadImageAsync(AggregateRootId id, IFormFile image, CancellationToken cancellationToken)
+	public async Task<Result<PutObjectResponse>> UploadImageAsync(ContentId id, IFormFile image, CancellationToken cancellationToken)
 	{
 		var key = GetImageKey(id);
 		
@@ -54,7 +54,7 @@ public sealed class ImageService : IImageService
 		}
 	}
 
-	public async Task<Result<DeleteObjectResponse>> DeleteImageAsync(AggregateRootId id, CancellationToken cancellationToken)
+	public async Task<Result<DeleteObjectResponse>> DeleteImageAsync(ContentId id, CancellationToken cancellationToken)
 	{
 		var key = GetImageKey(id);
 		
@@ -80,7 +80,7 @@ public sealed class ImageService : IImageService
 		}
 	}
 
-	public async Task<Result<GetObjectResponse>> GetImageAsync(AggregateRootId id, CancellationToken cancellationToken)
+	public async Task<Result<GetObjectResponse>> GetImageAsync(ContentId id, CancellationToken cancellationToken)
 	{
 		var key = GetImageKey(id);
 		
@@ -106,5 +106,5 @@ public sealed class ImageService : IImageService
 		}
 	}
 	
-	private string GetImageKey(AggregateRootId id) => $"{_cloudStoreSettings.AmazonS3.ImagesFolder}/{id.Value.ToString()}";
+	private string GetImageKey(ContentId id) => $"{_cloudStoreSettings.AmazonS3.ImagesFolder}/{id.Value.ToString()}";
 }

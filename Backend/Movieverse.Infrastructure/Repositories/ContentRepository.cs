@@ -3,7 +3,7 @@ using Movieverse.Application.Interfaces;
 using Movieverse.Application.Resources;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Persistence;
 
 namespace Movieverse.Infrastructure.Repositories;
@@ -19,7 +19,7 @@ public sealed class ContentRepository : IContentRepository
 		_dbContext = dbContext;
 	}
 
-	public async Task<Result<Content>> FindAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<Content>> FindAsync(ContentId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Finding content with id {id}...", id.ToString());
 		
@@ -35,7 +35,7 @@ public sealed class ContentRepository : IContentRepository
 		return await Task.FromResult(Result.Ok());
 	}
 
-	public async Task<Result<bool>> ExistsAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<bool>> ExistsAsync(ContentId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Checking if content with id {Id} exists", id);
 		
@@ -51,7 +51,7 @@ public sealed class ContentRepository : IContentRepository
 		return Result.Ok();
 	}
 
-	public async Task<Result<string>> GetContentTypeAsync(AggregateRootId id, CancellationToken cancellationToken)
+	public async Task<Result<string>> GetContentTypeAsync(ContentId id, CancellationToken cancellationToken)
 	{
 		_logger.LogDebug("Getting content type for content with id {Id}", id);
 		
@@ -59,7 +59,7 @@ public sealed class ContentRepository : IContentRepository
 		return image is not null ? image.ContentType : Error.NotFound(ContentResources.ContentNotFound);
 	}
 
-	public async Task<Result<string>> GetPathAsync(AggregateRootId id, CancellationToken cancellationToken)
+	public async Task<Result<string>> GetPathAsync(ContentId id, CancellationToken cancellationToken)
 	{
 		_logger.LogDebug("Getting path for content with id {Id}", id);
 
@@ -67,6 +67,6 @@ public sealed class ContentRepository : IContentRepository
 		return image is not null ? image.Path : Error.NotFound(ContentResources.ContentNotFound);
 	}
 	
-	private async Task<Content?> FindByIdAsync(AggregateRootId id, CancellationToken cancellationToken) =>
+	private async Task<Content?> FindByIdAsync(ContentId id, CancellationToken cancellationToken) =>
 		await _dbContext.Contents.FindAsync(new object?[] { id.Value }, cancellationToken);
 }

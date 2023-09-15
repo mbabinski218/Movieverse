@@ -63,7 +63,7 @@ public sealed class GetUpcomingMediaHandler : IRequestHandler<GetUpcomingMediaQu
 		var upcomingMedia = new List<FilteredMediaDto>();
 		foreach (var platform in platforms.Value)
 		{
-			var medias = await _mediaRepository.GetUpcomingMediaAsync(platform.Id, count, cancellationToken).ConfigureAwait(false);
+			var medias = await _mediaRepository.GetUpcomingMediaAsync(platform.Id.Value, count, cancellationToken).ConfigureAwait(false);
 			if (medias.IsUnsuccessful)
 			{
 				continue;

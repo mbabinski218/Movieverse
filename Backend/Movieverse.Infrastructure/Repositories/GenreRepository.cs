@@ -9,7 +9,7 @@ using Movieverse.Contracts.DataTransferObjects.Genre;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common;
 using Movieverse.Domain.Common.Result;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Persistence;
 
 namespace Movieverse.Infrastructure.Repositories;
@@ -35,7 +35,7 @@ public sealed class GenreRepository : IGenreRepository
 		return Result.Ok();
 	}
 
-	public async Task<Result<Genre>> FindByIdAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<Genre>> FindByIdAsync(GenreId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Finding genre with id {Id} from database", id);
 		

@@ -8,7 +8,7 @@ using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.DomainEvents;
 using Movieverse.Domain.ValueObjects;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.CommandHandlers.PersonCommands.Create;
 
@@ -62,7 +62,7 @@ public sealed class CreatePersonHandler : IRequestHandler<CreatePersonCommand, R
 				break;
 		}
 		
-		var personId = AggregateRootId.Create();
+		var personId = PersonId.Create();
 		var person = Person.Create(
 			personId, 
 			information, 
@@ -72,7 +72,7 @@ public sealed class CreatePersonHandler : IRequestHandler<CreatePersonCommand, R
 
 		if (request.ForUser)
 		{
-			person.AddDomainEvent(new PersonalityCreated(personId, userId));
+			person.AddDomainEvent(new PersonalityCreated(personId, userId.Value));
 		}
 		
 		// Adding pictures
@@ -80,8 +80,8 @@ public sealed class CreatePersonHandler : IRequestHandler<CreatePersonCommand, R
 		{
 			foreach (var picture in request.Pictures)
 			{
-				var pictureId = AggregateRootId.Create();
-				person.AddDomainEvent(new ImageChanged(personId, picture));
+				var pictureId = ContentId.Create();
+				person.AddDomainEvent(new ImageChanged(pictureId, picture));
 				person.ContentIds.Add(pictureId);
 			}
 		}

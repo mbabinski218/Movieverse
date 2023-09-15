@@ -1,14 +1,14 @@
 ﻿using Movieverse.Domain.Entities;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Domain.AggregateRoots.Media;
 
 public sealed class Movie : Media
 {
 	// Map to table
-	public AggregateRootId? SequelId { get; set; }
+	public MediaId? SequelId { get; set; }
 	public string? SequelTitle { get; set; }
-	public AggregateRootId? PrequelId { get; set; }
+	public MediaId? PrequelId { get; set; }
 	public string? PrequelTitle { get; set; }
 	
 	// EF Core
@@ -17,17 +17,17 @@ public sealed class Movie : Media
 		
 	}
 	
-	private Movie(AggregateRootId id, string title) : base(id, title)
+	private Movie(MediaId id, string title) : base(id, title)
 	{
 		
 	}
 	
 	// Other
-	public static Movie Create(AggregateRootId id, string title)
+	public static Movie Create(MediaId id, string title)
 	{
 		var movie = new Movie(id, title);
 		movie.AdvancedStatistics = Statistics.Create(movie);
 		return movie;
 	}
-	public static Movie Create(string title) => Create(AggregateRootId.Create(), title);
+	public static Movie Create(string title) => Create(MediaId.Create(), title);
 }

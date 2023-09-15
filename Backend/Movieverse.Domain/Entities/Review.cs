@@ -1,14 +1,13 @@
 ﻿using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common.Models;
-using Movieverse.Domain.ValueObjects.Id;
 
 namespace Movieverse.Domain.Entities;
 
-public class Review : Entity
+public class Review : Entity<int>
 {
 	// Map to table
 	public virtual Media Media { get; private set; } = null!;
-	public AggregateRootId UserId { get; private set; } = null!;
+	public Guid UserId { get; private set; }
 	public string UserName { get; set; } = null!;
 	public string Title { get; set; } = null!;
 	public string Content { get; set; } = null!;

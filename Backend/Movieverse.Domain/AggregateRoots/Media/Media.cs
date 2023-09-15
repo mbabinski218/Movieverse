@@ -1,14 +1,14 @@
 ﻿using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Entities;
 using Movieverse.Domain.ValueObjects;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Domain.AggregateRoots.Media;
 
-public class Media : AggregateRoot
+public class Media : AggregateRoot<MediaId, Guid>
 {
 	// Map to table
-	private readonly List<AggregateRootId> _platformIds = new();
+	//private readonly List<PlatformId> _platformIds = new();
 	
 	public string Title { get; set; } = null!;
 	public Details Details { get; set; } = null!;
@@ -16,11 +16,12 @@ public class Media : AggregateRoot
 	public int CurrentPosition { get; set; }
 	public BasicStatistics BasicStatistics { get; set; } = null!;
 	public virtual Statistics AdvancedStatistics { get; set; } = null!;
-	public AggregateRootId? PosterId { get; set; }
-	public AggregateRootId? TrailerId { get; set; }
-	public IReadOnlyList<AggregateRootId> PlatformIds => _platformIds.AsReadOnly();
-	public virtual List<AggregateRootId> ContentIds { get; private set; } = new();
-	public virtual List<AggregateRootId> GenreIds { get; private set; } = new();
+	public ContentId? PosterId { get; set; }
+	public ContentId? TrailerId { get; set; }
+	// public IReadOnlyList<PlatformId> PlatformIds => _platformIds.AsReadOnly();
+	public virtual List<PlatformId> PlatformIds { get; private set; } = new();
+	public virtual List<ContentId> ContentIds { get; private set; } = new();
+	public virtual List<GenreId> GenreIds { get; private set; } = new();
 	public virtual List<Review> Reviews { get; private set; } = new();
 	public virtual List<Staff> Staff { get; private set; } = new();
 
@@ -30,16 +31,16 @@ public class Media : AggregateRoot
 		
 	}
 	
-	protected Media(AggregateRootId id, string title)
+	protected Media(MediaId id, string title) : base(id)
 	{
-		Id = id;
 		Title = title;
 		CurrentPosition = 0;
 		BasicStatistics = new BasicStatistics();
 	}
 	
-	public void AddPlatformId(AggregateRootId platformId)
+	public void AddPlatformId(PlatformId platformId)
 	{
-		_platformIds.Add(platformId);
+		// _platformIds.Add(platformId);
+		PlatformIds.Add(platformId);
 	}
 }

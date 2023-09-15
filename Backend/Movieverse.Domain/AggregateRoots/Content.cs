@@ -1,9 +1,9 @@
 ﻿using Movieverse.Domain.Common.Models;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Domain.AggregateRoots;
 
-public class Content : AggregateRoot
+public class Content : AggregateRoot<ContentId, Guid>
 {
 	// Map to table
 	public string Path { get; set; } = null!;
@@ -17,14 +17,13 @@ public class Content : AggregateRoot
 	}
 	
 	// Methods
-	private Content(AggregateRootId id, string path, string contentType, string? title) : base(id)
+	private Content(ContentId id, string path, string contentType, string? title) : base(id)
 	{
-		Id = id;
 		Path = path;
 		ContentType = contentType;
 		Title = title;
 	}
 
-	public static Content Create(AggregateRootId id, string path, string contentType, string? title = null) => 
+	public static Content Create(ContentId id, string path, string contentType, string? title = null) => 
 		new(id, path, contentType, title);
 }

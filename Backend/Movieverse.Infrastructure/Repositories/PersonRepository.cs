@@ -3,7 +3,7 @@ using Movieverse.Application.Interfaces;
 using Movieverse.Application.Resources;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Persistence;
 
 namespace Movieverse.Infrastructure.Repositories;
@@ -26,7 +26,7 @@ public sealed class PersonRepository : IPersonRepository
 		return Result.Ok();
 	}
 
-	public async Task<Result<Person>> FindAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<Person>> FindAsync(PersonId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting person with id {id}...", id.ToString());
 		

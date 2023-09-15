@@ -3,7 +3,7 @@ using Movieverse.Domain.Common.Models;
 
 namespace Movieverse.Domain.Entities;
 
-public class Season : Entity
+public class Season : Entity<int>
 {
 	// Map to table
 	public virtual Series Series { get; set; } = null!;

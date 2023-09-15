@@ -1,8 +1,8 @@
-﻿using Movieverse.Domain.ValueObjects.Id;
+﻿using Movieverse.Domain.ValueObjects.Ids;
 
 namespace Movieverse.Application.Common.Extensions;
 
 public static class AggregateRootExtensions
 {
-	public static Guid? GetValue(this AggregateRootId? aggregateRootId) => aggregateRootId?.Value;
+	public static Guid? GetValue(this AggregateRootId<Guid>? aggregateRootId) => aggregateRootId?.Value;
 }

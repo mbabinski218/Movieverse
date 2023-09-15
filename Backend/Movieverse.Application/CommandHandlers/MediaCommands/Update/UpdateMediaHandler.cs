@@ -11,7 +11,7 @@ using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.DomainEvents;
 using Movieverse.Domain.Entities;
 using Movieverse.Domain.ValueObjects;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.CommandHandlers.MediaCommands.Update;
 
@@ -71,14 +71,14 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		
 		if (request.Poster is not null)
 		{
-			var posterId = media.PosterId ?? AggregateRootId.Create();
+			var posterId = media.PosterId ?? ContentId.Create();
 			media.PosterId = posterId;
 			media.AddDomainEvent(new ImageChanged(posterId, request.Poster));
 		}
 		
 		if (request.Trailer is not null)
 		{
-			var trailerId = media.TrailerId ?? AggregateRootId.Create();
+			var trailerId = media.TrailerId ?? ContentId.Create();
 			media.TrailerId = trailerId;
 			media.AddDomainEvent(new VideoChanged(trailerId, request.Trailer));
 		}
@@ -87,7 +87,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		{
 			foreach (var image in request.ImagesToAdd)
 			{
-				var imageId = AggregateRootId.Create();
+				var imageId = ContentId.Create();
 				media.ContentIds.Add(imageId);
 				media.AddDomainEvent(new ImageChanged(imageId, image));
 			}
@@ -97,7 +97,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		{
 			foreach (var video in request.VideosToAdd)
 			{
-				var videoId = AggregateRootId.Create();
+				var videoId = ContentId.Create();
 				media.ContentIds.Add(videoId);
 				media.AddDomainEvent(new VideoChanged(videoId, video));
 			}
@@ -115,13 +115,13 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		{
 			foreach (var platformId in request.PlatformIds)
 			{
-				if (media.PlatformIds.Contains(AggregateRootId.Create(platformId)))
+				if (media.PlatformIds.Contains(PlatformId.Create(platformId)))
 				{
 					continue;
 				}
 				
 				media.AddPlatformId(platformId);
-				media.AddDomainEvent(new PlatformToMediaAdded(media.Id, platformId));
+				media.AddDomainEvent(new PlatformToMediaAdded(media.Id.Value, platformId));
 			}
 		}
 		
@@ -135,7 +135,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 				}
 				
 				media.GenreIds.Add(genreId);
-				media.AddDomainEvent(new GenreToMediaAdded(media.Id, genreId));
+				media.AddDomainEvent(new GenreToMediaAdded(media.Id.Value, genreId));
 			}
 		}
 
@@ -150,7 +150,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 				
 				var staff = Staff.Create(media, staffDto.PersonId, staffDto.Role);
 				media.Staff.Add(staff);
-				media.AddDomainEvent(new PersonToMediaAdded(media.Id, staff.PersonId));
+				media.AddDomainEvent(new PersonToMediaAdded(media.Id.Value, staff.PersonId));
 			}
 		}
 
@@ -202,7 +202,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 							{
 								foreach (var image in episodeDto.ImagesToAdd)
 								{
-									var imageId = AggregateRootId.Create();
+									var imageId = ContentId.Create();
 									episode.ContentIds.Add(imageId);
 									episode.AddDomainEvent(new ImageChanged(imageId, image));
 								}
@@ -212,7 +212,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 							{
 								foreach (var video in episodeDto.VideosToAdd)
 								{
-									var videoId = AggregateRootId.Create();
+									var videoId = ContentId.Create();
 									episode.ContentIds.Add(videoId);
 									episode.AddDomainEvent(new VideoChanged(videoId, video));
 								}

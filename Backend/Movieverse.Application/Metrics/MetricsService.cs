@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using Movieverse.Domain.ValueObjects.Id;
 
 namespace Movieverse.Application.Metrics;
 
@@ -27,7 +26,7 @@ public sealed class MetricsService : IMetricsService
 		throw new NotImplementedException();
 	}
 
-	public Dictionary<AggregateRootId, long> GetCounters(string name)
+	public Dictionary<Guid, long> GetCounters(string name)
 		=> counters.Where(x => x.Key.StartsWith(name))
-			.ToDictionary(x => AggregateRootId.Create(x.Key.Split(" ")[1]), x=> x.Value);
+			.ToDictionary(x => Guid.Parse(x.Key.Split(" ")[1]), x=> x.Value);
 }

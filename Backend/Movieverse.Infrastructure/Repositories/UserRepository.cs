@@ -10,7 +10,7 @@ using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.Common.Types;
 using Movieverse.Domain.ValueObjects;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Authentication;
 using Movieverse.Infrastructure.Common;
 using Movieverse.Infrastructure.Persistence;
@@ -40,11 +40,11 @@ public sealed class UserRepository : IUserRepository
 		_logger = logger;
 	}
 
-	public async Task<Result<User>> FindByIdAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<User>> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Find user with id: {id}", id.Value);
+		_logger.LogDebug("Find user with id: {id}", id);
 		
-		var user = await _dbContext.Users.FindAsync(new object?[] { id.Value }, cancellationToken).ConfigureAwait(false);
+		var user = await _dbContext.Users.FindAsync(new object?[] { id }, cancellationToken).ConfigureAwait(false);
 		return user is null ? Error.NotFound(UserResources.UserDoesNotExist) : user;
 	}
 
@@ -257,7 +257,7 @@ public sealed class UserRepository : IUserRepository
 		return await RemoveTokens(user, cancellationToken).ConfigureAwait(false);
 	}
 
-	public async Task<Result<Information>> GetInformationAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<Information>> GetInformationAsync(Guid id, CancellationToken cancellationToken = default)
 	{
 		var user = await FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
 		if (user.IsUnsuccessful)
@@ -268,7 +268,7 @@ public sealed class UserRepository : IUserRepository
 		return user.Value.Information;
 	}
 
-	public async Task<Result> AddPersonalityAsync(AggregateRootId id, AggregateRootId personId, CancellationToken cancellationToken = default)
+	public async Task<Result> AddPersonalityAsync(Guid id, PersonId personId, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Add personality with id: {personId} to user with id: {id}", personId, id);
 		

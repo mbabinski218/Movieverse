@@ -1,10 +1,10 @@
 ﻿using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.ValueObjects;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Domain.Entities;
 
-public class Episode : Entity
+public class Episode : Entity<int>
 {
 	// Map to table
 	public virtual Season Season { get; private set; } = null!;
@@ -12,7 +12,7 @@ public class Episode : Entity
 	public string Title { get; set; } = null!;
 	public Details Details { get; set; } = null!;
 	public BasicStatistics BasicStatistics { get; set; } = null!;
-	public virtual List<AggregateRootId> ContentIds { get; private set; } = new();
+	public virtual List<ContentId> ContentIds { get; private set; } = new();
 	
 	// EF Core
 	private Episode()

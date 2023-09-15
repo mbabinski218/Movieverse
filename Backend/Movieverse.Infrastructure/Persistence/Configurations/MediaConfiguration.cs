@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common;
 using Movieverse.Domain.Entities;
-using Movieverse.Infrastructure.Common;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Infrastructure.Persistence.Configurations;
 
@@ -27,14 +28,25 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 		
 		builder.HasKey(m => m.Id);
 		
+		builder.Property(m => m.Id)
+			.HasConversion(
+				x => x.Value, 
+				x => MediaId.Create(x));
+		
 		builder.Property(m => m.Title)
 			.HasMaxLength(Constants.titleLength);
 
+		var converter = new ValueConverter<ContentId?, Guid?>
+		(
+			x => x == null ? null : x.Value,
+			x => x == null ? null : ContentId.Create(x.Value)
+		);
+		
 		builder.Property(m => m.PosterId)
-			.HasConversion(EfExtensions.nullableAggregateRootIdConverter);
+			.HasConversion(converter);
 
 		builder.Property(m => m.TrailerId)
-			.HasConversion(EfExtensions.nullableAggregateRootIdConverter);
+			.HasConversion(converter);
 	}
 	
 	private static void ConfigureMediaPlatformIdsTable(EntityTypeBuilder<Media> builder)
@@ -51,9 +63,9 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 				.HasColumnName("PlatformId")
 				.ValueGeneratedNever();
 		});
-		builder.Navigation(x => x.PlatformIds).HasField("_platformIds");
-		// builder.Metadata.FindNavigation(nameof(Media.PlatformIds))!
-		// 	.SetPropertyAccessMode(PropertyAccessMode.Field);
+
+		builder.Metadata.FindNavigation(nameof(Media.PlatformIds))!
+			.SetPropertyAccessMode(PropertyAccessMode.Field);
 	}
 	
 	private static void ConfigureMediaContentIdsTable(EntityTypeBuilder<Media> builder)
@@ -96,9 +108,6 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 		
 			reviewBuilder.HasKey(nameof(Review.Id));
 		
-			reviewBuilder.Property(r => r.UserId)
-				.HasConversion(EfExtensions.aggregateRootIdConverter);
-		
 			reviewBuilder.Property(r => r.UserName)
 				.HasMaxLength(Constants.nameLength);
 		
@@ -117,7 +126,9 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 			staffBuilder.HasKey(nameof(Staff.Id));
 			
 			staffBuilder.Property(s => s.PersonId)
-				.HasConversion(EfExtensions.aggregateRootIdConverter);
+				.HasConversion(
+					x => x.Value, 
+					x => PersonId.Create(x));
 		});
 	}
 	

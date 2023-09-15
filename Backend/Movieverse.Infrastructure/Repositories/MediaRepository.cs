@@ -8,7 +8,7 @@ using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common;
 using Movieverse.Domain.Common.Result;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Persistence;
 
 namespace Movieverse.Infrastructure.Repositories;
@@ -26,7 +26,7 @@ public sealed class MediaRepository : IMediaRepository
 		_mapper = mapper;
 	}
 
-	public async Task<Result<Media>> FindAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<Media>> FindAsync(MediaId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Finding media with id {id}...", id.ToString());
 		
@@ -45,7 +45,7 @@ public sealed class MediaRepository : IMediaRepository
 			.ConfigureAwait(false);
 	}
 	
-	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMediaAsync(AggregateRootId? platformId, short count, CancellationToken cancellationToken = default)
+	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMediaAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting upcoming medias...");
 
@@ -62,7 +62,7 @@ public sealed class MediaRepository : IMediaRepository
 		return new();
 	}
 
-	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMoviesAsync(AggregateRootId? platformId, short count, CancellationToken cancellationToken = default)
+	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMoviesAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting upcoming movies...");
 
@@ -79,7 +79,7 @@ public sealed class MediaRepository : IMediaRepository
 		return movies;
 	}
 
-	public async Task<bool> ExistsAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<bool> ExistsAsync(MediaId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Checking if media with id {id} exists...", id.ToString());
 		
@@ -94,7 +94,7 @@ public sealed class MediaRepository : IMediaRepository
 		return await _dbContext.Medias.AnyAsync(m => m.Title == title, cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
-	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindMoviesByIdsAsync(List<AggregateRootId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
+	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindMoviesByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting movies with ids {ids}...", string.Join(", ", ids.Select(id => id.ToString())));
 		
@@ -108,7 +108,7 @@ public sealed class MediaRepository : IMediaRepository
 			.ConfigureAwait(false);
 	}
 
-	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindSeriesByIdsAsync(List<AggregateRootId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
+	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindSeriesByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting series with ids {ids}...", string.Join(", ", ids.Select(id => id.ToString())));
 		

@@ -3,7 +3,7 @@ using Movieverse.Domain.ValueObjects;
 
 namespace Movieverse.Domain.Entities;
 
-public class Popularity : Entity
+public class Popularity : Entity<int>
 {
 	// Map to table
 	public virtual Statistics Statistics { get; private set; } = null!;
