@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Common.Exceptions;
-using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.DomainEvents;
 

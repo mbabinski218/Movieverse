@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Common;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Contracts.Commands.User;
 using Movieverse.Contracts.Messages;
 using Movieverse.Domain.Common.Result;

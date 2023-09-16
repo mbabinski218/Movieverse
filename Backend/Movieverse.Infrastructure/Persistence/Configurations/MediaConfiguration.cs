@@ -82,6 +82,9 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 				.ValueGeneratedNever()
 				.HasColumnName("ContentId");
 		});
+		
+		builder.Metadata.FindNavigation(nameof(Media.ContentIds))!
+			.SetPropertyAccessMode(PropertyAccessMode.Field);
 	}
 	
 	private static void ConfigureMediaGenreIdsTable(EntityTypeBuilder<Media> builder)
@@ -98,6 +101,9 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 				.ValueGeneratedNever()
 				.HasColumnName("GenreId");
 		});
+		
+		builder.Metadata.FindNavigation(nameof(Media.GenreIds))!
+			.SetPropertyAccessMode(PropertyAccessMode.Field);
 	}
 	
 	private static void ConfigureReviewsTable(EntityTypeBuilder<Media> builder)

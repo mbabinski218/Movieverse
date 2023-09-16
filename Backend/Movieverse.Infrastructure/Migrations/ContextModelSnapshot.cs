@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Movieverse.Infrastructure.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(Context))]
+    partial class ContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -244,8 +244,8 @@ namespace Movieverse.Infrastructure.Migrations
                         .HasColumnType("character varying(150)");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(4)
-                        .HasColumnType("numeric(4)");
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1087,28 +1087,28 @@ namespace Movieverse.Infrastructure.Migrations
                                 .HasColumnType("integer");
 
                             b1.Property<decimal>("Budget")
-                                .HasMaxLength(4)
-                                .HasColumnType("numeric");
+                                .HasPrecision(12)
+                                .HasColumnType("numeric(12)");
 
                             b1.Property<decimal>("GrossUs")
-                                .HasMaxLength(4)
-                                .HasColumnType("numeric");
+                                .HasPrecision(12)
+                                .HasColumnType("numeric(12)");
 
                             b1.Property<decimal>("GrossWorldwide")
-                                .HasMaxLength(4)
-                                .HasColumnType("numeric");
+                                .HasPrecision(12)
+                                .HasColumnType("numeric(12)");
 
                             b1.Property<decimal>("OpeningWeekendUs")
-                                .HasMaxLength(4)
-                                .HasColumnType("numeric");
+                                .HasPrecision(12)
+                                .HasColumnType("numeric(12)");
 
                             b1.Property<decimal>("OpeningWeekendWorldwide")
-                                .HasMaxLength(4)
-                                .HasColumnType("numeric");
+                                .HasPrecision(12)
+                                .HasColumnType("numeric(12)");
 
                             b1.Property<decimal>("Revenue")
-                                .HasMaxLength(4)
-                                .HasColumnType("numeric");
+                                .HasPrecision(12)
+                                .HasColumnType("numeric(12)");
 
                             b1.Property<int>("Theaters")
                                 .HasColumnType("integer");

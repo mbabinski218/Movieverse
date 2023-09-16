@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.Media;
 using Movieverse.Contracts.DataTransferObjects.Media;
@@ -88,7 +89,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 			foreach (var image in request.ImagesToAdd)
 			{
 				var imageId = ContentId.Create();
-				media.ContentIds.Add(imageId);
+				media.AddContent(imageId);
 				media.AddDomainEvent(new ImageChanged(imageId, image));
 			}
 		}
@@ -98,7 +99,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 			foreach (var video in request.VideosToAdd)
 			{
 				var videoId = ContentId.Create();
-				media.ContentIds.Add(videoId);
+				media.AddContent(videoId);
 				media.AddDomainEvent(new VideoChanged(videoId, video));
 			}
 		}
@@ -107,7 +108,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		{
 			foreach (var content in request.ContentToRemove)
 			{
-				media.ContentIds.Remove(content);
+				media.RemoveContent(content);
 			}
 		}
 		
@@ -120,7 +121,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 					continue;
 				}
 				
-				media.AddPlatformId(platformId);
+				media.AddPlatform(platformId);
 				media.AddDomainEvent(new PlatformToMediaAdded(media.Id.Value, platformId));
 			}
 		}
@@ -129,12 +130,12 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		{
 			foreach (var genreId in request.GenreIds)
 			{
-				if (media.GenreIds.Contains(genreId))
+				if (media.GenreIds.Contains(GenreId.Create(genreId)))
 				{
 					continue;
 				}
 				
-				media.GenreIds.Add(genreId);
+				media.AddGenre(genreId);
 				media.AddDomainEvent(new GenreToMediaAdded(media.Id.Value, genreId));
 			}
 		}
@@ -149,7 +150,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 				}
 				
 				var staff = Staff.Create(media, staffDto.PersonId, staffDto.Role);
-				media.Staff.Add(staff);
+				media.AddStaff(staff);
 				media.AddDomainEvent(new PersonToMediaAdded(media.Id.Value, staff.PersonId));
 			}
 		}
@@ -181,7 +182,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 						if (season is null)
 						{
 							season = Season.Create(series, seasonDto.SeasonNumber, seasonDto.Episodes?.Count() ?? 0);
-							series.Seasons.Add(season);
+							series.AddSeason(season);
 						}
 
 						if (seasonDto.Episodes is null)
@@ -195,7 +196,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 							if (episode is null)
 							{
 								episode = Episode.Create(season, episodeDto.EpisodeNumber, episodeDto.Title ?? "", episodeDto.Details ?? new Details());
-								season.Episodes.Add(episode);
+								season.AddEpisode(episode);
 							}
 								
 							if (episodeDto.ImagesToAdd is not null)
@@ -203,7 +204,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 								foreach (var image in episodeDto.ImagesToAdd)
 								{
 									var imageId = ContentId.Create();
-									episode.ContentIds.Add(imageId);
+									episode.AddContent(imageId);
 									episode.AddDomainEvent(new ImageChanged(imageId, image));
 								}
 							}
@@ -213,7 +214,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 								foreach (var video in episodeDto.VideosToAdd)
 								{
 									var videoId = ContentId.Create();
-									episode.ContentIds.Add(videoId);
+									episode.AddContent(videoId);
 									episode.AddDomainEvent(new VideoChanged(videoId, video));
 								}
 							}
@@ -222,7 +223,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 							{
 								foreach (var content in episodeDto.ContentToRemove)
 								{
-									episode.ContentIds.Remove(content);
+									episode.RemoveContent(content);
 								}
 							}
 						}

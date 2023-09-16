@@ -1,9 +1,8 @@
 ﻿using Mapster;
-using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Common;
-using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common;
@@ -16,21 +15,22 @@ namespace Movieverse.Infrastructure.Repositories;
 public sealed class MediaRepository : IMediaRepository
 {
 	private readonly ILogger<MediaRepository> _logger;
-	private readonly AppDbContext _dbContext;
-	private readonly IMapper _mapper;
+	private readonly Context _dbContext;
 	
-	public MediaRepository(ILogger<MediaRepository> logger, AppDbContext dbContext, IMapper mapper)
+	public MediaRepository(ILogger<MediaRepository> logger, Context dbContext)
 	{
 		_logger = logger;
 		_dbContext = dbContext;
-		_mapper = mapper;
 	}
 
 	public async Task<Result<Media>> FindAsync(MediaId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Finding media with id {id}...", id.ToString());
 		
-		var media = await _dbContext.Medias.FindAsync(new object?[] { id.Value }, cancellationToken).ConfigureAwait(false);
+		var media = await _dbContext.Medias
+			.FirstOrDefaultAsync(m => m.Id == id, cancellationToken)
+			.ConfigureAwait(false);
+		
 		return media is null ? Error.NotFound("Not found") : media;
 	}
 
@@ -48,18 +48,18 @@ public sealed class MediaRepository : IMediaRepository
 	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMediaAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting upcoming medias...");
-
+		
 		var medias = await _dbContext.Medias
-			.Where(m => m.Details.ReleaseDate > DateTime.UtcNow)
-			.Where(m => platformId == null || m.PlatformIds.Any(p => p == platformId))
 			.AsNoTracking()
+			.Where(m => m.Details.ReleaseDate > DateTime.UtcNow)
+			.Where(m => platformId == null || m.PlatformIds.Any(p => p.Value == platformId.Value))
 			.OrderBy(m => m.Details.ReleaseDate)
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()
 			.ToListAsync(cancellationToken)
 			.ConfigureAwait(false);
 		
-		return new();
+		return medias;
 	}
 
 	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMoviesAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
@@ -104,7 +104,7 @@ public sealed class MediaRepository : IMediaRepository
 			.Where(m => idsList.Contains(m.Id))
 			.AsNoTracking()
 			.ProjectToType<MediaInfoDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize)
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
 			.ConfigureAwait(false);
 	}
 
@@ -118,7 +118,7 @@ public sealed class MediaRepository : IMediaRepository
 			.Where(s => idsList.Contains(s.Id))
 			.AsNoTracking()
 			.ProjectToType<MediaInfoDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize)
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
 			.ConfigureAwait(false);
 	}
 

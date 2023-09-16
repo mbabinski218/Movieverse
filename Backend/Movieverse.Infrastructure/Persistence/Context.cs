@@ -10,7 +10,7 @@ using Movieverse.Domain.Common.Types;
 
 namespace Movieverse.Infrastructure.Persistence;
 
-public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Guid>
+public sealed class Context : IdentityDbContext<User, IdentityUserRole, Guid>
 {
 	// DbSet
 	public DbSet<Media> Medias { get; set; } = null!;
@@ -25,7 +25,7 @@ public sealed class AppDbContext : IdentityDbContext<User, IdentityUserRole, Gui
 	private readonly PublishDomainEventsInterceptor _publishDomainEventsInterceptor;
 	private readonly DateTimeSetterInterceptor _dateTimeSetterInterceptor;
 	
-	public AppDbContext(DbContextOptions<AppDbContext> options, PublishDomainEventsInterceptor publishDomainEventsInterceptor,
+	public Context(DbContextOptions<Context> options, PublishDomainEventsInterceptor publishDomainEventsInterceptor,
 		DateTimeSetterInterceptor dateTimeSetterInterceptor) : base(options)
 	{
 		_publishDomainEventsInterceptor = publishDomainEventsInterceptor;

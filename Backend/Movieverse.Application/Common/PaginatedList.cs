@@ -27,16 +27,17 @@ public sealed class PaginatedList<TKey> : IPaginatedList<TKey>
 		
 	}
 	
-	public static async Task<PaginatedList<TKey>> CreateAsync(IQueryable<TKey> source, short? pageNumber, short? pageSize)
+	public static async Task<PaginatedList<TKey>> CreateAsync(IQueryable<TKey> source, short? pageNumber, short? pageSize, 
+		CancellationToken cancellationToken = default)
 	{
-		var count = (short)await source.CountAsync();
+		var count = (short)await source.CountAsync(cancellationToken).ConfigureAwait(false);
 
 		if (pageSize.HasValue && pageNumber.HasValue)
 		{
 			source = source.Skip((pageNumber.Value - 1) * pageSize.Value).Take(pageSize.Value);
 		}
 
-		var items = await source.ToListAsync();
+		var items = await source.ToListAsync(cancellationToken).ConfigureAwait(false);
 
 		return new PaginatedList<TKey>
 		{
@@ -70,9 +71,9 @@ public sealed class PaginatedList<TKey> : IPaginatedList<TKey>
 public static class PaginatedListExtensions
 {
 	public static Task<PaginatedList<TDestination>> ToPaginatedListAsync<TDestination>(this IQueryable<TDestination> queryable,
-		short? pageNumber, short? pageSize)
+		short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 		where TDestination : class
-		=> PaginatedList<TDestination>.CreateAsync(queryable, pageNumber, pageSize);
+		=> PaginatedList<TDestination>.CreateAsync(queryable, pageNumber, pageSize, cancellationToken);
 
 	public static PaginatedList<TDestination> ToPaginatedList<TDestination>(this IEnumerable<TDestination> enumerable,
 		short? pageNumber, short? pageSize)

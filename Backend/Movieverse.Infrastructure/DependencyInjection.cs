@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Movieverse.Application.Common.Extensions;
 using Movieverse.Application.Common.Settings;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Types;
@@ -45,7 +46,9 @@ public static class DependencyInjection
 		
 		var dbDataSource = GetNpgsqlDataSource(connectionString); // DO NOT MOVE TO UseNpgsql DIRECTLY! - it will generate exception "More than twenty 'IServiceProvider' instances..."
 		
-		services.AddDbContext<AppDbContext>(options => options.UseNpgsql(dbDataSource));
+		services.AddDbContext<Context>(options => options.UseNpgsql(dbDataSource));
+		services.AddDbContext<ReadOnlyContext>(options => options.UseNpgsql(dbDataSource));
+		
 		services.AddHealthChecks().AddNpgSql(connectionString, name:"database");
 
 		services.AddIdentityCore<User>(options =>
@@ -64,7 +67,7 @@ public static class DependencyInjection
 			})
 			.AddRoles<IdentityUserRole>()
 			.AddDefaultTokenProviders()
-			.AddEntityFrameworkStores<AppDbContext>();
+			.AddEntityFrameworkStores<Context>();
         
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
@@ -117,11 +120,17 @@ public static class DependencyInjection
 	
 	private static IServiceCollection AddRepositories(this IServiceCollection services)
 	{
+		services.AddScoped<IContentReadOnlyRepository, ContentReadOnlyRepository>();
 		services.AddScoped<IContentRepository, ContentRepository>();
+		services.AddScoped<IGenreReadOnlyRepository, GenreReadOnlyRepository>();
 		services.AddScoped<IGenreRepository, GenreRepository>();
+		services.AddScoped<IMediaReadOnlyRepository, MediaReadOnlyRepository>();
 		services.AddScoped<IMediaRepository, MediaRepository>();
+		services.AddScoped<IPersonReadOnlyRepository, PersonReadOnlyRepository>();
 		services.AddScoped<IPersonRepository, PersonRepository>();
+		services.AddScoped<IPlatformReadOnlyRepository, PlatformReadOnlyRepository>();
 		services.AddScoped<IPlatformRepository, PlatformRepository>();
+		services.AddScoped<IUserReadOnlyRepository, UserReadOnlyRepository>();
 		services.AddScoped<IUserRepository, UserRepository>();
 
 		return services;

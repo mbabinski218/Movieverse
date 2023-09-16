@@ -4,9 +4,9 @@ namespace Movieverse.Infrastructure.Persistence;
 
 public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
 {
-	private readonly AppDbContext _context;
+	private readonly Context _context;
 
-	public UnitOfWork(AppDbContext context)
+	public UnitOfWork(Context context)
 	{
 		_context = context;
 	}

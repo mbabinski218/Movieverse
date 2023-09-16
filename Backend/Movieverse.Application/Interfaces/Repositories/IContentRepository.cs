@@ -2,7 +2,7 @@
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
-namespace Movieverse.Application.Interfaces;
+namespace Movieverse.Application.Interfaces.Repositories;
 
 public interface IContentRepository
 {

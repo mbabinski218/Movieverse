@@ -24,6 +24,4 @@ public class Review : Entity<int>
 	{
 		
 	}
-	
-	// Other
 }

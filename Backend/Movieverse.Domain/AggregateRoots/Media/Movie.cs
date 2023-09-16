@@ -11,23 +11,25 @@ public sealed class Movie : Media
 	public MediaId? PrequelId { get; set; }
 	public string? PrequelTitle { get; set; }
 	
-	// EF Core
-	private Movie()
-	{
-		
-	}
-	
+	// Constructors
 	private Movie(MediaId id, string title) : base(id, title)
 	{
 		
 	}
-	
-	// Other
+
+	// Methods
 	public static Movie Create(MediaId id, string title)
 	{
 		var movie = new Movie(id, title);
 		movie.AdvancedStatistics = Statistics.Create(movie);
 		return movie;
 	}
+	
 	public static Movie Create(string title) => Create(MediaId.Create(), title);
+	
+	// EF Core
+	private Movie()
+	{
+		
+	}
 }

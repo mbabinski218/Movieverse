@@ -51,6 +51,9 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
 				.ValueGeneratedNever()
 				.HasColumnName("ContentId");
 		});
+		
+		builder.Metadata.FindNavigation(nameof(Person.ContentIds))!
+			.SetPropertyAccessMode(PropertyAccessMode.Field);
 	}
 	
 	private static void ConfigurePersonMediaIdsTable(EntityTypeBuilder<Person> builder)
@@ -67,6 +70,9 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
 				.ValueGeneratedNever()
 				.HasColumnName("MediaId");
 		});
+		
+		builder.Metadata.FindNavigation(nameof(Person.MediaIds))!
+			.SetPropertyAccessMode(PropertyAccessMode.Field);
 	}
 	
 	private static void ConfigureInformation(EntityTypeBuilder<Person> builder)

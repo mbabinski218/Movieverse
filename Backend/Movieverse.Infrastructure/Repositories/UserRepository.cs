@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.DataTransferObjects.User;
 using Movieverse.Domain.AggregateRoots;
@@ -20,14 +21,14 @@ namespace Movieverse.Infrastructure.Repositories;
 public sealed class UserRepository : IUserRepository
 {
 	private readonly ILogger<UserRepository> _logger;
-	private readonly AppDbContext _dbContext;
+	private readonly Context _dbContext;
 	private readonly UserManager<User> _userManager;
 	private readonly RoleManager<IdentityUserRole> _roleManager;
 	private readonly ITokenProvider _tokenProvider;
 	private readonly GoogleAuthentication _googleAuthentication;
 	private readonly FacebookAuthentication _facebookAuthentication;
 
-	public UserRepository(ILogger<UserRepository> logger, AppDbContext dbContext, UserManager<User> userManager, 
+	public UserRepository(ILogger<UserRepository> logger, Context dbContext, UserManager<User> userManager, 
 		RoleManager<IdentityUserRole> roleManager, ITokenProvider tokenProvider, 
 		GoogleAuthentication googleAuthentication, FacebookAuthentication facebookAuthentication)
 	{
@@ -153,8 +154,8 @@ public sealed class UserRepository : IUserRepository
 		return new TokensDto(accessToken, refreshToken);
 	}
 	
-	private static readonly Func<AppDbContext, string, Task<IdentityUserToken<Guid>?>> getUserTokenByRefreshTokenAsync = 
-		EF.CompileAsyncQuery((AppDbContext context, string refreshToken) =>
+	private static readonly Func<Context, string, Task<IdentityUserToken<Guid>?>> getUserTokenByRefreshTokenAsync = 
+		EF.CompileAsyncQuery((Context context, string refreshToken) =>
 			context.UserTokens.FirstOrDefault(t => t.Value == refreshToken));
 	
 	public async Task<Result<User>> FindByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)

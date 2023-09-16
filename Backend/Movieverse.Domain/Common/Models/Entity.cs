@@ -5,23 +5,21 @@ namespace Movieverse.Domain.Common.Models;
 public class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvent
 	where TId : notnull
 {
-	public TId Id { get; protected set; }
+	// Map to table
+	public TId Id { get; } = default!;
     
 	private readonly List<IDomainEvent> _domainEvents = new();
 	
 	[NotMapped]
 	public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
+	// Constructors
 	protected Entity(TId id)
 	{
 		Id = id;
 	}
-
-	protected Entity()
-	{
-		
-	}
 	
+	// Equality
 	public override bool Equals(object? obj)
 	{
 		return obj is Entity<TId> entity && Id.Equals(entity.Id);
@@ -47,6 +45,7 @@ public class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvent
 		return Id.GetHashCode();
 	}
 	
+	// Methods
 	public void ClearDomainEvents()
 	{
 		_domainEvents.Clear();
@@ -55,5 +54,11 @@ public class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvent
 	public void AddDomainEvent(IDomainEvent domainEvent)
 	{
 		_domainEvents.Add(domainEvent);
+	}
+	
+	// EF Core
+	protected Entity()
+	{
+		
 	}
 }

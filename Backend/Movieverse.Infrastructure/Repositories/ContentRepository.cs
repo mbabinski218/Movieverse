@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using Movieverse.Application.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
@@ -11,9 +12,9 @@ namespace Movieverse.Infrastructure.Repositories;
 public sealed class ContentRepository : IContentRepository
 {
 	private readonly ILogger<ContentRepository> _logger;
-	private readonly AppDbContext _dbContext;
+	private readonly Context _dbContext;
 
-	public ContentRepository(ILogger<ContentRepository> logger, AppDbContext dbContext)
+	public ContentRepository(ILogger<ContentRepository> logger, Context dbContext)
 	{
 		_logger = logger;
 		_dbContext = dbContext;
@@ -23,7 +24,10 @@ public sealed class ContentRepository : IContentRepository
 	{
 		_logger.LogDebug("Finding content with id {id}...", id.ToString());
 		
-		var content = await _dbContext.Contents.FindAsync(new object?[] { id.Value }, cancellationToken).ConfigureAwait(false);
+		var content = await _dbContext.Contents
+			.FirstOrDefaultAsync(c => c.Id == id, cancellationToken)
+			.ConfigureAwait(false);
+		
 		return content is null ? Error.NotFound(ContentResources.ContentNotFound) : content;
 	}
 

@@ -3,6 +3,7 @@
 namespace Movieverse.Domain.ValueObjects.Ids;
 
 public abstract class EntityId<TKey> : ValueObject
+	where TKey : notnull
 {
 	public TKey Value { get; } = default!;
 	
@@ -17,5 +18,5 @@ public abstract class EntityId<TKey> : ValueObject
 	}
 	
 	public static implicit operator TKey(EntityId<TKey> id) => id.Value;
-	public override string ToString() => Value?.ToString() ?? "Undefined";
+	public override string ToString() => Value.ToString() ?? throw new NullReferenceException(nameof(EntityId<TKey>));
 }

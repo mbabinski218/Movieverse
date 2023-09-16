@@ -11,16 +11,16 @@ namespace Movieverse.UnitTests.InfrastructureUnitTests.Mocks;
 
 public static class AppDbContextMock
 {
-	public static AppDbContext Get()
+	public static Context Get()
 	{
-		var options = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("Movieverse").Options;
+		var options = new DbContextOptionsBuilder<Context>().UseInMemoryDatabase("Movieverse").Options;
 		
 		var publishDomainEventsInterceptor = new PublishDomainEventsInterceptor(
 			Substitute.For<IPublisher>(), Substitute.For<ILogger<PublishDomainEventsInterceptor>>());
 		
 		var dateTimeSetterInterceptor = new DateTimeSetterInterceptor(Substitute.For<ILogger<DateTimeSetterInterceptor>>());
 
-		var db = new AppDbContext(options, publishDomainEventsInterceptor, dateTimeSetterInterceptor);
+		var db = new Context(options, publishDomainEventsInterceptor, dateTimeSetterInterceptor);
 		
 		db.Medias = Substitute.For<DbSet<Media>>();
 		db.Movies = Substitute.For<DbSet<Movie>>();

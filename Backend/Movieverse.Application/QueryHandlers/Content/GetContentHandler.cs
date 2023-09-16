@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Contracts.DataTransferObjects.Content;
 using Movieverse.Contracts.Queries.Content;
 using Movieverse.Domain.Common.Result;
@@ -9,9 +10,9 @@ namespace Movieverse.Application.QueryHandlers.Content;
 public sealed class GetContentHandler : IRequestHandler<GetContentQuery, Result<ContentDto>>
 {
 	private readonly IImageService _imageService;
-	private readonly IContentRepository _contentRepository;
+	private readonly IContentReadOnlyRepository _contentRepository;
 
-	public GetContentHandler(IImageService imageService, IContentRepository contentRepository)
+	public GetContentHandler(IImageService imageService, IContentReadOnlyRepository contentRepository)
 	{
 		_imageService = imageService;
 		_contentRepository = contentRepository;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
@@ -12,9 +12,9 @@ namespace Movieverse.Infrastructure.Repositories;
 public sealed class PlatformRepository : IPlatformRepository
 {
 	private readonly ILogger<PlatformRepository> _logger;
-	private readonly AppDbContext _dbContext;
+	private readonly Context _dbContext;
 
-	public PlatformRepository(ILogger<PlatformRepository> logger, AppDbContext dbContext)
+	public PlatformRepository(ILogger<PlatformRepository> logger, Context dbContext)
 	{
 		_logger = logger;
 		_dbContext = dbContext;
@@ -24,7 +24,10 @@ public sealed class PlatformRepository : IPlatformRepository
 	{
 		_logger.LogDebug("Getting platform with id {id}...", id.ToString());
 		
-		var platform = await _dbContext.Platforms.FindAsync(new object?[] { id.Value }, cancellationToken).ConfigureAwait(false);
+		var platform = await _dbContext.Platforms
+			.FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
+			.ConfigureAwait(false);
+		
 		return platform is null ? Error.NotFound(PlatformResources.PlatformDoesNotExist) : platform;
 	}
 

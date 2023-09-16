@@ -27,7 +27,7 @@ public sealed class PlatformConfiguration : IEntityTypeConfiguration<Platform>
 			.HasMaxLength(Constants.nameLength);
 
 		builder.Property(p => p.Price)
-			.HasPrecision(Constants.precision);
+			.HasPrecision(Constants.pricePrecision, Constants.priceScale);
 
 		builder.Property(p => p.LogoId)
 			.HasConversion(
@@ -49,5 +49,8 @@ public sealed class PlatformConfiguration : IEntityTypeConfiguration<Platform>
 				.ValueGeneratedNever()
 				.HasColumnName("MediaId");
 		});
+		
+		builder.Metadata.FindNavigation(nameof(Platform.MediaIds))!
+			.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

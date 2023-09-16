@@ -51,6 +51,9 @@ public sealed class SeriesConfiguration : IEntityTypeConfiguration<Series>
 						.ValueGeneratedNever()
 						.HasColumnName("ContentId");
 				});
+				
+				builder.Metadata.FindNavigation(nameof(Episode.ContentIds))!
+					.SetPropertyAccessMode(PropertyAccessMode.Field);
 			});
 		});
 	}

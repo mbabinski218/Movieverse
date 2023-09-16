@@ -38,22 +38,22 @@ public sealed class StatisticsConfiguration : IEntityTypeConfiguration<Statistic
 		builder.OwnsOne(s => s.BoxOffice, boxOfficeConfiguration =>
 		{
 			boxOfficeConfiguration.Property(bo => bo.Budget)
-				.HasMaxLength(Constants.precision);
+				.HasPrecision(Constants.pricePrecision);
 			
 			boxOfficeConfiguration.Property(bo => bo.Revenue)
-				.HasMaxLength(Constants.precision);
+				.HasPrecision(Constants.pricePrecision);
 			
 			boxOfficeConfiguration.Property(bo => bo.GrossUs)
-				.HasMaxLength(Constants.precision);
+				.HasPrecision(Constants.pricePrecision);
 			
 			boxOfficeConfiguration.Property(bo => bo.OpeningWeekendUs)
-				.HasMaxLength(Constants.precision);
+				.HasPrecision(Constants.pricePrecision);
 			
 			boxOfficeConfiguration.Property(bo => bo.GrossWorldwide)
-				.HasMaxLength(Constants.precision);
+				.HasPrecision(Constants.pricePrecision);
 			
 			boxOfficeConfiguration.Property(bo => bo.OpeningWeekendWorldwide)
-				.HasMaxLength(Constants.precision);
+				.HasPrecision(Constants.pricePrecision);
 		});
 	}
 }

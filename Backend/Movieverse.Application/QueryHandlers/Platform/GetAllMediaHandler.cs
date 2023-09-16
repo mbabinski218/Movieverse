@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Contracts.Queries.Platform;
 using Movieverse.Domain.AggregateRoots.Media;
@@ -12,10 +12,11 @@ namespace Movieverse.Application.QueryHandlers.Platform;
 public sealed class GetAllMediaHandler : IRequestHandler<GetAllMediaQuery, Result<IPaginatedList<MediaInfoDto>>>
 {
 	private readonly ILogger<GetAllMediaHandler> _logger;
-	private readonly IPlatformRepository _platformRepository;
-	private readonly IMediaRepository _mediaRepository;
+	private readonly IPlatformReadOnlyRepository _platformRepository;
+	private readonly IMediaReadOnlyRepository _mediaRepository;
 
-	public GetAllMediaHandler(ILogger<GetAllMediaHandler> logger, IPlatformRepository platformRepository, IMediaRepository mediaRepository)
+	public GetAllMediaHandler(ILogger<GetAllMediaHandler> logger, IPlatformReadOnlyRepository platformRepository, 
+		IMediaReadOnlyRepository mediaRepository)
 	{
 		_logger = logger;
 		_platformRepository = platformRepository;

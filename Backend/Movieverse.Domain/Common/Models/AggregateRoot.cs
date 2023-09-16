@@ -4,18 +4,20 @@ namespace Movieverse.Domain.Common.Models;
 
 public abstract class AggregateRoot<TId, TIdType> : Entity<TId>, IAggregateRoot
 	where TId : AggregateRootId<TIdType>
+	where TIdType : notnull
 {
+	// Map to table
+	public new AggregateRootId<TIdType> Id { get; } = null!;
 	public DateTimeOffset CreatedAt { get; set; }
 	public DateTimeOffset? UpdatedAt { get; set; }
 
-	private AggregateRootId<TIdType> _id = null!;
-	public new AggregateRootId<TIdType> Id => _id;
-
+	// Constructors
 	protected AggregateRoot(TId id)
 	{
-		_id = id;
+		Id = id;
 	}
 
+	// EF Core
 	protected AggregateRoot()
 	{
 		

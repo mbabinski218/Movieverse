@@ -1,7 +1,7 @@
 ﻿using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Contracts.DataTransferObjects.Platform;
 using Movieverse.Contracts.Queries.Platform;
 using Movieverse.Domain.Common.Result;
@@ -11,10 +11,10 @@ namespace Movieverse.Application.QueryHandlers.Platform;
 public sealed class GetPlatformHandler : IRequestHandler<GetPlatformQuery, Result<PlatformDto>>
 {
 	private readonly ILogger<GetPlatformHandler> _logger;
-    private readonly IPlatformRepository _platformRepository;
+    private readonly IPlatformReadOnlyRepository _platformRepository;
     private readonly IMapper _mapper;
 
-    public GetPlatformHandler(ILogger<GetPlatformHandler> logger, IPlatformRepository platformRepository, IMapper mapper)
+    public GetPlatformHandler(ILogger<GetPlatformHandler> logger, IPlatformReadOnlyRepository platformRepository, IMapper mapper)
     {
 	    _logger = logger;
 	    _platformRepository = platformRepository;

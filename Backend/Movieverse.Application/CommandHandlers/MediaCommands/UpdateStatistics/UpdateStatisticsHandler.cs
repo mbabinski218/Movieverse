@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Metrics;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.Media;
@@ -153,7 +154,7 @@ public sealed class UpdateStatisticsHandler : IRequestHandler<UpdateStatisticsCo
 			var points = normalizedViews + normalizedVotes * 2 + normalizedUserReviews * 4 + normalizedCriticReviews * 5 + 
 			             normalizedInWatchlistCount * 3 + normalizedPosition * 3;
 				
-			media.AdvancedStatistics.Popularity.Add(latestPopularity);
+			media.AdvancedStatistics.AddPopularity(latestPopularity);
 			_newRanking.TryAdd(media.Id, points);
 		}
 	}

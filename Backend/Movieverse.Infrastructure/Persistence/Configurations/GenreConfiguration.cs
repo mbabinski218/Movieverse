@@ -44,5 +44,8 @@ public sealed class GenreConfiguration : IEntityTypeConfiguration<Genre>
 				.ValueGeneratedNever()
 				.HasColumnName("MediaId");
 		});
+		
+		builder.Metadata.FindNavigation(nameof(Genre.MediaIds))!
+			.SetPropertyAccessMode(PropertyAccessMode.Field);
 	}
 }

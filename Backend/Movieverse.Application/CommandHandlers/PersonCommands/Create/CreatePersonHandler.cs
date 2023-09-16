@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.Person;
 using Movieverse.Domain.AggregateRoots;
@@ -82,7 +83,7 @@ public sealed class CreatePersonHandler : IRequestHandler<CreatePersonCommand, R
 			{
 				var pictureId = ContentId.Create();
 				person.AddDomainEvent(new ImageChanged(pictureId, picture));
-				person.ContentIds.Add(pictureId);
+				person.AddContentId(pictureId);
 			}
 		}
 		

@@ -2,16 +2,17 @@
 
 public sealed class PlatformId : AggregateRootId<Guid>
 {
+	// Constructors
 	private PlatformId(Guid value) : base(value)
 	{
 		
 	}	
 	
+	// Methods
 	public static PlatformId Create() => new(Guid.NewGuid());
 	public static PlatformId Create(Guid value) => new(value);
-	public static PlatformId Create(string value) => new(Guid.Parse(value));
 
+	// Operators
 	public static implicit operator PlatformId(Guid value) => Create(value);
-	
-	public static implicit operator PlatformId(string value) => Create(value);
+	public static explicit operator Guid(PlatformId platformId) => platformId.Value;
 }
