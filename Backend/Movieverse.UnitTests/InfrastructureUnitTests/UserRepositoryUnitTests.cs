@@ -16,7 +16,7 @@ namespace Movieverse.UnitTests.InfrastructureUnitTests;
 public class UserRepositoryUnitTests
 {
 	private ILogger<UserRepository> _logger = null!;
-	private AppDbContext _dbContext = null!;
+	private Context _dbContext = null!;
 	private UserManager<User> _userManager = null!;
 	private RoleManager<IdentityUserRole> _roleManager = null!;
 	private SignInManager<User> _signInManager = null!;

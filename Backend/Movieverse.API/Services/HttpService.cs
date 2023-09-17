@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http.Extensions;
 using Movieverse.Application.Interfaces;
 using Movieverse.Domain.Common.Types;
-using Movieverse.Domain.ValueObjects.Id;
 
 namespace Movieverse.API.Services;
 
@@ -35,8 +34,8 @@ public sealed class HttpService : IHttpService
 	}
 
 	private bool _idHeaderWasSet;
-	private AggregateRootId? _idHeader;
-	public AggregateRootId? IdHeader
+	private Guid? _idHeader;
+	public Guid? IdHeader
 	{
 		get
 		{
@@ -46,7 +45,7 @@ public sealed class HttpService : IHttpService
 			}
 
 			var idRouteValue = _httpContextAccessor.HttpContext?.Request.RouteValues["Id"];
-			_idHeader = idRouteValue is not string id ? null : AggregateRootId.Create(id);
+			_idHeader = idRouteValue is not string id ? null : Guid.Parse(id);
 
 			_idHeaderWasSet = true;
 			return _idHeader;
@@ -75,8 +74,8 @@ public sealed class HttpService : IHttpService
 	}
 	
 	private bool _userIdWasSet;
-	private AggregateRootId? _userId;
-	public AggregateRootId? UserId
+	private Guid? _userId;
+	public Guid? UserId
 	{
 		get
 		{
@@ -98,7 +97,7 @@ public sealed class HttpService : IHttpService
 			var decodedToken = handler.CanReadToken(token) ? handler.ReadJwtToken(token) : null;
 			
 			var id = decodedToken?.Claims.FirstOrDefault(c => c.Type == ClaimNames.id)?.Value;
-			_userId = id is null ? null : AggregateRootId.Create(id);
+			_userId = id is null ? null : Guid.Parse(id);
 			
 			_userIdWasSet = true;
 			return _userId;

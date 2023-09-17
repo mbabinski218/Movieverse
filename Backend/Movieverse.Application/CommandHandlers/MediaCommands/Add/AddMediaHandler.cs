@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.Media;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common.Result;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.CommandHandlers.MediaCommands.Add;
 
@@ -35,7 +36,7 @@ public sealed class AddMediaHandler : IRequestHandler<AddMediaCommand, Result>
 		}
 
 		Result addResult;
-		var mediaId = AggregateRootId.Create();
+		var mediaId = MediaId.Create();
 		switch (request.Type)
 		{
 			case nameof(Movie):

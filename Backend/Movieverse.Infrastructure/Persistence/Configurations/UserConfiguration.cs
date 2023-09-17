@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common;
 using Movieverse.Domain.Entities;
-using Movieverse.Infrastructure.Common;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Infrastructure.Persistence.Configurations;
 
@@ -25,11 +26,23 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 		builder.Property(u => u.UserName)
 			.HasMaxLength(Constants.nameLength);
 
+		var avatarConverter = new ValueConverter<ContentId?, Guid?>
+		(
+			x => x == null ? null : x.Value,
+			x => x == null ? null : ContentId.Create(x.Value)
+		);
+		
 		builder.Property(u => u.AvatarId)
-			.HasConversion(EfExtensions.nullableAggregateRootIdConverter);
+			.HasConversion(avatarConverter);
 
+		var personConverter = new ValueConverter<PersonId?, Guid?>
+		(
+			x => x == null ? null : x.Value,
+			x => x == null ? null : PersonId.Create(x.Value)
+		);
+		
 		builder.Property(u => u.PersonId)
-			.HasConversion(EfExtensions.nullableAggregateRootIdConverter);
+			.HasConversion(personConverter);
 
 		builder.OwnsOne(u => u.Information);
 	}
@@ -39,7 +52,9 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 		builder.OwnsMany(u => u.MediaInfos, dataBuilder =>
 		{
 			dataBuilder.Property(mi => mi.MediaId)
-				.HasConversion(EfExtensions.aggregateRootIdConverter);
+				.HasConversion(
+					x => x.Value, 
+					x => MediaId.Create(x));
 
 			dataBuilder.HasKey(nameof(MediaInfo.Id));
 		});

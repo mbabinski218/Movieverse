@@ -1,24 +1,21 @@
 ﻿using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Entities;
 using Movieverse.Domain.ValueObjects;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Domain.AggregateRoots;
 
 public class User : IdentityAggregateRoot
 {
 	// Map to table
+	private readonly List<MediaInfo> _mediaInfos = new();
+	
 	public Information Information { get; set; } = null!;
-	public AggregateRootId? AvatarId { get; set; } = null!;
-	public List<MediaInfo> MediaInfos { get; private set; } = new();
-	public AggregateRootId? PersonId { get; set; }
+	public ContentId? AvatarId { get; set; } = null!;
+	public IReadOnlyList<MediaInfo> MediaInfos => _mediaInfos.AsReadOnly();
+	public PersonId? PersonId { get; set; }
 
-	// EF Core
-	private User()
-	{
-		
-	}
-
+	// Constructors
 	protected User(Guid id, string email, string userName, string? firstName, string? lastName, short age)
 	{
 		Id = id;
@@ -32,7 +29,23 @@ public class User : IdentityAggregateRoot
 		};
 	}
 	
-	// Other
+	// Methods
 	public static User Create(string email, string userName, string? firstName, string? lastName, short age) => 
 		new(Guid.NewGuid(), email, userName, firstName, lastName, age);
+	
+	public void AddMediaInfo(MediaInfo mediaInfo)
+	{
+		_mediaInfos.Add(mediaInfo);
+	}
+	
+	public void RemoveMediaInfo(MediaInfo mediaInfo)
+	{
+		_mediaInfos.Remove(mediaInfo);
+	}
+	
+	// EF Core
+	private User()
+	{
+		
+	}
 }

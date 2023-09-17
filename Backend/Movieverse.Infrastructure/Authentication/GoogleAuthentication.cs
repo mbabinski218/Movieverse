@@ -24,9 +24,9 @@ public readonly struct GoogleUser
 public sealed class GoogleAuthentication
 {
 	private readonly GoogleJsonWebSignature.ValidationSettings _validationSettings;
-	private readonly AppDbContext _dbContext;
+	private readonly Context _dbContext;
 
-	public GoogleAuthentication(IOptions<AuthenticationSettings> googleSettings, AppDbContext dbContext)
+	public GoogleAuthentication(IOptions<AuthenticationSettings> googleSettings, Context dbContext)
 	{
 		_dbContext = dbContext;
 		ArgumentNullException.ThrowIfNull(googleSettings.Value, nameof(googleSettings));

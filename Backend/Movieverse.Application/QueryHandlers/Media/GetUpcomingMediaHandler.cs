@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Contracts.Queries.Media;
@@ -11,10 +11,11 @@ namespace Movieverse.Application.QueryHandlers.Media;
 public sealed class GetUpcomingMediaHandler : IRequestHandler<GetUpcomingMediaQuery, Result<IEnumerable<FilteredMediaDto>>>
 {
 	private readonly ILogger<GetUpcomingMediaHandler> _logger;
-	private readonly IMediaRepository _mediaRepository;
-	private readonly IPlatformRepository _platformRepository;
+	private readonly IMediaReadOnlyRepository _mediaRepository;
+	private readonly IPlatformReadOnlyRepository _platformRepository;
 
-	public GetUpcomingMediaHandler(ILogger<GetUpcomingMediaHandler> logger, IMediaRepository mediaRepository, IPlatformRepository platformRepository)
+	public GetUpcomingMediaHandler(ILogger<GetUpcomingMediaHandler> logger, IMediaReadOnlyRepository mediaRepository, 
+		IPlatformReadOnlyRepository platformRepository)
 	{
 		_logger = logger;
 		_mediaRepository = mediaRepository;
@@ -63,7 +64,7 @@ public sealed class GetUpcomingMediaHandler : IRequestHandler<GetUpcomingMediaQu
 		var upcomingMedia = new List<FilteredMediaDto>();
 		foreach (var platform in platforms.Value)
 		{
-			var medias = await _mediaRepository.GetUpcomingMediaAsync(platform.Id, count, cancellationToken).ConfigureAwait(false);
+			var medias = await _mediaRepository.GetUpcomingMediaAsync(platform.Id.Value, count, cancellationToken).ConfigureAwait(false);
 			if (medias.IsUnsuccessful)
 			{
 				continue;

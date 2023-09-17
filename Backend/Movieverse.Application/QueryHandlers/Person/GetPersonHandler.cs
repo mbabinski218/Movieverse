@@ -1,7 +1,7 @@
 ﻿using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Contracts.DataTransferObjects.Person;
 using Movieverse.Contracts.Queries.Person;
 using Movieverse.Domain.Common.Result;
@@ -11,11 +11,11 @@ namespace Movieverse.Application.QueryHandlers.Person;
 public sealed class GetPersonHandler : IRequestHandler<GetPersonQuery, Result<PersonDto>>
 {
 	private readonly ILogger<GetPersonHandler> _logger;
-	private readonly IPersonRepository _personRepository;
+	private readonly IPersonReadOnlyRepository _personRepository;
 	private readonly IMapper _mapper;
 
 
-	public GetPersonHandler(ILogger<GetPersonHandler> logger, IPersonRepository personRepository, IMapper mapper)
+	public GetPersonHandler(ILogger<GetPersonHandler> logger, IPersonReadOnlyRepository personRepository, IMapper mapper)
 	{
 		_logger = logger;
 		_personRepository = personRepository;

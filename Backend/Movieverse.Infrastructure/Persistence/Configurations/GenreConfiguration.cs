@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Infrastructure.Persistence.Configurations;
 
@@ -16,6 +17,11 @@ public sealed class GenreConfiguration : IEntityTypeConfiguration<Genre>
 	private static void ConfigureGenreTable(EntityTypeBuilder<Genre> builder)
 	{
 		builder.HasKey(g => g.Id);
+		
+		builder.Property(g => g.Id)
+			.HasConversion(
+				id => id.Value,
+				value => GenreId.Create(value));
 
 		builder.Property(g => g.Name)
 			.HasMaxLength(Constants.nameLength);
@@ -38,5 +44,8 @@ public sealed class GenreConfiguration : IEntityTypeConfiguration<Genre>
 				.ValueGeneratedNever()
 				.HasColumnName("MediaId");
 		});
+		
+		builder.Metadata.FindNavigation(nameof(Genre.MediaIds))!
+			.SetPropertyAccessMode(PropertyAccessMode.Field);
 	}
 }

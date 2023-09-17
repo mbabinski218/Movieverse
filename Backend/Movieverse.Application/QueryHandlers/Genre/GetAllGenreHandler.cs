@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Contracts.DataTransferObjects.Genre;
 using Movieverse.Contracts.Queries.Genre;
 using Movieverse.Domain.Common;
@@ -11,9 +11,9 @@ namespace Movieverse.Application.QueryHandlers.Genre;
 public sealed class GetAllGenreHandler : IRequestHandler<GetAllGenresQuery, Result<IPaginatedList<GenreDto>>>
 {
 	private readonly ILogger<GetAllGenreHandler> _logger;
-	private readonly IGenreRepository _genreRepository;
+	private readonly IGenreReadOnlyRepository _genreRepository;
 
-	public GetAllGenreHandler(ILogger<GetAllGenreHandler> logger, IGenreRepository genreRepository)
+	public GetAllGenreHandler(ILogger<GetAllGenreHandler> logger, IGenreReadOnlyRepository genreRepository)
 	{
 		_logger = logger;
 		_genreRepository = genreRepository;

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Movieverse.Domain.Common.Types;
 using Movieverse.Infrastructure.Persistence;
@@ -11,10 +12,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Movieverse.Infrastructure.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(Context))]
+    [Migration("20230916185817_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,7 +112,6 @@ namespace Movieverse.Infrastructure.Migrations
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Content", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("ContentType")
@@ -134,13 +136,12 @@ namespace Movieverse.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Contents", (string)null);
+                    b.ToTable("Contents");
                 });
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Genre", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("CreatedAt")
@@ -164,13 +165,12 @@ namespace Movieverse.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres", (string)null);
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Media.Media", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("CreatedAt")
@@ -199,7 +199,7 @@ namespace Movieverse.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Medias", (string)null);
+                    b.ToTable("Medias");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Media");
 
@@ -209,7 +209,6 @@ namespace Movieverse.Infrastructure.Migrations
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Person", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Biography")
@@ -228,13 +227,12 @@ namespace Movieverse.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Persons", (string)null);
+                    b.ToTable("Persons");
                 });
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Platform", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("CreatedAt")
@@ -249,15 +247,15 @@ namespace Movieverse.Infrastructure.Migrations
                         .HasColumnType("character varying(150)");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(4)
-                        .HasColumnType("numeric(4)");
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Platforms", (string)null);
+                    b.ToTable("Platforms");
                 });
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.User", b =>
@@ -386,7 +384,7 @@ namespace Movieverse.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Award", (string)null);
+                    b.ToTable("Award");
                 });
 
             modelBuilder.Entity("Movieverse.Domain.Entities.Statistics", b =>
@@ -405,7 +403,7 @@ namespace Movieverse.Infrastructure.Migrations
                     b.HasIndex("MediaId")
                         .IsUnique();
 
-                    b.ToTable("Statistics", (string)null);
+                    b.ToTable("Statistics");
                 });
 
             modelBuilder.Entity("Movieverse.Domain.Entities.StatisticsAward", b =>
@@ -426,7 +424,7 @@ namespace Movieverse.Infrastructure.Migrations
 
                     b.HasIndex("AwardId");
 
-                    b.ToTable("StatisticsAward", (string)null);
+                    b.ToTable("StatisticsAward");
                 });
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Media.Movie", b =>
@@ -510,7 +508,7 @@ namespace Movieverse.Infrastructure.Migrations
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Genre", b =>
                 {
-                    b.OwnsMany("Movieverse.Domain.AggregateRoots.Genre.MediaIds#Movieverse.Domain.ValueObjects.Id.AggregateRootId", "MediaIds", b1 =>
+                    b.OwnsMany("Movieverse.Domain.ValueObjects.Ids.AggregateRootIds.MediaId", "MediaIds", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -540,7 +538,7 @@ namespace Movieverse.Infrastructure.Migrations
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Media.Media", b =>
                 {
-                    b.OwnsMany("Movieverse.Domain.AggregateRoots.Media.Media.ContentIds#Movieverse.Domain.ValueObjects.Id.AggregateRootId", "ContentIds", b1 =>
+                    b.OwnsMany("Movieverse.Domain.ValueObjects.Ids.AggregateRootIds.ContentId", "ContentIds", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -565,7 +563,7 @@ namespace Movieverse.Infrastructure.Migrations
                                 .HasForeignKey("MediaId");
                         });
 
-                    b.OwnsOne("Movieverse.Domain.AggregateRoots.Media.Media.Details#Movieverse.Domain.ValueObjects.Details", "Details", b1 =>
+                    b.OwnsOne("Movieverse.Domain.ValueObjects.Details", "Details", b1 =>
                         {
                             b1.Property<Guid>("MediaId")
                                 .HasColumnType("uuid");
@@ -601,63 +599,13 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.HasKey("MediaId");
 
-                            b1.ToTable("Medias", (string)null);
+                            b1.ToTable("Medias");
 
                             b1.WithOwner()
                                 .HasForeignKey("MediaId");
                         });
 
-                    b.OwnsMany("Movieverse.Domain.AggregateRoots.Media.Media.GenreIds#Movieverse.Domain.ValueObjects.Id.AggregateRootId", "GenreIds", b1 =>
-                        {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
-                            b1.Property<Guid>("MediaId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<Guid>("Value")
-                                .HasColumnType("uuid")
-                                .HasColumnName("GenreId");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("MediaId");
-
-                            b1.ToTable("MediaGenreIds", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("MediaId");
-                        });
-
-                    b.OwnsMany("Movieverse.Domain.AggregateRoots.Media.Media.PlatformIds#Movieverse.Domain.ValueObjects.Id.AggregateRootId", "PlatformIds", b1 =>
-                        {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
-                            b1.Property<Guid>("MediaId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<Guid>("Value")
-                                .HasColumnType("uuid")
-                                .HasColumnName("PlatformId");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("MediaId");
-
-                            b1.ToTable("MediaPlatformIds", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("MediaId");
-                        });
-
-                    b.OwnsMany("Movieverse.Domain.AggregateRoots.Media.Media.Reviews#Movieverse.Domain.Entities.Review", "Reviews", b1 =>
+                    b.OwnsMany("Movieverse.Domain.Entities.Review", "Reviews", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -719,7 +667,7 @@ namespace Movieverse.Infrastructure.Migrations
                             b1.Navigation("Media");
                         });
 
-                    b.OwnsMany("Movieverse.Domain.AggregateRoots.Media.Media.Staff#Movieverse.Domain.Entities.Staff", "Staff", b1 =>
+                    b.OwnsMany("Movieverse.Domain.Entities.Staff", "Staff", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -740,7 +688,7 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.HasIndex("MediaId");
 
-                            b1.ToTable("Staff", (string)null);
+                            b1.ToTable("Staff");
 
                             b1.WithOwner("Media")
                                 .HasForeignKey("MediaId");
@@ -748,7 +696,57 @@ namespace Movieverse.Infrastructure.Migrations
                             b1.Navigation("Media");
                         });
 
-                    b.OwnsOne("Movieverse.Domain.AggregateRoots.Media.Media.TechnicalSpecs#Movieverse.Domain.ValueObjects.TechnicalSpecs", "TechnicalSpecs", b1 =>
+                    b.OwnsMany("Movieverse.Domain.ValueObjects.Ids.AggregateRootIds.GenreId", "GenreIds", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<Guid>("MediaId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<Guid>("Value")
+                                .HasColumnType("uuid")
+                                .HasColumnName("GenreId");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("MediaId");
+
+                            b1.ToTable("MediaGenreIds", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("MediaId");
+                        });
+
+                    b.OwnsMany("Movieverse.Domain.ValueObjects.Ids.AggregateRootIds.PlatformId", "PlatformIds", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<Guid>("MediaId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<Guid>("Value")
+                                .HasColumnType("uuid")
+                                .HasColumnName("PlatformId");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("MediaId");
+
+                            b1.ToTable("MediaPlatformIds", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("MediaId");
+                        });
+
+                    b.OwnsOne("Movieverse.Domain.ValueObjects.TechnicalSpecs", "TechnicalSpecs", b1 =>
                         {
                             b1.Property<Guid>("MediaId")
                                 .HasColumnType("uuid");
@@ -775,7 +773,7 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.HasKey("MediaId");
 
-                            b1.ToTable("Medias", (string)null);
+                            b1.ToTable("Medias");
 
                             b1.WithOwner()
                                 .HasForeignKey("MediaId");
@@ -800,7 +798,7 @@ namespace Movieverse.Infrastructure.Migrations
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Person", b =>
                 {
-                    b.OwnsMany("Movieverse.Domain.AggregateRoots.Person.ContentIds#Movieverse.Domain.ValueObjects.Id.AggregateRootId", "ContentIds", b1 =>
+                    b.OwnsMany("Movieverse.Domain.ValueObjects.Ids.AggregateRootIds.ContentId", "ContentIds", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -825,7 +823,7 @@ namespace Movieverse.Infrastructure.Migrations
                                 .HasForeignKey("PersonId");
                         });
 
-                    b.OwnsOne("Movieverse.Domain.AggregateRoots.Person.Information#Movieverse.Domain.ValueObjects.Information", "Information", b1 =>
+                    b.OwnsOne("Movieverse.Domain.ValueObjects.Information", "Information", b1 =>
                         {
                             b1.Property<Guid>("PersonId")
                                 .HasColumnType("uuid");
@@ -843,13 +841,38 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.HasKey("PersonId");
 
-                            b1.ToTable("Persons", (string)null);
+                            b1.ToTable("Persons");
 
                             b1.WithOwner()
                                 .HasForeignKey("PersonId");
                         });
 
-                    b.OwnsOne("Movieverse.Domain.AggregateRoots.Person.LifeHistory#Movieverse.Domain.ValueObjects.LifeHistory", "LifeHistory", b1 =>
+                    b.OwnsMany("Movieverse.Domain.ValueObjects.Ids.AggregateRootIds.MediaId", "MediaIds", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<Guid>("PersonId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<Guid>("Value")
+                                .HasColumnType("uuid")
+                                .HasColumnName("MediaId");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("PersonId");
+
+                            b1.ToTable("PersonMediaIds", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("PersonId");
+                        });
+
+                    b.OwnsOne("Movieverse.Domain.ValueObjects.LifeHistory", "LifeHistory", b1 =>
                         {
                             b1.Property<Guid>("PersonId")
                                 .HasColumnType("uuid");
@@ -876,32 +899,7 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.HasKey("PersonId");
 
-                            b1.ToTable("Persons", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("PersonId");
-                        });
-
-                    b.OwnsMany("Movieverse.Domain.AggregateRoots.Person.MediaIds#Movieverse.Domain.ValueObjects.Id.AggregateRootId", "MediaIds", b1 =>
-                        {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
-                            b1.Property<Guid>("PersonId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<Guid>("Value")
-                                .HasColumnType("uuid")
-                                .HasColumnName("MediaId");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("PersonId");
-
-                            b1.ToTable("PersonMediaIds", (string)null);
+                            b1.ToTable("Persons");
 
                             b1.WithOwner()
                                 .HasForeignKey("PersonId");
@@ -920,7 +918,7 @@ namespace Movieverse.Infrastructure.Migrations
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Platform", b =>
                 {
-                    b.OwnsMany("Movieverse.Domain.AggregateRoots.Platform.MediaIds#Movieverse.Domain.ValueObjects.Id.AggregateRootId", "MediaIds", b1 =>
+                    b.OwnsMany("Movieverse.Domain.ValueObjects.Ids.AggregateRootIds.MediaId", "MediaIds", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -950,7 +948,7 @@ namespace Movieverse.Infrastructure.Migrations
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.User", b =>
                 {
-                    b.OwnsOne("Movieverse.Domain.AggregateRoots.User.Information#Movieverse.Domain.ValueObjects.Information", "Information", b1 =>
+                    b.OwnsOne("Movieverse.Domain.ValueObjects.Information", "Information", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
@@ -968,13 +966,13 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("Users", (string)null);
+                            b1.ToTable("Users");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsMany("Movieverse.Domain.AggregateRoots.User.MediaInfos#Movieverse.Domain.Entities.MediaInfo", "MediaInfos", b1 =>
+                    b.OwnsMany("Movieverse.Domain.Entities.MediaInfo", "MediaInfos", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -998,7 +996,7 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.HasIndex("UserId");
 
-                            b1.ToTable("MediaInfo", (string)null);
+                            b1.ToTable("MediaInfo");
 
                             b1.WithOwner("User")
                                 .HasForeignKey("UserId");
@@ -1020,47 +1018,7 @@ namespace Movieverse.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Movieverse.Domain.Entities.Statistics.BoxOffice#Movieverse.Domain.ValueObjects.BoxOffice", "BoxOffice", b1 =>
-                        {
-                            b1.Property<int>("StatisticsId")
-                                .HasColumnType("integer");
-
-                            b1.Property<decimal>("Budget")
-                                .HasMaxLength(4)
-                                .HasColumnType("numeric");
-
-                            b1.Property<decimal>("GrossUs")
-                                .HasMaxLength(4)
-                                .HasColumnType("numeric");
-
-                            b1.Property<decimal>("GrossWorldwide")
-                                .HasMaxLength(4)
-                                .HasColumnType("numeric");
-
-                            b1.Property<decimal>("OpeningWeekendUs")
-                                .HasMaxLength(4)
-                                .HasColumnType("numeric");
-
-                            b1.Property<decimal>("OpeningWeekendWorldwide")
-                                .HasMaxLength(4)
-                                .HasColumnType("numeric");
-
-                            b1.Property<decimal>("Revenue")
-                                .HasMaxLength(4)
-                                .HasColumnType("numeric");
-
-                            b1.Property<int>("Theaters")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("StatisticsId");
-
-                            b1.ToTable("Statistics", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("StatisticsId");
-                        });
-
-                    b.OwnsMany("Movieverse.Domain.Entities.Statistics.Popularity#Movieverse.Domain.Entities.Popularity", "Popularity", b1 =>
+                    b.OwnsMany("Movieverse.Domain.Entities.Popularity", "Popularity", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -1087,12 +1045,12 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.HasIndex("StatisticsId");
 
-                            b1.ToTable("Popularity", (string)null);
+                            b1.ToTable("Popularity");
 
                             b1.WithOwner("Statistics")
                                 .HasForeignKey("StatisticsId");
 
-                            b1.OwnsOne("Movieverse.Domain.Entities.Statistics.Popularity#Movieverse.Domain.Entities.Popularity.BasicStatistics#Movieverse.Domain.ValueObjects.BasicStatistics", "BasicStatistics", b2 =>
+                            b1.OwnsOne("Movieverse.Domain.ValueObjects.BasicStatistics", "BasicStatistics", b2 =>
                                 {
                                     b2.Property<int>("PopularityId")
                                         .HasColumnType("integer");
@@ -1114,7 +1072,7 @@ namespace Movieverse.Infrastructure.Migrations
 
                                     b2.HasKey("PopularityId");
 
-                                    b2.ToTable("Popularity", (string)null);
+                                    b2.ToTable("Popularity");
 
                                     b2.WithOwner()
                                         .HasForeignKey("PopularityId");
@@ -1124,6 +1082,46 @@ namespace Movieverse.Infrastructure.Migrations
                                 .IsRequired();
 
                             b1.Navigation("Statistics");
+                        });
+
+                    b.OwnsOne("Movieverse.Domain.ValueObjects.BoxOffice", "BoxOffice", b1 =>
+                        {
+                            b1.Property<int>("StatisticsId")
+                                .HasColumnType("integer");
+
+                            b1.Property<decimal>("Budget")
+                                .HasPrecision(12)
+                                .HasColumnType("numeric(12)");
+
+                            b1.Property<decimal>("GrossUs")
+                                .HasPrecision(12)
+                                .HasColumnType("numeric(12)");
+
+                            b1.Property<decimal>("GrossWorldwide")
+                                .HasPrecision(12)
+                                .HasColumnType("numeric(12)");
+
+                            b1.Property<decimal>("OpeningWeekendUs")
+                                .HasPrecision(12)
+                                .HasColumnType("numeric(12)");
+
+                            b1.Property<decimal>("OpeningWeekendWorldwide")
+                                .HasPrecision(12)
+                                .HasColumnType("numeric(12)");
+
+                            b1.Property<decimal>("Revenue")
+                                .HasPrecision(12)
+                                .HasColumnType("numeric(12)");
+
+                            b1.Property<int>("Theaters")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("StatisticsId");
+
+                            b1.ToTable("Statistics");
+
+                            b1.WithOwner()
+                                .HasForeignKey("StatisticsId");
                         });
 
                     b.Navigation("BoxOffice")
@@ -1155,7 +1153,7 @@ namespace Movieverse.Infrastructure.Migrations
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Media.Movie", b =>
                 {
-                    b.OwnsOne("Movieverse.Domain.AggregateRoots.Media.Movie.BasicStatistics#Movieverse.Domain.ValueObjects.BasicStatistics", "BasicStatistics", b1 =>
+                    b.OwnsOne("Movieverse.Domain.ValueObjects.BasicStatistics", "BasicStatistics", b1 =>
                         {
                             b1.Property<Guid>("MovieId")
                                 .HasColumnType("uuid");
@@ -1182,7 +1180,7 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.HasKey("MovieId");
 
-                            b1.ToTable("Medias", (string)null);
+                            b1.ToTable("Medias");
 
                             b1.WithOwner()
                                 .HasForeignKey("MovieId");
@@ -1194,7 +1192,7 @@ namespace Movieverse.Infrastructure.Migrations
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Media.Series", b =>
                 {
-                    b.OwnsOne("Movieverse.Domain.AggregateRoots.Media.Series.BasicStatistics#Movieverse.Domain.ValueObjects.BasicStatistics", "BasicStatistics", b1 =>
+                    b.OwnsOne("Movieverse.Domain.ValueObjects.BasicStatistics", "BasicStatistics", b1 =>
                         {
                             b1.Property<Guid>("SeriesId")
                                 .HasColumnType("uuid");
@@ -1221,13 +1219,13 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.HasKey("SeriesId");
 
-                            b1.ToTable("Medias", (string)null);
+                            b1.ToTable("Medias");
 
                             b1.WithOwner()
                                 .HasForeignKey("SeriesId");
                         });
 
-                    b.OwnsMany("Movieverse.Domain.AggregateRoots.Media.Series.Seasons#Movieverse.Domain.Entities.Season", "Seasons", b1 =>
+                    b.OwnsMany("Movieverse.Domain.Entities.Season", "Seasons", b1 =>
                         {
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -1248,12 +1246,12 @@ namespace Movieverse.Infrastructure.Migrations
 
                             b1.HasIndex("SeriesId");
 
-                            b1.ToTable("Season", (string)null);
+                            b1.ToTable("Season");
 
                             b1.WithOwner("Series")
                                 .HasForeignKey("SeriesId");
 
-                            b1.OwnsMany("Movieverse.Domain.AggregateRoots.Media.Series.Seasons#Movieverse.Domain.Entities.Season.Episodes#Movieverse.Domain.Entities.Episode", "Episodes", b2 =>
+                            b1.OwnsMany("Movieverse.Domain.Entities.Episode", "Episodes", b2 =>
                                 {
                                     b2.Property<int>("Id")
                                         .ValueGeneratedOnAdd()
@@ -1276,12 +1274,12 @@ namespace Movieverse.Infrastructure.Migrations
 
                                     b2.HasIndex("SeasonId");
 
-                                    b2.ToTable("Episode", (string)null);
+                                    b2.ToTable("Episode");
 
                                     b2.WithOwner("Season")
                                         .HasForeignKey("SeasonId");
 
-                                    b2.OwnsOne("Movieverse.Domain.AggregateRoots.Media.Series.Seasons#Movieverse.Domain.Entities.Season.Episodes#Movieverse.Domain.Entities.Episode.BasicStatistics#Movieverse.Domain.ValueObjects.BasicStatistics", "BasicStatistics", b3 =>
+                                    b2.OwnsOne("Movieverse.Domain.ValueObjects.BasicStatistics", "BasicStatistics", b3 =>
                                         {
                                             b3.Property<int>("EpisodeId")
                                                 .HasColumnType("integer");
@@ -1303,13 +1301,13 @@ namespace Movieverse.Infrastructure.Migrations
 
                                             b3.HasKey("EpisodeId");
 
-                                            b3.ToTable("Episode", (string)null);
+                                            b3.ToTable("Episode");
 
                                             b3.WithOwner()
                                                 .HasForeignKey("EpisodeId");
                                         });
 
-                                    b2.OwnsMany("Movieverse.Domain.AggregateRoots.Media.Series.Seasons#Movieverse.Domain.Entities.Season.Episodes#Movieverse.Domain.Entities.Episode.ContentIds#Movieverse.Domain.ValueObjects.Id.AggregateRootId", "ContentIds", b3 =>
+                                    b2.OwnsMany("Movieverse.Domain.ValueObjects.Ids.AggregateRootIds.ContentId", "ContentIds", b3 =>
                                         {
                                             b3.Property<int>("Id")
                                                 .ValueGeneratedOnAdd()
@@ -1334,7 +1332,7 @@ namespace Movieverse.Infrastructure.Migrations
                                                 .HasForeignKey("EpisodeId");
                                         });
 
-                                    b2.OwnsOne("Movieverse.Domain.AggregateRoots.Media.Series.Seasons#Movieverse.Domain.Entities.Season.Episodes#Movieverse.Domain.Entities.Episode.Details#Movieverse.Domain.ValueObjects.Details", "Details", b3 =>
+                                    b2.OwnsOne("Movieverse.Domain.ValueObjects.Details", "Details", b3 =>
                                         {
                                             b3.Property<int>("EpisodeId")
                                                 .HasColumnType("integer");
@@ -1365,7 +1363,7 @@ namespace Movieverse.Infrastructure.Migrations
 
                                             b3.HasKey("EpisodeId");
 
-                                            b3.ToTable("Episode", (string)null);
+                                            b3.ToTable("Episode");
 
                                             b3.WithOwner()
                                                 .HasForeignKey("EpisodeId");

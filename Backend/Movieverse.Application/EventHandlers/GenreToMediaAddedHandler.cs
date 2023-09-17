@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Common.Exceptions;
-using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Domain.DomainEvents;
 
 namespace Movieverse.Application.EventHandlers;
@@ -26,10 +26,10 @@ public sealed class GenreToMediaAddedHandler : INotificationHandler<GenreToMedia
 		_logger.LogDebug("Adding media with id {MediaId} to platform with id {PlatformId}", notification.MediaId.ToString(),
 			notification.GenreId.ToString());
 
-		var genre = await _genreRepository.FindByIdAsync(notification.GenreId, cancellationToken).ConfigureAwait(false);
+		var genre = await _genreRepository.FindAsync(notification.GenreId, cancellationToken).ConfigureAwait(false);
 		ResultException.ThrowIfUnsuccessful(genre);
 
-		genre.Value.MediaIds.Add(notification.MediaId);
+		genre.Value.AddMedia(notification.MediaId);
 		await _outputCacheStore.EvictByTagAsync(notification.GenreId.ToString(), cancellationToken);
 	}
 }

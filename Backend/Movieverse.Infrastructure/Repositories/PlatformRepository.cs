@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Persistence;
 
 namespace Movieverse.Infrastructure.Repositories;
@@ -12,19 +12,22 @@ namespace Movieverse.Infrastructure.Repositories;
 public sealed class PlatformRepository : IPlatformRepository
 {
 	private readonly ILogger<PlatformRepository> _logger;
-	private readonly AppDbContext _dbContext;
+	private readonly Context _dbContext;
 
-	public PlatformRepository(ILogger<PlatformRepository> logger, AppDbContext dbContext)
+	public PlatformRepository(ILogger<PlatformRepository> logger, Context dbContext)
 	{
 		_logger = logger;
 		_dbContext = dbContext;
 	}
 
-	public async Task<Result<Platform>> FindAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<Platform>> FindAsync(PlatformId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting platform with id {id}...", id.ToString());
 		
-		var platform = await _dbContext.Platforms.FindAsync(new object?[] { id.Value }, cancellationToken).ConfigureAwait(false);
+		var platform = await _dbContext.Platforms
+			.FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
+			.ConfigureAwait(false);
+		
 		return platform is null ? Error.NotFound(PlatformResources.PlatformDoesNotExist) : platform;
 	}
 
@@ -35,7 +38,7 @@ public sealed class PlatformRepository : IPlatformRepository
 		return await _dbContext.Platforms.AsNoTracking().ToListAsync(cancellationToken).ConfigureAwait(false);
 	}
 
-	public async Task<Result<List<AggregateRootId>>> GetAllMediaIdsAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<List<MediaId>>> GetAllMediaIdsAsync(PlatformId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting all media ids for platform with id {id}...", id.ToString());
 		

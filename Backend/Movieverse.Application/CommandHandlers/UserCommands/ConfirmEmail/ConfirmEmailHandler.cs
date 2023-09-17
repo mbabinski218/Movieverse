@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Contracts.Commands.User;
 using Movieverse.Domain.Common.Result;
 

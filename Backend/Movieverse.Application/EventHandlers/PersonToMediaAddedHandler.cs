@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Common.Exceptions;
-using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Domain.DomainEvents;
 
 namespace Movieverse.Application.EventHandlers;
@@ -29,7 +29,7 @@ public sealed class PersonToMediaAddedHandler : INotificationHandler<PersonToMed
 		var person = await _personRepository.FindAsync(notification.PersonId, cancellationToken).ConfigureAwait(false);
 		ResultException.ThrowIfUnsuccessful(person);
 		
-		person.Value.MediaIds.Add(notification.MediaId);
+		person.Value.AddMediaId(notification.MediaId);
 		await _outputCacheStore.EvictByTagAsync(notification.PersonId.ToString(), cancellationToken);
 	}
 }

@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
-using Movieverse.Application.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Persistence;
 
 namespace Movieverse.Infrastructure.Repositories;
@@ -11,11 +12,22 @@ namespace Movieverse.Infrastructure.Repositories;
 public sealed class PersonRepository : IPersonRepository
 {
 	private readonly ILogger<PersonRepository> _logger;
-	private readonly AppDbContext _dbContext;
-	public PersonRepository(ILogger<PersonRepository> logger, AppDbContext dbContext)
+	private readonly Context _dbContext;
+	public PersonRepository(ILogger<PersonRepository> logger, Context dbContext)
 	{
 		_logger = logger;
 		_dbContext = dbContext;
+	}
+	
+	public async Task<Result<Person>> FindAsync(PersonId id, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Getting person with id {id}...", id.ToString());
+		
+		var person = await _dbContext.Persons
+			.FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
+			.ConfigureAwait(false);
+		
+		return person is null ? Error.NotFound(PersonResources.PersonDoesNotExist) : person;
 	}
 	
 	public async Task<Result> AddAsync(Person person, CancellationToken cancellationToken)
@@ -24,13 +36,5 @@ public sealed class PersonRepository : IPersonRepository
 		
 		await _dbContext.Persons.AddAsync(person, cancellationToken).ConfigureAwait(false);
 		return Result.Ok();
-	}
-
-	public async Task<Result<Person>> FindAsync(AggregateRootId id, CancellationToken cancellationToken = default)
-	{
-		_logger.LogDebug("Getting person with id {id}...", id.ToString());
-		
-		var person = await _dbContext.Persons.FindAsync(new object?[] { id.Value }, cancellationToken).ConfigureAwait(false);
-		return person is null ? Error.NotFound(PersonResources.PersonDoesNotExist) : person;
 	}
 }

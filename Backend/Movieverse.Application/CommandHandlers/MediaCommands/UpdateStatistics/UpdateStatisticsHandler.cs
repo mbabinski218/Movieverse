@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Metrics;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.Media;
@@ -10,7 +11,6 @@ using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.Entities;
 using Movieverse.Domain.ValueObjects;
-using Movieverse.Domain.ValueObjects.Id;
 
 namespace Movieverse.Application.CommandHandlers.MediaCommands.UpdateStatistics;
 
@@ -22,8 +22,8 @@ public sealed class UpdateStatisticsHandler : IRequestHandler<UpdateStatisticsCo
 	private readonly IOutputCacheStore _outputCacheStore;
 	private readonly IUnitOfWork _unitOfWork;
 
-	private ConcurrentDictionary<AggregateRootId, long> _metrics = new();
-	private readonly ConcurrentDictionary<AggregateRootId, double> _newRanking = new();
+	private ConcurrentDictionary<Guid, long> _metrics = new();
+	private readonly ConcurrentDictionary<Guid, double> _newRanking = new();
 	
 	public UpdateStatisticsHandler(ILogger<UpdateStatisticsHandler> logger, IMediaRepository mediaRepository, IMetricsService metricsService, 
 		IOutputCacheStore outputCacheStore, IUnitOfWork unitOfWork)
@@ -45,7 +45,7 @@ public sealed class UpdateStatisticsHandler : IRequestHandler<UpdateStatisticsCo
 			return medias.Error;
 		}
 		
-		_metrics = new ConcurrentDictionary<AggregateRootId, long>(_metricsService.GetCounters(Meter.mediaCounter));
+		_metrics = new ConcurrentDictionary<Guid, long>(_metricsService.GetCounters(Meter.mediaCounter));
 		
 		var maxPosition = medias.Value.Count;
 		var empty = _metrics.Values.Count == 0;
@@ -154,7 +154,7 @@ public sealed class UpdateStatisticsHandler : IRequestHandler<UpdateStatisticsCo
 			var points = normalizedViews + normalizedVotes * 2 + normalizedUserReviews * 4 + normalizedCriticReviews * 5 + 
 			             normalizedInWatchlistCount * 3 + normalizedPosition * 3;
 				
-			media.AdvancedStatistics.Popularity.Add(latestPopularity);
+			media.AdvancedStatistics.AddPopularity(latestPopularity);
 			_newRanking.TryAdd(media.Id, points);
 		}
 	}

@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.Platform;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.DomainEvents;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.CommandHandlers.PlatformCommands.Add;
 
@@ -31,7 +32,7 @@ public sealed class AddPlatformHandler : IRequestHandler<AddPlatformCommand, Res
 	{
 		_logger.LogDebug("Adding platform {name}...", request.Name);
 		
-		var imageId = AggregateRootId.Create();
+		var imageId = ContentId.Create();
         var platform = Platform.Create(request.Name, imageId, request.Price);
         platform.AddDomainEvent(new ImageChanged(imageId, request.Image));
 

@@ -3,12 +3,13 @@ using MediatR;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.User;
 using Movieverse.Contracts.DataTransferObjects.User;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.DomainEvents;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.CommandHandlers.UserCommands.Update;
 
@@ -55,7 +56,7 @@ public sealed class UpdateHandler : IRequestHandler<UpdateCommand, Result<UserDt
 		{
 			if (user.AvatarId is null)
 			{
-				var avatarId = AggregateRootId.Create();
+				var avatarId = ContentId.Create();
 				user.AddDomainEvent(new ImageChanged(avatarId, request.Avatar));
 				user.AvatarId = avatarId;
 			}

@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Movieverse.Domain.Common;
 using Movieverse.Domain.Entities;
-using Movieverse.Infrastructure.Common;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Infrastructure.Persistence.Configurations;
 
@@ -37,22 +38,22 @@ public sealed class StatisticsConfiguration : IEntityTypeConfiguration<Statistic
 		builder.OwnsOne(s => s.BoxOffice, boxOfficeConfiguration =>
 		{
 			boxOfficeConfiguration.Property(bo => bo.Budget)
-				.HasMaxLength(Constants.precision);
+				.HasPrecision(Constants.pricePrecision);
 			
 			boxOfficeConfiguration.Property(bo => bo.Revenue)
-				.HasMaxLength(Constants.precision);
+				.HasPrecision(Constants.pricePrecision);
 			
 			boxOfficeConfiguration.Property(bo => bo.GrossUs)
-				.HasMaxLength(Constants.precision);
+				.HasPrecision(Constants.pricePrecision);
 			
 			boxOfficeConfiguration.Property(bo => bo.OpeningWeekendUs)
-				.HasMaxLength(Constants.precision);
+				.HasPrecision(Constants.pricePrecision);
 			
 			boxOfficeConfiguration.Property(bo => bo.GrossWorldwide)
-				.HasMaxLength(Constants.precision);
+				.HasPrecision(Constants.pricePrecision);
 			
 			boxOfficeConfiguration.Property(bo => bo.OpeningWeekendWorldwide)
-				.HasMaxLength(Constants.precision);
+				.HasPrecision(Constants.pricePrecision);
 		});
 	}
 }
@@ -81,8 +82,14 @@ public sealed class AwardConfiguration : IEntityTypeConfiguration<Award>
 	{
 		builder.HasKey(a => a.Id);
 
+		var converter = new ValueConverter<ContentId?, Guid?>
+		(
+			x => x == null ? null : x.Value,
+			x => x == null ? null : ContentId.Create(x.Value)
+		);
+
 		builder.Property(a => a.ImageId)
-			.HasConversion(EfExtensions.nullableAggregateRootIdConverter);
+			.HasConversion(converter);
 		
 		builder.Property(a => a.Name)
 			.HasMaxLength(Constants.nameLength);

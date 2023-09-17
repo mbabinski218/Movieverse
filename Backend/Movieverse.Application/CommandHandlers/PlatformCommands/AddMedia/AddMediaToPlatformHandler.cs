@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.Platform;
 using Movieverse.Domain.Common.Result;
@@ -42,7 +43,7 @@ public sealed class AddMediaToPlatformHandler : IRequestHandler<AddMediaToPlatfo
 			return platform.Error;
 		}
 		
-		platform.Value.MediaIds.Add(request.MediaId);
+		platform.Value.AddMedia(request.MediaId);
 		platform.Value.AddDomainEvent(new MediaToPlatformAdded(request.Id, request.MediaId));
 		
 		var updateResult = await _platformRepository.UpdateAsync(platform.Value, cancellationToken).ConfigureAwait(false);

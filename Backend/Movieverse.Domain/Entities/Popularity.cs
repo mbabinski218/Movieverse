@@ -3,7 +3,7 @@ using Movieverse.Domain.ValueObjects;
 
 namespace Movieverse.Domain.Entities;
 
-public class Popularity : Entity
+public class Popularity : Entity<int>
 {
 	// Map to table
 	public virtual Statistics Statistics { get; private set; } = null!;
@@ -12,13 +12,8 @@ public class Popularity : Entity
 	public int Position { get; set; }
 	public int Change { get; set; }
 	public long Views { get; set; }
-
-	// EF Core
-	private Popularity()
-	{
-			
-	}
-
+	
+	// Constructors
 	private Popularity(DateTimeOffset date)
 	{
 		BasicStatistics = new BasicStatistics();
@@ -27,8 +22,8 @@ public class Popularity : Entity
 		Change = 0;
 		Views = 0;
 	}
-	
-	// Other
+
+	// Methods
 	public static Popularity Create(Statistics statistics, DateTimeOffset date)
 	{
 		var popularity = new Popularity(date)
@@ -36,5 +31,11 @@ public class Popularity : Entity
 			Statistics = statistics,
 		};
 		return popularity;
+	}
+	
+	// EF Core
+	private Popularity()
+	{
+			
 	}
 }

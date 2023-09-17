@@ -8,27 +8,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Movieverse.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
                 .Annotation("Npgsql:Enum:role", "director,writer,actor,creator,producer,composer,cinematographer,editor,art_director,costume_designer,makeup_artist,sound_designer,other");
-
-            migrationBuilder.CreateTable(
-                name: "AspNetRoles",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
 
             migrationBuilder.CreateTable(
                 name: "Award",
@@ -96,7 +82,7 @@ namespace Movieverse.Infrastructure.Migrations
                     TechnicalSpecs_SoundMix = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     TechnicalSpecs_Camera = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     TechnicalSpecs_NegativeFormat = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    CurrentPosition = table.Column<int>(type: "integer", nullable: true),
+                    CurrentPosition = table.Column<int>(type: "integer", nullable: false),
                     PosterId = table.Column<Guid>(type: "uuid", nullable: true),
                     TrailerId = table.Column<Guid>(type: "uuid", nullable: true),
                     Discriminator = table.Column<string>(type: "text", nullable: false),
@@ -111,6 +97,7 @@ namespace Movieverse.Infrastructure.Migrations
                     BasicStatistics_InWatchlistCount = table.Column<int>(type: "integer", nullable: true),
                     SeasonCount = table.Column<short>(type: "smallint", nullable: true),
                     EpisodeCount = table.Column<short>(type: "smallint", nullable: true),
+                    SeriesEnded = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
@@ -150,13 +137,27 @@ namespace Movieverse.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     LogoId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Price = table.Column<decimal>(type: "numeric(2)", precision: 2, nullable: false),
+                    Price = table.Column<decimal>(type: "numeric(12,2)", precision: 12, scale: 2, nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Platforms", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,27 +190,6 @@ namespace Movieverse.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RoleId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ClaimType = table.Column<string>(type: "text", nullable: true),
-                    ClaimValue = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -293,11 +273,12 @@ namespace Movieverse.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MediaReviews",
+                name: "Reviews",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MediaId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
@@ -308,14 +289,13 @@ namespace Movieverse.Infrastructure.Migrations
                     Spoiler = table.Column<bool>(type: "boolean", nullable: false),
                     Modified = table.Column<bool>(type: "boolean", nullable: false),
                     Deleted = table.Column<bool>(type: "boolean", nullable: false),
-                    Banned = table.Column<bool>(type: "boolean", nullable: false),
-                    MediaId = table.Column<Guid>(type: "uuid", nullable: false)
+                    Banned = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MediaReviews", x => x.Id);
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MediaReviews_Medias_MediaId",
+                        name: "FK_Reviews_Medias_MediaId",
                         column: x => x.MediaId,
                         principalTable: "Medias",
                         principalColumn: "Id",
@@ -329,8 +309,8 @@ namespace Movieverse.Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     SeriesId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SeasonNumber = table.Column<long>(type: "bigint", nullable: false),
-                    EpisodeCount = table.Column<long>(type: "bigint", nullable: true)
+                    SeasonNumber = table.Column<short>(type: "smallint", nullable: false),
+                    EpisodeCount = table.Column<short>(type: "smallint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -371,12 +351,12 @@ namespace Movieverse.Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     MediaId = table.Column<Guid>(type: "uuid", nullable: false),
-                    BoxOffice_Budget = table.Column<decimal>(type: "numeric", maxLength: 2, nullable: false),
-                    BoxOffice_Revenue = table.Column<decimal>(type: "numeric", maxLength: 2, nullable: false),
-                    BoxOffice_GrossUs = table.Column<decimal>(type: "numeric", maxLength: 2, nullable: false),
-                    BoxOffice_GrossWorldwide = table.Column<decimal>(type: "numeric", maxLength: 2, nullable: false),
-                    BoxOffice_OpeningWeekendUs = table.Column<decimal>(type: "numeric", maxLength: 2, nullable: false),
-                    BoxOffice_OpeningWeekendWorldwide = table.Column<decimal>(type: "numeric", maxLength: 2, nullable: false),
+                    BoxOffice_Budget = table.Column<decimal>(type: "numeric(12)", precision: 12, nullable: false),
+                    BoxOffice_Revenue = table.Column<decimal>(type: "numeric(12)", precision: 12, nullable: false),
+                    BoxOffice_GrossUs = table.Column<decimal>(type: "numeric(12)", precision: 12, nullable: false),
+                    BoxOffice_GrossWorldwide = table.Column<decimal>(type: "numeric(12)", precision: 12, nullable: false),
+                    BoxOffice_OpeningWeekendUs = table.Column<decimal>(type: "numeric(12)", precision: 12, nullable: false),
+                    BoxOffice_OpeningWeekendWorldwide = table.Column<decimal>(type: "numeric(12)", precision: 12, nullable: false),
                     BoxOffice_Theaters = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -411,6 +391,26 @@ namespace Movieverse.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PersonMediaIds",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PersonId = table.Column<Guid>(type: "uuid", nullable: false),
+                    MediaId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PersonMediaIds", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PersonMediaIds_Persons_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PlatformMediaIds",
                 columns: table => new
                 {
@@ -431,86 +431,22 @@ namespace Movieverse.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
+                name: "RoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false),
                     ClaimType = table.Column<string>(type: "text", nullable: true),
                     ClaimValue = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.PrimaryKey("PK_RoleClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUserClaims_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
-                columns: table => new
-                {
-                    LoginProvider = table.Column<string>(type: "text", nullable: false),
-                    ProviderKey = table.Column<string>(type: "text", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserLogins_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RoleId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        name: "FK_RoleClaims_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    LoginProvider = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Value = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserTokens_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -531,6 +467,71 @@ namespace Movieverse.Infrastructure.Migrations
                     table.PrimaryKey("PK_MediaInfo", x => x.Id);
                     table.ForeignKey(
                         name: "FK_MediaInfo_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ClaimType = table.Column<string>(type: "text", nullable: true),
+                    ClaimValue = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserClaims_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_UserRoles_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRoles_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    LoginProvider = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Value = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_UserTokens_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -584,8 +585,9 @@ namespace Movieverse.Infrastructure.Migrations
                     BasicStatistics_CriticReviews = table.Column<int>(type: "integer", nullable: false),
                     BasicStatistics_InWatchlistCount = table.Column<int>(type: "integer", nullable: false),
                     Date = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    Position = table.Column<long>(type: "bigint", nullable: true),
-                    Change = table.Column<long>(type: "bigint", nullable: true)
+                    Position = table.Column<int>(type: "integer", nullable: false),
+                    Change = table.Column<int>(type: "integer", nullable: false),
+                    Views = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -644,62 +646,6 @@ namespace Movieverse.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "EpisodeReviews",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Content = table.Column<string>(type: "character varying(3000)", maxLength: 3000, nullable: false),
-                    Rating = table.Column<short>(type: "smallint", nullable: false),
-                    Date = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    ByCritic = table.Column<bool>(type: "boolean", nullable: false),
-                    Spoiler = table.Column<bool>(type: "boolean", nullable: false),
-                    Modified = table.Column<bool>(type: "boolean", nullable: false),
-                    Deleted = table.Column<bool>(type: "boolean", nullable: false),
-                    Banned = table.Column<bool>(type: "boolean", nullable: false),
-                    EpisodeId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EpisodeReviews", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EpisodeReviews_Episode_EpisodeId",
-                        column: x => x.EpisodeId,
-                        principalTable: "Episode",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetRoleClaims_RoleId",
-                table: "AspNetRoleClaims",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "RoleNameIndex",
-                table: "AspNetRoles",
-                column: "NormalizedName",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserClaims_UserId",
-                table: "AspNetUserClaims",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserLogins_UserId",
-                table: "AspNetUserLogins",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserRoles_RoleId",
-                table: "AspNetUserRoles",
-                column: "RoleId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Episode_SeasonId",
                 table: "Episode",
@@ -708,11 +654,6 @@ namespace Movieverse.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_EpisodeContentIds_EpisodeId",
                 table: "EpisodeContentIds",
-                column: "EpisodeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EpisodeReviews_EpisodeId",
-                table: "EpisodeReviews",
                 column: "EpisodeId");
 
             migrationBuilder.CreateIndex(
@@ -741,13 +682,13 @@ namespace Movieverse.Infrastructure.Migrations
                 column: "MediaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MediaReviews_MediaId",
-                table: "MediaReviews",
-                column: "MediaId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PersonContentIds_PersonId",
                 table: "PersonContentIds",
+                column: "PersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersonMediaIds_PersonId",
+                table: "PersonMediaIds",
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
@@ -759,6 +700,22 @@ namespace Movieverse.Infrastructure.Migrations
                 name: "IX_Popularity_StatisticsId",
                 table: "Popularity",
                 column: "StatisticsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_MediaId",
+                table: "Reviews",
+                column: "MediaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleClaims_RoleId",
+                table: "RoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "Roles",
+                column: "NormalizedName",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Season_SeriesId",
@@ -782,6 +739,16 @@ namespace Movieverse.Infrastructure.Migrations
                 column: "AwardId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserClaims_UserId",
+                table: "UserClaims",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_RoleId",
+                table: "UserRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "Users",
                 column: "NormalizedEmail");
@@ -797,28 +764,10 @@ namespace Movieverse.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserClaims");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserLogins");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserTokens");
-
-            migrationBuilder.DropTable(
                 name: "Contents");
 
             migrationBuilder.DropTable(
                 name: "EpisodeContentIds");
-
-            migrationBuilder.DropTable(
-                name: "EpisodeReviews");
 
             migrationBuilder.DropTable(
                 name: "GenreMediaIds");
@@ -836,10 +785,10 @@ namespace Movieverse.Infrastructure.Migrations
                 name: "MediaPlatformIds");
 
             migrationBuilder.DropTable(
-                name: "MediaReviews");
+                name: "PersonContentIds");
 
             migrationBuilder.DropTable(
-                name: "PersonContentIds");
+                name: "PersonMediaIds");
 
             migrationBuilder.DropTable(
                 name: "PlatformMediaIds");
@@ -848,22 +797,31 @@ namespace Movieverse.Infrastructure.Migrations
                 name: "Popularity");
 
             migrationBuilder.DropTable(
+                name: "Reviews");
+
+            migrationBuilder.DropTable(
+                name: "RoleClaims");
+
+            migrationBuilder.DropTable(
                 name: "Staff");
 
             migrationBuilder.DropTable(
                 name: "StatisticsAward");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "UserClaims");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
+
+            migrationBuilder.DropTable(
+                name: "UserTokens");
 
             migrationBuilder.DropTable(
                 name: "Episode");
 
             migrationBuilder.DropTable(
                 name: "Genres");
-
-            migrationBuilder.DropTable(
-                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Persons");
@@ -876,6 +834,12 @@ namespace Movieverse.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Statistics");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Season");

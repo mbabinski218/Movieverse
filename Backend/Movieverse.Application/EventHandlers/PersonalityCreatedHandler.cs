@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Common.Exceptions;
-using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Domain.DomainEvents;
 
 namespace Movieverse.Application.EventHandlers;

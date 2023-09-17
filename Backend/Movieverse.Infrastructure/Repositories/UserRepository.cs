@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces;
+using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.DataTransferObjects.User;
 using Movieverse.Domain.AggregateRoots;
@@ -10,7 +11,7 @@ using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.Common.Types;
 using Movieverse.Domain.ValueObjects;
-using Movieverse.Domain.ValueObjects.Id;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Authentication;
 using Movieverse.Infrastructure.Common;
 using Movieverse.Infrastructure.Persistence;
@@ -20,14 +21,14 @@ namespace Movieverse.Infrastructure.Repositories;
 public sealed class UserRepository : IUserRepository
 {
 	private readonly ILogger<UserRepository> _logger;
-	private readonly AppDbContext _dbContext;
+	private readonly Context _dbContext;
 	private readonly UserManager<User> _userManager;
 	private readonly RoleManager<IdentityUserRole> _roleManager;
 	private readonly ITokenProvider _tokenProvider;
 	private readonly GoogleAuthentication _googleAuthentication;
 	private readonly FacebookAuthentication _facebookAuthentication;
 
-	public UserRepository(ILogger<UserRepository> logger, AppDbContext dbContext, UserManager<User> userManager, 
+	public UserRepository(ILogger<UserRepository> logger, Context dbContext, UserManager<User> userManager, 
 		RoleManager<IdentityUserRole> roleManager, ITokenProvider tokenProvider, 
 		GoogleAuthentication googleAuthentication, FacebookAuthentication facebookAuthentication)
 	{
@@ -40,11 +41,11 @@ public sealed class UserRepository : IUserRepository
 		_logger = logger;
 	}
 
-	public async Task<Result<User>> FindByIdAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<User>> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Find user with id: {id}", id.Value);
+		_logger.LogDebug("Find user with id: {id}", id);
 		
-		var user = await _dbContext.Users.FindAsync(new object?[] { id.Value }, cancellationToken).ConfigureAwait(false);
+		var user = await _dbContext.Users.FindAsync(new object?[] { id }, cancellationToken).ConfigureAwait(false);
 		return user is null ? Error.NotFound(UserResources.UserDoesNotExist) : user;
 	}
 
@@ -153,8 +154,8 @@ public sealed class UserRepository : IUserRepository
 		return new TokensDto(accessToken, refreshToken);
 	}
 	
-	private static readonly Func<AppDbContext, string, Task<IdentityUserToken<Guid>?>> getUserTokenByRefreshTokenAsync = 
-		EF.CompileAsyncQuery((AppDbContext context, string refreshToken) =>
+	private static readonly Func<Context, string, Task<IdentityUserToken<Guid>?>> getUserTokenByRefreshTokenAsync = 
+		EF.CompileAsyncQuery((Context context, string refreshToken) =>
 			context.UserTokens.FirstOrDefault(t => t.Value == refreshToken));
 	
 	public async Task<Result<User>> FindByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
@@ -257,7 +258,7 @@ public sealed class UserRepository : IUserRepository
 		return await RemoveTokens(user, cancellationToken).ConfigureAwait(false);
 	}
 
-	public async Task<Result<Information>> GetInformationAsync(AggregateRootId id, CancellationToken cancellationToken = default)
+	public async Task<Result<Information>> GetInformationAsync(Guid id, CancellationToken cancellationToken = default)
 	{
 		var user = await FindByIdAsync(id, cancellationToken).ConfigureAwait(false);
 		if (user.IsUnsuccessful)
@@ -268,7 +269,7 @@ public sealed class UserRepository : IUserRepository
 		return user.Value.Information;
 	}
 
-	public async Task<Result> AddPersonalityAsync(AggregateRootId id, AggregateRootId personId, CancellationToken cancellationToken = default)
+	public async Task<Result> AddPersonalityAsync(Guid id, PersonId personId, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Add personality with id: {personId} to user with id: {id}", personId, id);
 		

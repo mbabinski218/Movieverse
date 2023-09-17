@@ -30,6 +30,7 @@ public sealed class MediaMapper : IRegister
 			.Map(dest => dest.StartYear, src => GetStartYear(src.Details.ReleaseDate));
 
 		config.NewConfig<Media, MediaDemoDto>()
+			.Map(dest => dest.Id, src => src.Id.GetValue())
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
 			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue());
 		
@@ -60,7 +61,7 @@ public sealed class MediaMapper : IRegister
 			.Map(dest => dest.LatestReview, src => src.Reviews.OrderByDescending(r => r.Date).FirstOrDefault());
 		
 		config.NewConfig<Review, ReviewDto>()
-			.Map(dest => dest.UserId, src => src.UserId.Value);
+			.Map(dest => dest.UserId, src => src.UserId);
 
 		config.NewConfig<Staff, PostStaffDto>()
 			.Map(dest => dest.PersonId, src => src.PersonId.Value);
