@@ -16,10 +16,10 @@ namespace Movieverse.Infrastructure.Repositories;
 public sealed class GenreReadOnlyRepository : IGenreReadOnlyRepository
 {
 	private readonly ILogger<GenreReadOnlyRepository> _logger;
-	private readonly Context _dbContext;
+	private readonly ReadOnlyContext _dbContext;
 	private readonly IMapper _mapper;
 
-	public GenreReadOnlyRepository(ILogger<GenreReadOnlyRepository> logger, Context dbContext, IMapper mapper)
+	public GenreReadOnlyRepository(ILogger<GenreReadOnlyRepository> logger, ReadOnlyContext dbContext, IMapper mapper)
 	{
 		_logger = logger;
 		_dbContext = dbContext;

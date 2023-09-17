@@ -44,7 +44,7 @@ public sealed class DatabaseSeeder : IDatabaseSeeder
 		await SeedRoles().ConfigureAwait(false);
 		await SeedUsers().ConfigureAwait(false);
 		await SeedPlatforms().ConfigureAwait(false);
-		//await SeedMedias().ConfigureAwait(false);
+		await SeedMedias().ConfigureAwait(false);
 
 		await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 	}

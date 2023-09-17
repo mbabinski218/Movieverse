@@ -12,13 +12,10 @@ public sealed class GetPlatformHandler : IRequestHandler<GetPlatformQuery, Resul
 {
 	private readonly ILogger<GetPlatformHandler> _logger;
     private readonly IPlatformReadOnlyRepository _platformRepository;
-    private readonly IMapper _mapper;
-
-    public GetPlatformHandler(ILogger<GetPlatformHandler> logger, IPlatformReadOnlyRepository platformRepository, IMapper mapper)
+    public GetPlatformHandler(ILogger<GetPlatformHandler> logger, IPlatformReadOnlyRepository platformRepository)
     {
 	    _logger = logger;
 	    _platformRepository = platformRepository;
-	    _mapper = mapper;
     }
 
     public async Task<Result<PlatformDto>> Handle(GetPlatformQuery request, CancellationToken cancellationToken)
@@ -26,6 +23,6 @@ public sealed class GetPlatformHandler : IRequestHandler<GetPlatformQuery, Resul
 		_logger.LogDebug("Getting platform {id}...", request.Id);
 		
 		var platform = await _platformRepository.FindAsync(request.Id, cancellationToken).ConfigureAwait(false);
-		return platform.IsSuccessful ? _mapper.Map<PlatformDto>(platform.Value) : platform.Error;
+		return platform.IsSuccessful ? platform.Value : platform.Error;
 	}
 }

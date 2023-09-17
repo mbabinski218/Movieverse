@@ -35,8 +35,12 @@ public sealed class GetAllMediaHandler : IRequestHandler<GetAllMediaQuery, Resul
 		
 		return request.Type switch
 		{
-			nameof(Movie) => await _mediaRepository.FindMoviesByIdsAsync(mediaIds.Value, request.PageNumber, request.PageSize, cancellationToken).ConfigureAwait(false),
-			nameof(Series) => await _mediaRepository.FindSeriesByIdsAsync(mediaIds.Value, request.PageNumber, request.PageSize, cancellationToken).ConfigureAwait(false),
+			nameof(Movie) => await _mediaRepository
+				.FindMoviesByIdsAsync(mediaIds.Value.ToList(), request.PageNumber, request.PageSize, cancellationToken)
+				.ConfigureAwait(false),
+			nameof(Series) => await _mediaRepository
+				.FindSeriesByIdsAsync(mediaIds.Value.ToList(), request.PageNumber, request.PageSize, cancellationToken)
+				.ConfigureAwait(false),
 			_ => Error.Invalid("Invalid media type")
 		};
 	}

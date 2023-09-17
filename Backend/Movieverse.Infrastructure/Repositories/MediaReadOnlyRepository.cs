@@ -33,7 +33,6 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		_logger.LogDebug("Finding media with id {id}...", id.ToString());
 
 		var media = await _dbContext.Medias
-			.AsNoTracking()
 			.FirstOrDefaultAsync(m => m.Id == id, cancellationToken)
 			.ConfigureAwait(false);
 		

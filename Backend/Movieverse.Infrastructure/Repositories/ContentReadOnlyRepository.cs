@@ -12,9 +12,9 @@ namespace Movieverse.Infrastructure.Repositories;
 public sealed class ContentReadOnlyRepository : IContentReadOnlyRepository
 {
 	private readonly ILogger<ContentReadOnlyRepository> _logger;
-	private readonly Context _dbContext;
+	private readonly ReadOnlyContext _dbContext;
 
-	public ContentReadOnlyRepository(ILogger<ContentReadOnlyRepository> logger, Context dbContext)
+	public ContentReadOnlyRepository(ILogger<ContentReadOnlyRepository> logger, ReadOnlyContext dbContext)
 	{
 		_logger = logger;
 		_dbContext = dbContext;
