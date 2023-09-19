@@ -1,0 +1,12 @@
+.navbar {
+    font-size: var(--font-m);
+    background-color: var(--color-dark);
+}
+
+.navbar a {
+    color: var(--color-white);
+}
+
+.svg {
+    cursor: pointer;
+}  
