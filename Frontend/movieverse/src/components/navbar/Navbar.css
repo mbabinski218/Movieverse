@@ -1,11 +1,5 @@
-.content {
-    gap: var(--gap-s);
-    grid-template-areas: "logo search element element element";
-}
-
 .navbar {
     font-size: var(--font-m);
-    background-color: var(--color-dark);
     z-index: 10;
 }
 
@@ -14,23 +8,12 @@
     width: 80px;
     height: 40px;
     cursor: pointer;
+    margin: auto;
+    display: block;
 }
 
 .navbar-nav .nav-link {
     color: var(--color-white);
-}
-
-.search {
-    grid-area: search;
-    background-color: var(--color-white);
-    width: 100%;
-    height: 2rem;
-    border-radius: 10px;
-    box-shadow: 0px 0px 5px 0px var(--color-dark);
-    display: flex;
-    align-items: center;
-    padding-left: 10px;
-    padding-right: 10px;
 }
 
 input {    
@@ -46,45 +29,58 @@ input:focus {
 }
 
 .nav {
-    grid-area: links;
     color: var(--color-white);
 }
 
-.search-icon {
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-}
-
 .menu {
+    grid-area: menu;
     cursor: pointer;
-    width: 2.5%;
+    width: 21px;
+    margin: auto;
+    display: block;
 }
 
 .chart {
-    width: 15%;
+    width: 16px;
     margin-right: 10px;
 }
 
 .check {
-    width: 14%;
+    width: 15px;
     margin-right: 10px;
+}
+
+.person {
+    width: 13px;
+    margin-right: 10px;
+}
+
+.pro {
+    grid-area: pro;
+}
+
+.watchlist {
+    grid-area: watchlist;
 }
 
 .user {
-    width: 12%;
-    margin-right: 10px;
+    grid-area: user;
 }
 
-.element {
-    grid-area: element;
-    cursor: pointer;
-    width: 14%;
-    display: block;
-    text-decoration: none; 
+.element-link {
     color: var(--color-white);
-    text-align: center;
     white-space: nowrap;
+    position: relative;
+    left: 30%;
+}
+
+a.element-link.nav-link {
+    color: var(--color-white);
+}
+
+a.element-link.nav-link:hover {
+    color: var(--color-white);
+    text-decoration: underline;
 }
 
 .button {
@@ -94,7 +90,7 @@ input:focus {
 .button::after {
     position: absolute;
     content: "";
-    width: 100%;
+    width: inherit;
     height: 2px;
     top: 100%;
     left: 0;
@@ -111,11 +107,13 @@ input:focus {
 
 .menu-open {
     background-color: var(--color-dark);
+    position: absolute;
     padding-top : 2rem;
-    padding-bottom : 2rem;
+    padding-bottom : 3rem;
     width: 100%;
-    height: 20rem;
-    z-index: 9;
+    overflow: hidden;
+    z-index: 8;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 .menu-close {
@@ -124,8 +122,8 @@ input:focus {
 }
 
 .selected {
-    animation: slide-in 0.5s forwards;
-    -webkit-animation: slide-in 0.5s forwards;
+    animation: slide-in 0.4s forwards;
+    -webkit-animation: slide-in 0.4s forwards;
 }
 
 @keyframes slide-in {
@@ -146,8 +144,82 @@ input:focus {
     }
 }
 
+.element {
+    cursor: pointer;
+    width: inherit;
+    display: block;
+    text-decoration: none; 
+    color: var(--color-white);
+    text-align: center;
+    white-space: nowrap;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.content {
+    gap: var(--gap-s);
+    display: grid !important;
+    grid-template-columns: min-content 1fr min-content min-content min-content min-content;
+    grid-template-areas: "logo search pro watchlist user menu";
+}
+
+@media (max-width: 768px) {
+    .content {
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-areas: 
+        "logo search menu"
+        "pro watchlist user";
+    }
+
+    .element{
+        padding-left: 0rem;
+        padding-right: 0rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .element{
+        padding-left: 0rem;
+        padding-right: 0rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .element{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .element{
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+
+@media (min-width: 1400px) {
+    .element{
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
 .category {
     font-size: var(--font-l);
     color: var(--color-gold);
     padding-bottom: 0.5rem;
+    white-space: nowrap;
+    position: relative;
+    left: 30%;
+}
+
+.background-dark {
+    background-color: var(--color-dark);
+}
+
+@media (max-width: 576px) {
+    .container, .container-sm {
+        max-width: 540px;
+    }
 }
