@@ -104,4 +104,18 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
 			.ConfigureAwait(false);
 	}
+
+	public async Task<Result<IPaginatedList<SearchMediaDto>>> SearchMediaAsync(string search, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Searching media with string {Search}...", search);
+		
+		var medias = await _dbContext.Medias
+			.AsNoTracking()
+			.Where(m => m.Title.ToLower().StartsWith(search.ToLower()))
+			.ProjectToType<SearchMediaDto>()
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
+			.ConfigureAwait(false);
+
+		return medias;
+	}
 }

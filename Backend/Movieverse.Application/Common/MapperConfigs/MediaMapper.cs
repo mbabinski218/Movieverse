@@ -72,9 +72,13 @@ public sealed class MediaMapper : IRegister
 		
 		config.NewConfig<Episode, EpisodeDto>()
 			.Map(dest => dest.ContentIds, src => src.ContentIds.Select(id => id.Value));
+
+		config.NewConfig<Media, SearchMediaDto>()
+			.Map(dest => dest.Id, src => src.Id.GetValue())
+			.Map(dest => dest.Title, src => src.Title)
+			.Map(dest => dest.Year, src => GetStartYear(src.Details.ReleaseDate))
+			.Map(dest => dest.Poster, src => src.PosterId.GetValue().ToString());
 	}
 	
 	private static short? GetStartYear(DateTimeOffset? date) => date is null ? null : (short?)date.Value.Year;
-	
-	
 }

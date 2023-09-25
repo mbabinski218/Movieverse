@@ -49,4 +49,12 @@ public sealed class MediaController : ApiController
 		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
+	[OutputCache(NoStore = true)]
+	[HttpGet("search")]
+	public async Task<ActionResult> Search([FromQuery] SearchMediaQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
 }
