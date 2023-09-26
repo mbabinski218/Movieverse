@@ -72,5 +72,5 @@ public sealed class ContentRepository : IContentRepository
 	}
 	
 	private async Task<Content?> FindByIdAsync(ContentId id, CancellationToken cancellationToken) =>
-		await _dbContext.Contents.FindAsync(new object?[] { id.Value }, cancellationToken);
+		await _dbContext.Contents.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 }

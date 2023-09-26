@@ -6,6 +6,7 @@ using Movieverse.Application.Interfaces;
 using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.DomainEvents;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.EventHandlers;
 
@@ -29,7 +30,7 @@ public sealed class ImageChangedHandler : INotificationHandler<ImageChanged>
 	{
 		_logger.LogDebug("Handling image changed event for image with id {id}.", notification.ImageId);
 		
-		var isInDatabaseResult = await _contentRepository.ExistsAsync(notification.ImageId, cancellationToken);
+		var isInDatabaseResult = await _contentRepository.ExistsAsync(ContentId.Create(notification.ImageId), cancellationToken);
 		ResultException.ThrowIfUnsuccessful(isInDatabaseResult);
 
 		if (isInDatabaseResult.Value)

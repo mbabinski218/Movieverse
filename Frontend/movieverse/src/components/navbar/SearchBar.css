@@ -16,3 +16,19 @@
     width: 20px;
     height: 20px;
 }
+
+.list-open {
+    background-color: var(--color-dark);
+    position: absolute;
+    border-radius: 10px;
+    width: inherit;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    margin-top: 7px;
+}
+
+.list-close {
+    display: none;
+    overflow: hidden;
+}

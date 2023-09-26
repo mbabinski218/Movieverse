@@ -1,11 +1,14 @@
 import { Container, Nav, Navbar as NavbarBs, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from 'react';
+import { SearchMediaDto } from "../../core/dtos/media/searchMediaDto";
+import { SearchBar } from "./SearchBar";
+import { SearchList } from "./SearchList";
+import { PaginatedList } from "../../core/types/paginatedList";
 import Logo from "../../assets/logo.svg";
 import Chart from "../../assets/chart.svg";
 import Check from "../../assets/check.svg";
 import Person from "../../assets/person.svg";
 import Menu from "../../assets/bars.svg";
-import { SearchBar } from "./SearchBar";
 import "./Navbar.css";
 
 export const Navbar: React.FC = () => {
@@ -13,8 +16,8 @@ export const Navbar: React.FC = () => {
     document.title = "Movieverse"
   })
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchBarOpen, setSearchBarOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [searchBarOpen, setSearchBarOpen] = useState<boolean>(false);
 
   return (
     <>
@@ -23,10 +26,16 @@ export const Navbar: React.FC = () => {
             <Nav.Link href="/"> 
               <img src={Logo} alt="logo" className="logo" />  
             </Nav.Link>
-            <SearchBar onClick={() => {
-              setSearchBarOpen(!searchBarOpen);
-              setMenuOpen(false);
-            }}/>
+            <SearchBar 
+              searchBarOpen={searchBarOpen} 
+              onClick={() => {
+                setSearchBarOpen(true);
+                setMenuOpen(false);
+              }}
+              onBlur={() => {
+                setSearchBarOpen(false);
+              }}
+            />
             <a className="element button pro" href="/pro">
               <img src={Chart} alt="chart" className="chart" />
               <span>Pro</span>

@@ -6,6 +6,7 @@ import { Watchlist } from "./pages/Watchlist";
 import { Pro } from "./pages/Pro";
 import { Chart } from "./pages/Chart";
 import { User } from "./pages/User";
+import { Find } from "./pages/Find";
 
 const App: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
           <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/user" element={<User />} />
           <Route path="/chart" element={<Chart />} />
+          <Route path="/find" element={<Find />} />
         </Routes>
       </BrowserRouter>
     </>
