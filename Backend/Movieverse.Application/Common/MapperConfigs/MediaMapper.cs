@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using Amazon.Runtime.Internal.Transform;
+using Mapster;
 using Movieverse.Application.Common.Extensions;
 using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Domain.AggregateRoots.Media;
@@ -77,8 +78,24 @@ public sealed class MediaMapper : IRegister
 			.Map(dest => dest.Id, src => src.Id.GetValue())
 			.Map(dest => dest.Title, src => src.Title)
 			.Map(dest => dest.Year, src => GetStartYear(src.Details.ReleaseDate))
-			.Map(dest => dest.Poster, src => src.PosterId.GetValue().ToString());
+			.Map(dest => dest.Poster, src => src.PosterId.GetValue().ToString())
+			.Map(dest => dest.Description, src => GetDescription(src.Details.Storyline));
 	}
 	
 	private static short? GetStartYear(DateTimeOffset? date) => date is null ? null : (short?)date.Value.Year;
+
+	private static string? GetDescription(string? description)
+	{
+		if (description is null)
+		{
+			return null;
+		}
+		
+		if (description.Length <= 100)
+		{
+			return description + "...";
+		}
+		
+		return description[..100] + "...";
+	}
 }

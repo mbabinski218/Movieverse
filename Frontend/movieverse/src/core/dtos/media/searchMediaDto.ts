@@ -3,4 +3,5 @@ export interface SearchMediaDto {
     title: string;
     year: number;
     poster: string | null;
+    description: string | null;
 }

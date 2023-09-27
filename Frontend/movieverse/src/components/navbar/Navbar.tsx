@@ -1,9 +1,7 @@
 import { Container, Nav, Navbar as NavbarBs, Row, Col } from "react-bootstrap";
-import { useEffect, useState } from 'react';
-import { SearchMediaDto } from "../../core/dtos/media/searchMediaDto";
+import { useOutsideClickAlerter } from "../../hooks/useOutsideClickAlerter";
 import { SearchBar } from "./SearchBar";
-import { SearchList } from "./SearchList";
-import { PaginatedList } from "../../core/types/paginatedList";
+import { useRef, useState } from "react";
 import Logo from "../../assets/logo.svg";
 import Chart from "../../assets/chart.svg";
 import Check from "../../assets/check.svg";
@@ -12,12 +10,13 @@ import Menu from "../../assets/bars.svg";
 import "./Navbar.css";
 
 export const Navbar: React.FC = () => {
-  useEffect(() => {
-    document.title = "Movieverse"
-  })
-
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [searchBarOpen, setSearchBarOpen] = useState<boolean>(false);
+
+  const searchRef = useRef(null);
+  useOutsideClickAlerter(searchRef, () => {
+    setSearchBarOpen(false);
+  });
 
   return (
     <>
@@ -26,14 +25,12 @@ export const Navbar: React.FC = () => {
             <Nav.Link href="/"> 
               <img src={Logo} alt="logo" className="logo" />  
             </Nav.Link>
-            <SearchBar 
+            <SearchBar
+              searchRef={searchRef}
               searchBarOpen={searchBarOpen} 
               onClick={() => {
                 setSearchBarOpen(true);
                 setMenuOpen(false);
-              }}
-              onBlur={() => {
-                setSearchBarOpen(false);
               }}
             />
             <a className="element button pro" href="/pro">
@@ -50,7 +47,6 @@ export const Navbar: React.FC = () => {
             </a>
             <img src={Menu} alt="menu" className="menu" onClick={() => {
               setMenuOpen(!menuOpen);
-              setSearchBarOpen(false);
             }}/>
         </Container>
       </NavbarBs>

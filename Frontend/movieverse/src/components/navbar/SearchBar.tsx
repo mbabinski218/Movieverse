@@ -10,10 +10,10 @@ import "./SearchBar.css";
 interface SearchBarProps {
   searchBarOpen: boolean;
   onClick: () => void;
-  onBlur: () => void;
+  searchRef: React.MutableRefObject<null>;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onClick, onBlur}) => {
+export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onClick, searchRef}) => {
   const [input, setInput] = useState<string>("");
   const [searchResult, setSearchResult] = useState<PaginatedList<SearchMediaDto>>(PaginatedListWrapper.empty<SearchMediaDto>());
 
@@ -35,18 +35,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onClick, onB
   }, [debouncedInput]);
 
   return (
-    <>
-      <div> 
-        <div className="search">
-          <input placeholder="Search" onClick={onClick} onChange={(e => setInput(e.target.value))} onBlur={onBlur} />
-          <a href="/find">
-            <img src={SearchIcon} className="search-icon" />
-          </a>          
-        </div>
-        <div className={searchBarOpen ? "list-open" : "list-close"} >
-          <SearchList searchResult={searchResult} />
-        </div>
+    <div className="search" id="search" ref={searchRef}> 
+      <div className="searchBar">
+        <input placeholder="Search" onClick={onClick} onChange={(e => setInput(e.target.value))} />
+        <a href="/find">
+          <img src={SearchIcon} className="search-icon" />
+        </a>          
       </div>
-    </>
+      <div className={searchBarOpen ? "list-open" : "list-close"} >
+        <SearchList searchResult={searchResult} />
+      </div>
+    </div>
   )
 }

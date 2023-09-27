@@ -1,14 +1,23 @@
 .search {
+    position: relative;
+}
+
+.searchBar {
     grid-area: search;
     background-color: var(--color-white);
     width: auto;
     height: 2rem;
     border-radius: 10px;
-    box-shadow: 0px 0px 5px 0px var(--color-dark);
     display: flex;
     align-items: center;
     padding-left: 10px;
     padding-right: 10px;
+}
+
+.searchBar:focus-within {
+    outline-color: var(--color-gold);
+    outline-width: 2px;
+    outline-style: solid;
 }
 
 .search-icon {
@@ -21,11 +30,18 @@
     background-color: var(--color-dark);
     position: absolute;
     border-radius: 10px;
-    width: inherit;
+    width: 100%;
     overflow: hidden;
     display: flex;
     align-items: center;
     margin-top: 7px;
+}
+
+@media (max-width: 768px) {
+    .list-open {
+        display: none;
+        overflow: hidden;
+    }
 }
 
 .list-close {

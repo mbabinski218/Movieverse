@@ -6,4 +6,5 @@ public sealed class SearchMediaDto
 	public string Title { get; set; } = null!;
 	public ushort Year { get; set; }
 	public string? Poster { get; set; }
+	public string? Description { get; set; }
 }
