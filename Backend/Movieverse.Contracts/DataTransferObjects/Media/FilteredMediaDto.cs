@@ -1,8 +1,10 @@
-﻿namespace Movieverse.Contracts.DataTransferObjects.Media;
+﻿using Movieverse.Domain.Common;
+
+namespace Movieverse.Contracts.DataTransferObjects.Media;
 
 public sealed class FilteredMediaDto
 {
-	public Guid? Id { get; set; }
-	public string? Name { get; set; } = null!;
-	public IEnumerable<MediaDemoDto> Medias { get; set; } = null!;
+	public string PlaceName { get; set; } = null!;
+	public Guid? PlaceId { get; set; }
+	public IPaginatedList<MediaDemoDto> Medias { get; set; } = null!;
 }

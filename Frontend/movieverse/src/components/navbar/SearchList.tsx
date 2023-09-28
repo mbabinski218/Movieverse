@@ -11,17 +11,24 @@ interface SearchListProps {
 
 export const SearchList: React.FC<SearchListProps> = ({searchResult}) => {
 	const onError = (e: any) => {
-		e.target.src = Blank;
+		const img = e.target as HTMLImageElement;
+		img.src = Blank;
 	} 
 
 	return (
-		<div>
+		<div className="list">
 			{
 				searchResult.items.map((result) => {
+					let imgSrc = Blank;
+					if (result.poster)
+					{
+						imgSrc = CloudStore.getImageUrl(result.poster as string);
+					}
+
 					return (
 						<a className="items" key={result.id} href={`/media/${result.id}`}>
 							<img className="poster" 
-									 src={CloudStore.getImageUrl(result.poster ? Blank : result.poster as string) } 
+									 src={imgSrc} 
 									 onError={onError}/>
 							<div className="info">
 								<span className="title">{result.title}</span>

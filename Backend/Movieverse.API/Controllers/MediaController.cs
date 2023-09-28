@@ -51,6 +51,14 @@ public sealed class MediaController : ApiController
 			err => StatusCode(err.Code, err.Messages));
 	
 	[AllowAnonymous]
+	[OutputCache(NoStore = true)] // TODO Można dodać cache jakoś chyba
+	[HttpGet("latest")]
+	public async Task<ActionResult> GetUpcoming([FromBody] GetLatestMediaQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
 	[OutputCache(NoStore = true)]
 	[HttpGet("search")]
 	public async Task<ActionResult> Search([FromQuery] SearchMediaQuery query, CancellationToken cancellationToken) =>

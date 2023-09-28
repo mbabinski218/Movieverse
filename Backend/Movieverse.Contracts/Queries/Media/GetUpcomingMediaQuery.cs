@@ -4,7 +4,7 @@ using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Contracts.Queries.Media;
 
-public record GetUpcomingMediaQuery(
+public sealed record GetUpcomingMediaQuery(
 	string Place, 
 	short Count
 	) : IRequest<Result<IEnumerable<FilteredMediaDto>>>;

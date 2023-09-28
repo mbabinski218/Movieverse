@@ -19,7 +19,7 @@ export const Navbar: React.FC = () => {
   });
 
   return (
-    <>
+    <div className="header">
       <NavbarBs className={menuOpen ? "background-dark" : ""}>
         <Container className="content">
             <Nav.Link href="/"> 
@@ -81,6 +81,6 @@ export const Navbar: React.FC = () => {
           </Row>
         </Container>
       </div>
-    </>          
+    </div>          
   )
 };

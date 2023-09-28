@@ -46,8 +46,8 @@ public sealed class GetUpcomingMediaHandler : IRequestHandler<GetUpcomingMediaQu
 		{
 			new()
 			{
-				Id = null,
-				Name = "Theaters",
+				PlaceName = "Theaters",
+				PlaceId = null,
 				Medias = movies.Value
 			}
 		};
@@ -72,8 +72,8 @@ public sealed class GetUpcomingMediaHandler : IRequestHandler<GetUpcomingMediaQu
 				
 			upcomingMedia.Add(new FilteredMediaDto
 			{
-				Id = platform.Id,
-				Name = platform.Name,
+				PlaceName = platform.Name,
+				PlaceId = platform.Id,
 				Medias = medias.Value
 			});
 		}

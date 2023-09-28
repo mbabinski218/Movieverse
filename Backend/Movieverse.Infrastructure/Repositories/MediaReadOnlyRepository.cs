@@ -44,7 +44,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		};
 	}
 	
-	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMediaAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
+	public async Task<Result<IPaginatedList<MediaDemoDto>>> GetUpcomingMediaAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting upcoming medias...");
 		
@@ -55,13 +55,30 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.OrderBy(m => m.Details.ReleaseDate)
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()
-			.ToListAsync(cancellationToken)
+			.ToPaginatedListAsync(null, null, cancellationToken)
 			.ConfigureAwait(false);
 		
 		return medias;
 	}
 
-	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMoviesAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
+	public async Task<Result<IPaginatedList<MediaDemoDto>>> GetLatestMediaAsync(PlatformId? platformId, short? pageNumber = null, short? pageSize = null, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Getting upcoming series...");
+
+		var series = await _dbContext.Medias
+			.AsNoTracking()
+			.Where(s => s.Details.ReleaseDate <= DateTime.UtcNow)
+			.Where(s => platformId == null || s.PlatformIds.Any(p => p == platformId))
+			.OrderBy(s => s.Details.ReleaseDate)
+			.ProjectToType<MediaDemoDto>()
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
+			.ConfigureAwait(false);
+
+		return series;
+	}
+
+	
+	public async Task<Result<IPaginatedList<MediaDemoDto>>> GetUpcomingMoviesAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting upcoming movies...");
 
@@ -72,7 +89,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.OrderBy(m => m.Details.ReleaseDate)
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()
-			.ToListAsync(cancellationToken)
+			.ToPaginatedListAsync(null, null, cancellationToken)
 			.ConfigureAwait(false);
 
 		return movies;
@@ -90,7 +107,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
 			.ConfigureAwait(false);
 	}
-
+	
 	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindSeriesByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting series with ids {ids}...", string.Join(", ", ids.Select(id => id.ToString())));

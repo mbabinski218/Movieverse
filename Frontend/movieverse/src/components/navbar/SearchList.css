@@ -1,3 +1,7 @@
+.list {
+    opacity: 1;
+}
+
 .items {
     cursor: pointer;
     color: var(--color-white);

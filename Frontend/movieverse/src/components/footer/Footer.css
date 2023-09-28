@@ -1,0 +1,37 @@
+.footer {
+    grid-area: footer;
+    color: var(--color-white);
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.break {
+    border-width: 1px;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.footer-items {
+    padding-left: 10px;
+    padding-right: 10px;
+    display: block;
+}
+
+.company {
+    width: 60%;
+}
+
+.shortcuts {
+    float: right;
+}
+
+.shortcuts-item {
+    padding-left: 20px;
+    text-decoration: none;
+    color: var(--color-white);
+    cursor: pointer;
+}
+
+.shortcuts-item:hover {
+    text-decoration: underline;
+}

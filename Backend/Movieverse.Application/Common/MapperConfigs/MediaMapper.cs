@@ -1,5 +1,4 @@
-﻿using Amazon.Runtime.Internal.Transform;
-using Mapster;
+﻿using Mapster;
 using Movieverse.Application.Common.Extensions;
 using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Domain.AggregateRoots.Media;
