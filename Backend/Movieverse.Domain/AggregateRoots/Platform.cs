@@ -9,7 +9,7 @@ public sealed class Platform : AggregateRoot<PlatformId, Guid>
 	private readonly List<MediaId> _mediaIds = new();
 	
 	public string Name { get; set; } = null!;
-	public ContentId LogoId { get; set; } = null!;
+	public ContentId? LogoId { get; set; }
 	public decimal Price { get; set; }
 	public IReadOnlyList<MediaId> MediaIds => _mediaIds.AsReadOnly();
 

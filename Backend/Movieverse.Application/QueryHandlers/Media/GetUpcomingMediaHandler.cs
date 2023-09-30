@@ -22,6 +22,7 @@ public sealed class GetUpcomingMediaHandler : IRequestHandler<GetUpcomingMediaQu
 		_platformRepository = platformRepository;
 	}
 
+	//TODO naprawić jak latest
 	public async Task<Result<IEnumerable<FilteredMediaDto>>> Handle(GetUpcomingMediaQuery request, CancellationToken cancellationToken)
 	{
 		_logger.LogDebug("Getting upcoming media...");
@@ -46,9 +47,9 @@ public sealed class GetUpcomingMediaHandler : IRequestHandler<GetUpcomingMediaQu
 		{
 			new()
 			{
-				PlaceName = "Theaters",
-				PlaceId = null,
-				Medias = movies.Value
+				PlatformId = Guid.Empty,
+				PlatformName = "Theaters",
+				Media = movies.Value
 			}
 		};
 	}
@@ -72,9 +73,9 @@ public sealed class GetUpcomingMediaHandler : IRequestHandler<GetUpcomingMediaQu
 				
 			upcomingMedia.Add(new FilteredMediaDto
 			{
-				PlaceName = platform.Name,
-				PlaceId = platform.Id,
-				Medias = medias.Value
+				PlatformId = platform.Id,
+				PlatformName = platform.Name,
+				Media = medias.Value
 			});
 		}
 

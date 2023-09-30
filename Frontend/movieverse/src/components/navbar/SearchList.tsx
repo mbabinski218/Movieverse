@@ -3,6 +3,7 @@ import { SearchMediaDto } from "../../core/dtos/media/searchMediaDto";
 import { PaginatedList } from "../../core/types/paginatedList";
 import Blank from "../../assets/blank.png";
 import "./SearchList.css";
+import { SyntheticEvent, useCallback } from "react";
 
 
 interface SearchListProps {
@@ -10,10 +11,10 @@ interface SearchListProps {
 }
 
 export const SearchList: React.FC<SearchListProps> = ({searchResult}) => {
-	const onError = (e: any) => {
+	const onError = useCallback((e: SyntheticEvent<HTMLImageElement, Event>): void => {
 		const img = e.target as HTMLImageElement;
 		img.src = Blank;
-	} 
+	}, []);
 
 	return (
 		<div className="list">

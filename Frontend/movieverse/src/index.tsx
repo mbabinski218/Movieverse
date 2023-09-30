@@ -8,7 +8,7 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  <React.StrictMode> {/* Elementy są renderowane dwa razy w trybie ścisłym (temu api może być wywoływane dwa razy) */}
     <App />
   </React.StrictMode>
 );

@@ -2,6 +2,7 @@
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Movieverse.Application.Common.Extensions;
 using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.DataTransferObjects.Platform;
@@ -30,11 +31,17 @@ public sealed class PlatformReadOnlyRepository : IPlatformReadOnlyRepository
 		_logger.LogDebug("Getting platform with id {id}...", id.ToString());
 		
 		var platform = await _dbContext.Platforms
-			.ProjectToType<PlatformDto>()
+			.AsNoTracking()
 			.FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
 			.ConfigureAwait(false);
 		
-		return platform is null ? Error.NotFound(PlatformResources.PlatformDoesNotExist) : platform;
+		return platform is null ? Error.NotFound(PlatformResources.PlatformDoesNotExist) : new PlatformDto
+		{
+			Id = platform.Id,
+			Name = platform.Name,
+			LogoId = platform.LogoId.GetValue(),
+			Price = platform.Price
+		};
 	}
 
 	public async Task<Result<IEnumerable<Platform>>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -42,6 +49,7 @@ public sealed class PlatformReadOnlyRepository : IPlatformReadOnlyRepository
 		_logger.LogDebug("Getting all platforms...");
 
 		return await _dbContext.Platforms
+			.AsNoTracking()
 			.ToListAsync(cancellationToken)
 			.ConfigureAwait(false);
 	}
@@ -51,6 +59,7 @@ public sealed class PlatformReadOnlyRepository : IPlatformReadOnlyRepository
 		_logger.LogDebug("Getting all media ids for platform with id {id}...", id.ToString());
 		
 		return await _dbContext.Platforms
+			.AsNoTracking()
 			.Where(p => p.Id == id.Value)
 			.SelectMany(p => p.MediaIds)
 			.ToListAsync(cancellationToken);

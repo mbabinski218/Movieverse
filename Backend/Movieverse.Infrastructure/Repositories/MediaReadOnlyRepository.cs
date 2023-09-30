@@ -9,7 +9,6 @@ using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common;
 using Movieverse.Domain.Common.Result;
-using Movieverse.Domain.ValueObjects.Ids;
 using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Persistence;
 
@@ -61,15 +60,15 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		return medias;
 	}
 
-	public async Task<Result<IPaginatedList<MediaDemoDto>>> GetLatestMediaAsync(PlatformId? platformId, short? pageNumber = null, short? pageSize = null, CancellationToken cancellationToken = default)
+	public async Task<Result<IPaginatedList<MediaDemoDto>>> GetLatestMediaAsync(PlatformId platformId, short? pageNumber = null, short? pageSize = null, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting upcoming series...");
 
 		var series = await _dbContext.Medias
 			.AsNoTracking()
-			.Where(s => s.Details.ReleaseDate <= DateTime.UtcNow)
-			.Where(s => platformId == null || s.PlatformIds.Any(p => p == platformId))
-			.OrderBy(s => s.Details.ReleaseDate)
+			.Where(m => m.Details.ReleaseDate <= DateTime.UtcNow)
+			.Where(m =>  m.PlatformIds.Any(p => p.Value == platformId.Value))
+			.OrderBy(m => m.Details.ReleaseDate)
 			.ProjectToType<MediaDemoDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
 			.ConfigureAwait(false);
@@ -85,7 +84,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		var movies = await _dbContext.Movies
 			.AsNoTracking()
 			.Where(m => m.Details.ReleaseDate > DateTime.UtcNow)
-			.Where(m => platformId == null || m.PlatformIds.Any(p => p == platformId))
+			.Where(m => platformId == null || m.PlatformIds.Any(p => p == platformId.Value))
 			.OrderBy(m => m.Details.ReleaseDate)
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()

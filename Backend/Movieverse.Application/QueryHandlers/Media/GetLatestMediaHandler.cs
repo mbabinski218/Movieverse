@@ -25,9 +25,9 @@ public sealed class GetLatestMediaHandler : IRequestHandler<GetLatestMediaQuery,
 	{
 		_logger.LogDebug("Getting latest media...");
 
-		return request.PlaceId is null || request.PlaceName is null
+		return request.PlatformId is null
 			? await GetAllLatestMediaAsync(request.PageNumber, request.PageSize).ConfigureAwait(false) 
-			: await GetLatestMediaByPlaceAsync(request.PlaceName, request.PlaceId, request.PageNumber, request.PageSize).ConfigureAwait(false);
+			: await GetLatestMediaByPlaceAsync(request.PlatformId, request.PageNumber, request.PageSize).ConfigureAwait(false);
 	}
 	
 	private async Task<Result<IEnumerable<FilteredMediaDto>>> GetAllLatestMediaAsync(short? pageNumber, short? pageSize)
@@ -40,21 +40,9 @@ public sealed class GetLatestMediaHandler : IRequestHandler<GetLatestMediaQuery,
 
 		var latestMedia = new List<FilteredMediaDto>();
 		
-		var latestMediaInTheaters = await _mediaRepository.GetLatestMediaAsync(null, pageNumber, pageSize).ConfigureAwait(false);
-		if (latestMediaInTheaters.IsUnsuccessful)
-		{
-			return latestMediaInTheaters.Error;
-		}
-		latestMedia.Add(new FilteredMediaDto
-		{
-			PlaceName = "Theaters",
-			PlaceId = null,
-			Medias = latestMediaInTheaters.Value
-		});
-		
 		foreach (var platform in platforms.Value)
 		{
-			var latestMediaResult = await _mediaRepository.GetLatestMediaAsync(PlatformId.Create(platform.Id), pageNumber, pageSize).ConfigureAwait(false);
+			var latestMediaResult = await _mediaRepository.GetLatestMediaAsync(platform.Id.Value, pageNumber, pageSize).ConfigureAwait(false);
 			if (latestMediaResult.IsUnsuccessful)
 			{
 				return latestMediaResult.Error;
@@ -62,37 +50,18 @@ public sealed class GetLatestMediaHandler : IRequestHandler<GetLatestMediaQuery,
 
 			latestMedia.Add(new FilteredMediaDto
 			{
-				PlaceName = platform.Name,
-				PlaceId = platform.Id,
-				Medias = latestMediaResult.Value
+				PlatformId = platform.Id,
+				PlatformName = platform.Name,
+				Media = latestMediaResult.Value
 			});
 		}
 
 		return latestMedia;
 	}
 	
-	private async Task<Result<IEnumerable<FilteredMediaDto>>> GetLatestMediaByPlaceAsync(string placeName, PlatformId placeId, short? pageNumber, short? pageSize)
+	private async Task<Result<IEnumerable<FilteredMediaDto>>> GetLatestMediaByPlaceAsync(PlatformId platformId, short? pageNumber, short? pageSize)
 	{
-		if (placeName == "Theaters")
-		{
-			var latestMediaInTheaters = await _mediaRepository.GetLatestMediaAsync(null, pageNumber, pageSize).ConfigureAwait(false);
-			if (latestMediaInTheaters.IsUnsuccessful)
-			{
-				return latestMediaInTheaters.Error;
-			}
-			
-			return new List<FilteredMediaDto>
-			{
-				new()
-				{
-					PlaceName = placeName,
-					PlaceId = null,
-					Medias = latestMediaInTheaters.Value
-				}
-			};
-		}
-		
-		var platform = await _platformRepository.FindAsync(placeId).ConfigureAwait(false);
+		var platform = await _platformRepository.FindAsync(platformId).ConfigureAwait(false);
 		if (platform.IsUnsuccessful)
 		{
 			return platform.Error;
@@ -108,9 +77,9 @@ public sealed class GetLatestMediaHandler : IRequestHandler<GetLatestMediaQuery,
 		{
 			new()
 			{
-				PlaceName = placeName,
-				PlaceId = placeId,
-				Medias = latestMediaResult.Value
+				PlatformId = platformId,
+				PlatformName = platform.Value.Name,
+				Media = latestMediaResult.Value
 			}
 		};
 	}

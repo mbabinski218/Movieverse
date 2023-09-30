@@ -1,7 +1,7 @@
 import { Container, Nav, Navbar as NavbarBs, Row, Col } from "react-bootstrap";
 import { useOutsideClickAlerter } from "../../hooks/useOutsideClickAlerter";
 import { SearchBar } from "./SearchBar";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Logo from "../../assets/logo.svg";
 import Chart from "../../assets/chart.svg";
 import Check from "../../assets/check.svg";
@@ -13,10 +13,23 @@ export const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [searchBarOpen, setSearchBarOpen] = useState<boolean>(false);
 
+  const outsideSearchBarClick = useCallback(() => {
+    setSearchBarOpen(false);
+  }, [setSearchBarOpen]);
+
   const searchRef = useRef(null);
   useOutsideClickAlerter(searchRef, () => {
-    setSearchBarOpen(false);
+    outsideSearchBarClick();
   });
+
+  const searchBarClick = useCallback(() => {
+    setSearchBarOpen(true);
+    setMenuOpen(false);
+  }, [setSearchBarOpen, setMenuOpen]);
+
+  const menuClick = useCallback(() => {
+    setMenuOpen(!menuOpen);
+  }, [setMenuOpen]);
 
   return (
     <div className="header">
@@ -28,10 +41,7 @@ export const Navbar: React.FC = () => {
             <SearchBar
               searchRef={searchRef}
               searchBarOpen={searchBarOpen} 
-              onClick={() => {
-                setSearchBarOpen(true);
-                setMenuOpen(false);
-              }}
+              onClick={searchBarClick}
             />
             <a className="element button pro" href="/pro">
               <img src={Chart} alt="chart" className="chart" />
@@ -45,9 +55,7 @@ export const Navbar: React.FC = () => {
               <img src={Person} alt="person" className="person" />
               <span>Sign in</span>
             </a>
-            <img src={Menu} alt="menu" className="menu" onClick={() => {
-              setMenuOpen(!menuOpen);
-            }}/>
+            <img src={Menu} alt="menu" className="menu" onClick={menuClick}/>
         </Container>
       </NavbarBs>
       <div className={menuOpen ? "menu-open selected" : "menu-close"}>

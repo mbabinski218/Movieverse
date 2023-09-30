@@ -235,7 +235,7 @@ namespace Movieverse.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("LogoId")
+                    b.Property<Guid?>("LogoId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
