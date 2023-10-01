@@ -1,0 +1,49 @@
+.list {  
+    background: rgba(47, 47, 47, 0.91);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+
+.items {
+    cursor: pointer;
+    color: var(--color-white);
+    text-decoration: none;
+    display: flex;
+    padding: 10px 10px 10px 10px;
+}
+
+.items:hover {
+    color: var(--color-gold);
+}
+
+.info {
+    padding-left: 10px;
+    display: grid;
+    row-gap: 0%;
+    grid-template-areas: 
+        "title"                          
+        "year"                          
+        "description";
+    grid-template-rows: repeat(2, min-content);
+}
+
+.title {
+    grid-area: title;
+    font-weight: bold;
+}
+
+.year {
+    grid-area: year;
+}
+
+.description {
+    margin-top: 10px;
+    grid-area: description;
+
+}
+
+.poster {
+    height: 150px;
+    width: 101px;
+}

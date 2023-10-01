@@ -1,0 +1,32 @@
+﻿<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="EnterName" xml:space="preserve">
+        <value>Podaj nazwę</value>
+    </data>
+    <data name="NameTooLong" xml:space="preserve">
+        <value>Nazwa jest za długa (max 100)</value>
+    </data>
+    <data name="EnterDescription" xml:space="preserve">
+        <value>Podaj opis</value>
+    </data>
+    <data name="DescriptionTooLong" xml:space="preserve">
+        <value>Opis jest za długi (max 1000)</value>
+    </data>
+    <data name="CannotCreateGenre" xml:space="preserve">
+        <value>Nie można dodać gatunku</value>
+    </data>
+    <data name="GenreNotFound" xml:space="preserve">
+        <value>Nie znaleziono gatunku</value>
+    </data>
+</root>

@@ -1,0 +1,86 @@
+﻿<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="WrongEmailFormat" xml:space="preserve">
+        <value>Błędny format email</value>
+    </data>
+    <data name="EnterPassword" xml:space="preserve">
+        <value>Podaj hasło</value>
+    </data>
+    <data name="WrongDataFormat" xml:space="preserve">
+        <value>Błędny format</value>
+    </data>
+    <data name="EnterEmail" xml:space="preserve">
+        <value>Podaj email</value>
+    </data>
+    <data name="EnterUserName" xml:space="preserve">
+        <value>Podaj nazwę użytkownika</value>
+    </data>
+    <data name="EnterAge" xml:space="preserve">
+        <value>Podaj wiek</value>
+    </data>
+    <data name="ConfirmPassword" xml:space="preserve">
+        <value>Potwierdź hasło</value>
+    </data>
+    <data name="PasswordsMustBeTheSame" xml:space="preserve">
+        <value>Hasła muszą być takie same</value>
+    </data>
+    <data name="EmailIsNotConfirmed" xml:space="preserve">
+        <value>Potwierdź email</value>
+    </data>
+    <data name="InvalidPassword" xml:space="preserve">
+        <value>Błędne hasło</value>
+    </data>
+    <data name="CloudNotSignIn" xml:space="preserve">
+        <value>Błąd podczas logowania</value>
+    </data>
+    <data name="FailedToRegisterUser" xml:space="preserve">
+        <value>Błąd podczas rejestracji</value>
+    </data>
+    <data name="AgeMustBeGreaterThanZero" xml:space="preserve">
+        <value>Wiek musi być większy niż 0</value>
+    </data>
+    <data name="EnterAuthenticator" xml:space="preserve">
+        <value>Błędny uwierzytelniacz</value>
+    </data>
+    <data name="EnterRefreshToken" xml:space="preserve">
+        <value>Podaj refresh token</value>
+    </data>
+    <data name="FailedToAddRole" xml:space="preserve">
+        <value>Błąd podczas dodawania do roli</value>
+    </data>
+    <data name="FailedToAuthenticateViaGoogle" xml:space="preserve">
+        <value>Błąd podczas logowania przez Google</value>
+    </data>
+    <data name="FailedToLoginWithRefreshToken" xml:space="preserve">
+        <value>Błąd podczas logowania przez refresh token</value>
+    </data>
+    <data name="InvalidGrantType" xml:space="preserve">
+        <value>Błędny typ dostępu</value>
+    </data>
+    <data name="InvalidRefreshToken" xml:space="preserve">
+        <value>Błędny refresh token</value>
+    </data>
+    <data name="UserDoesNotExist" xml:space="preserve">
+        <value>Użytkownik nie istnieje</value>
+    </data>
+    <data name="UserUpdateFailed" xml:space="preserve">
+        <value>Błąd przy aktualizacji danych użytkownika</value>
+    </data>
+    <data name="YouAreNotLoggedIn" xml:space="preserve">
+        <value>Nie jesteś zalogowany</value>
+    </data>
+    <data name="UserAlreadyHavePersonality" xml:space="preserve">
+        <value>Użytkownik ma już osobowość</value>
+    </data>
+</root>

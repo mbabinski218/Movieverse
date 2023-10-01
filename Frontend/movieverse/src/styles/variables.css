@@ -1,0 +1,33 @@
+:root {
+    --gap-xxs: 4px;
+    --gap-xs: 8px;
+    --gap-s: 16px;
+    --gap-m: 20px;
+    --gap-l: 30px;
+  
+    --font-xs: 12px;
+    --font-normal: 14px;
+    --font-m: 16px;
+    --font-l: 24px;
+    --font-xl: 36px;
+  
+    --lineHeight-s: 16px;
+    --lineHeight-m: 20px;
+    --lineHeight-l: 24px;
+    --lineHeight-xl: 40px;
+
+    --color-gold: #ffcb74;
+    --color-white: #ffffff;
+    --color-dark: #2f2f2f;
+    --color-error: #ff6961;
+    --color-success: #77dd77;  
+
+    --background-color-light: #f6f6f6;
+    --background-color-dark: #111111;
+
+    --screen-1400: 1400px;
+    --screen-1200: 1200px;
+    --screen-1064: 992px;
+    --screen-768: 768px;
+    --screen-576: 576px;
+  }

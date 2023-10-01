@@ -1,0 +1,50 @@
+.search {
+    position: relative;
+}
+
+.searchBar {
+    grid-area: search;
+    background-color: var(--color-white);
+    width: auto;
+    height: 2rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.searchBar:focus-within {
+    outline-color: var(--color-gold);
+    outline-width: 2px;
+    outline-style: solid;
+}
+
+.search-icon {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+
+.list-open {
+    background-color: var(--color-dark);
+    position: absolute;
+    border-radius: 10px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    margin-top: 7px;
+}
+
+@media (max-width: 768px) {
+    .list-open {
+        display: none;
+        overflow: hidden;
+    }
+}
+
+.list-close {
+    display: none;
+    overflow: hidden;
+}

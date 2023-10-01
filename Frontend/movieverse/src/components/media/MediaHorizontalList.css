@@ -1,0 +1,7 @@
+.platfromName {
+  cursor: default;
+  color: var(--color-gold);
+  font-size: var(--font-l);
+  font-weight: Bold;
+  padding-bottom: 20px;
+}

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Version>0.0.1</Version>
+        <Title>Movieverse.UnitTests</Title>
+        <Authors>Movieverse</Authors>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Movieverse.Application\Movieverse.Application.csproj" />
+      <ProjectReference Include="..\Movieverse.Infrastructure\Movieverse.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.10" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.0" />
+      <PackageReference Include="NSubstitute" Version="5.0.0" />
+      <PackageReference Include="NUnit" Version="3.13.3" />
+    </ItemGroup>
+
+
+</Project>
