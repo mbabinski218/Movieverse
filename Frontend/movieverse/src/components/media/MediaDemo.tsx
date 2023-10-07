@@ -11,12 +11,12 @@ import Star from "../../assets/star.svg";
 
 interface MediaDemoProps {
 	mediaDemo: MediaDemoDto;
+	isOnWatchlist: boolean | null;
 }
 
-export const MediaDemo: React.FC<MediaDemoProps> = ({mediaDemo}) => {
+export const MediaDemo: React.FC<MediaDemoProps> = ({mediaDemo, isOnWatchlist}) => {
 	const [imgSrc, setImgSrc] = useState<string>(Blank);
 	const [trailerAvailable, setTrailerAvailable] = useState<boolean>(false);
-	const [isOnWatchlist, setIsOnWatchlist] = useState<boolean>(false);
 
 	const onError = useCallback((e: SyntheticEvent<HTMLImageElement, Event>): void => {
 		const img = e.target as HTMLImageElement;
@@ -41,10 +41,10 @@ export const MediaDemo: React.FC<MediaDemoProps> = ({mediaDemo}) => {
 			<img className="img" src={imgSrc} onError={onError} alt={mediaDemo.title} />
 			<div className="overlay">
 				<a className="item-title">{mediaDemo.title}</a>
-				<div className="add-to-watchlist enable-icon">
-					<img className="icon" src={Plus} alt="like" />
+				<div className={isOnWatchlist !== null ? "add-to-watchlist enable-icon" : "add-to-watchlist disable-icon"}>
+					<img className="icon" src={isOnWatchlist ? Check : Plus} alt="like" />
 				</div>
-				<div className={trailerAvailable ? "trailer enable-icon" : "no-trailer"} onClick={openTrailer}>
+				<div className={trailerAvailable ? "trailer enable-icon" : "trailer disable-icon"} onClick={openTrailer}>
 					<img className="icon" src={Clapperboard} alt="trailer" />
 				</div>
 				<div className="icon rating">

@@ -48,17 +48,13 @@
 
 .add-to-watchlist {
   grid-area: watchlist;
-  text-align: center;
-  cursor: pointer;
 }
 
 .trailer {
   grid-area: trailer;
-  cursor: pointer;
 }
 
-.no-trailer {
-  grid-area: trailer;
+.disable-icon {
   cursor: default;
   opacity: 0.2;
 }
@@ -67,6 +63,10 @@
   display: flex;
   margin: auto;
   height: 21px;
+}
+
+.enable-icon {
+  cursor: pointer;
 }
 
 .enable-icon:hover {

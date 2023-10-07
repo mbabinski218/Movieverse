@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FilteredMediaDto } from "../../core/dtos/media/filteredMediaDto";
 import { MediaDemo } from "./MediaDemo";
+import { WatchlistStatus } from "../../core/dtos/user/watchlistStatus";
+import { Api } from "../../Api";
 import "./MediaHorizontalList.css";
 import leftArrow from "../../assets/arrow-left.svg";
 import rightArrow from "../../assets/arrow-right.svg";
@@ -94,6 +96,19 @@ export const MediaHorizontalList: React.FC<MediaHorizontalListProps> = ({filtere
     };
   }, [scrollButtons, scrollPosition]);
 
+  //TODO jeszcze o watchlist i to nie ma sensu jak nie zalogowany i musi być już po załadowaniu strony
+  // Watchlist statuses
+  const [watchlistStatuses, setWatchlistStatuses] = useState<WatchlistStatus[]>([]);
+  useEffect(() => {
+    if (!filteredMedia.media?.items) {
+      return;
+    }
+
+    Api.getWatchlistStatuses(filteredMedia.media?.items?.map(x => x.id) ?? [])
+      .then(statuses => setWatchlistStatuses(statuses))
+      .catch(err => console.error(err));
+  }, []);
+
   // Update scroll buttons
   return (
     <div>
@@ -105,7 +120,7 @@ export const MediaHorizontalList: React.FC<MediaHorizontalListProps> = ({filtere
         <div className="mediaHorizontalListContainer" style={{transform: `translateX(-${scrollPosition}px)`}} ref={onContainerRefChange}>
           {filteredMedia.media?.items?.map((media) => (
             <div key={media.id} ref={itemRef}>
-              <MediaDemo mediaDemo={media} />
+              <MediaDemo mediaDemo={media} isOnWatchlist={watchlistStatuses.find(x => x.mediaId === media.id)?.isOnWatchlist ?? null}/>
             </div>
           ))}
         </div>

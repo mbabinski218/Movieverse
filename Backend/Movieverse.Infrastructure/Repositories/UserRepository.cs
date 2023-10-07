@@ -10,6 +10,7 @@ using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.Common.Types;
+using Movieverse.Domain.Entities;
 using Movieverse.Domain.ValueObjects;
 using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Authentication;
@@ -285,6 +286,18 @@ public sealed class UserRepository : IUserRepository
 		
 		user.Value.PersonId = personId;
 		return Result.Ok();
+	}
+
+	public async Task<Result<MediaInfo?>> FindMediaInfoAsync(Guid id, MediaId mediaId, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Find media info for user with id: {id}", id);
+
+		var mediaInfo = await _dbContext.Users
+			.Where(u => u.Id == id)
+			.SelectMany(u => u.MediaInfos)
+			.FirstOrDefaultAsync(mi => mi.MediaId.Value == mediaId.Value, cancellationToken);
+
+		return mediaInfo;
 	}
 
 	public async Task<Result> AddRoleAsync(User user, UserRole role, CancellationToken cancellationToken = default)

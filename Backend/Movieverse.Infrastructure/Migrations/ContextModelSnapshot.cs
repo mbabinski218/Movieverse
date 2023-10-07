@@ -977,7 +977,7 @@ namespace Movieverse.Infrastructure.Migrations
 
                             NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
-                            b1.Property<bool>("IsInWatchlist")
+                            b1.Property<bool>("IsOnWatchlist")
                                 .HasColumnType("boolean");
 
                             b1.Property<Guid>("MediaId")
@@ -1055,11 +1055,11 @@ namespace Movieverse.Infrastructure.Migrations
                                     b2.Property<int>("CriticReviews")
                                         .HasColumnType("integer");
 
-                                    b2.Property<int>("InWatchlistCount")
+                                    b2.Property<int>("OnWatchlistCount")
                                         .HasColumnType("integer");
 
-                                    b2.Property<double>("Rating")
-                                        .HasColumnType("double precision");
+                                    b2.Property<decimal>("Rating")
+                                        .HasColumnType("numeric");
 
                                     b2.Property<int>("UserReviews")
                                         .HasColumnType("integer");
@@ -1159,14 +1159,14 @@ namespace Movieverse.Infrastructure.Migrations
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<int>("InWatchlistCount")
+                            b1.Property<int>("OnWatchlistCount")
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<double>("Rating")
+                            b1.Property<decimal>("Rating")
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasPrecision(3, 1)
-                                .HasColumnType("double precision");
+                                .HasColumnType("numeric(3,1)");
 
                             b1.Property<int>("UserReviews")
                                 .ValueGeneratedOnUpdateSometimes()
@@ -1199,14 +1199,14 @@ namespace Movieverse.Infrastructure.Migrations
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<int>("InWatchlistCount")
+                            b1.Property<int>("OnWatchlistCount")
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<double>("Rating")
+                            b1.Property<decimal>("Rating")
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasPrecision(3, 1)
-                                .HasColumnType("double precision");
+                                .HasColumnType("numeric(3,1)");
 
                             b1.Property<int>("UserReviews")
                                 .ValueGeneratedOnUpdateSometimes()
@@ -1286,12 +1286,12 @@ namespace Movieverse.Infrastructure.Migrations
                                             b3.Property<int>("CriticReviews")
                                                 .HasColumnType("integer");
 
-                                            b3.Property<int>("InWatchlistCount")
+                                            b3.Property<int>("OnWatchlistCount")
                                                 .HasColumnType("integer");
 
-                                            b3.Property<double>("Rating")
+                                            b3.Property<decimal>("Rating")
                                                 .HasPrecision(3, 1)
-                                                .HasColumnType("double precision");
+                                                .HasColumnType("numeric(3,1)");
 
                                             b3.Property<int>("UserReviews")
                                                 .HasColumnType("integer");

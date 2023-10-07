@@ -2,6 +2,7 @@ import { QueryParams } from "./common/queryParams";
 import { PaginatedList } from "./core/types/paginatedList";
 import { SearchMediaDto } from "./core/dtos/media/searchMediaDto";
 import { FilteredMediaDto } from "./core/dtos/media/filteredMediaDto";
+import { WatchlistStatus } from "./core/dtos/user/watchlistStatus";
 
 export class Api {
 	static readonly url: string = "https://localhost:44375/api";
@@ -55,6 +56,17 @@ export class Api {
 		try {
 			return await fetch(`${this.url}/content/${id}`)
 				.then(response => response.text())
+		}
+		catch (error) {
+			console.error(error);
+			throw error;
+		}
+	}
+
+	static async getWatchlistStatuses(mediaIds: string[])
+		: Promise<WatchlistStatus[]> {
+		try {
+			throw new Error("Not implemented");
 		}
 		catch (error) {
 			console.error(error);

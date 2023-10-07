@@ -2,7 +2,7 @@
     grid-area: page;
     margin-top: 20px;
     margin-bottom: 20px;
-    margin-left: 20px;
+    padding-left: 20px;
     width: 100%;
     overflow: hidden;
 }

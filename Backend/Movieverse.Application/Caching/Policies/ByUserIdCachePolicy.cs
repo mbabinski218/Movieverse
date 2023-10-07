@@ -1,6 +1,6 @@
 ﻿namespace Movieverse.Application.Caching.Policies;
 
-public class ByUserIdCachePolicy
+public sealed class ByUserIdCachePolicy
 {
 	
 }

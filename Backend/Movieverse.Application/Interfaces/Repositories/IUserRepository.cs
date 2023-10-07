@@ -1,6 +1,7 @@
 ﻿using Movieverse.Contracts.DataTransferObjects.User;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
+using Movieverse.Domain.Entities;
 using Movieverse.Domain.ValueObjects;
 using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
@@ -22,4 +23,5 @@ public interface IUserRepository
 	Task<Result> LogoutAsync(User user, CancellationToken cancellationToken = default);
 	Task<Result<Information>> GetInformationAsync(Guid id, CancellationToken cancellationToken = default);
 	Task<Result> AddPersonalityAsync(Guid id, PersonId personId, CancellationToken cancellationToken = default);
+	Task<Result<MediaInfo?>> FindMediaInfoAsync(Guid id, MediaId mediaId, CancellationToken cancellationToken = default);
 }

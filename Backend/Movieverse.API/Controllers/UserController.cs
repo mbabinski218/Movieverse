@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.OutputCaching;
 using Movieverse.API.Common;
 using Movieverse.API.Common.Extensions;
 using Movieverse.Application.Authorization;
+using Movieverse.Application.Caching.Policies;
 using Movieverse.Contracts.Commands.User;
 using Movieverse.Contracts.DataTransferObjects.User;
 using Movieverse.Contracts.Queries.User;
@@ -71,6 +72,15 @@ public sealed class UserController : ApiController
 	[OutputCache(NoStore = true)]
 	[HttpPut("{Id:guid}")]
 	public async Task<ActionResult<UserDto>> Update([FromForm] UpdateCommand command, CancellationToken cancellationToken) =>
+		await mediator.Send(command, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[PolicyAuthorize(Policies.atLeastUser)]
+	// [OutputCache(PolicyName = CachePolicies.byUserId)]
+	[OutputCache(NoStore = true)]
+	[HttpPut("/watchlist/{Id:guid}")]
+	public async Task<ActionResult> UpdateWatchlist([FromRoute] UpdateWatchlistCommand command, CancellationToken cancellationToken) =>
 		await mediator.Send(command, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));

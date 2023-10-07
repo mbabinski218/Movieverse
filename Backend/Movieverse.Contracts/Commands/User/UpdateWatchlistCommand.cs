@@ -1,3 +1,9 @@
-﻿namespace Movieverse.Contracts.Commands.User;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Movieverse.Domain.Common.Result;
 
-public record UpdateWatchlistCommand();
+namespace Movieverse.Contracts.Commands.User;
+
+public sealed record UpdateWatchlistCommand(
+	[FromRoute] Guid MediaId
+	) : IRequest<Result>;
