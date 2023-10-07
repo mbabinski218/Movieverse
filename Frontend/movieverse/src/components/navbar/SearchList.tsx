@@ -1,9 +1,9 @@
 import { CloudStore } from "../../CloudStore";
 import { SearchMediaDto } from "../../core/dtos/media/searchMediaDto";
 import { PaginatedList } from "../../core/types/paginatedList";
-import Blank from "../../assets/blank.png";
-import "./SearchList.css";
 import { SyntheticEvent, useCallback } from "react";
+import "./SearchList.css";
+import Blank from "../../assets/blank.png";
 
 
 interface SearchListProps {
@@ -17,7 +17,7 @@ export const SearchList: React.FC<SearchListProps> = ({searchResult}) => {
 	}, []);
 
 	return (
-		<div className="list">
+		<div>
 			{
 				searchResult.items.map((result) => {
 					let imgSrc = Blank;
@@ -28,7 +28,7 @@ export const SearchList: React.FC<SearchListProps> = ({searchResult}) => {
 
 					return (
 						<a className="items" key={result.id} href={`/media/${result.id}`}>
-							<img className="poster" 
+							<img className="poster"
 									 src={imgSrc} 
 									 onError={onError}/>
 							<div className="info">

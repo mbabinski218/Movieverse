@@ -50,4 +50,15 @@ export class Api {
 			throw error;
 		}
 	}
+
+	static async getVideoPath(id: string): Promise<string> {
+		try {
+			return await fetch(`${this.url}/content/${id}`)
+				.then(response => response.text())
+		}
+		catch (error) {
+			console.error(error);
+			throw error;
+		}
+	}
 }

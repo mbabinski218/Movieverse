@@ -3,5 +3,62 @@
   color: var(--color-gold);
   font-size: var(--font-l);
   font-weight: Bold;
-  padding-bottom: 20px;
+  margin-left: 10px;
+}
+
+.mediaHorizontalList {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.scrollButton {
+  position: absolute;
+  display: none;
+  cursor: pointer;
+  border: none;
+  scale: 2;
+  z-index: 5;
+  width: 20px;
+  height: 15%;  
+  border-radius: 5px;
+  background-color: var(--color-dark);
+  opacity: 0.3;
+}
+
+.mediaHorizontalList:hover .scrollButton {
+  display: flex;
+}
+
+.scrollButton:hover {
+  transition: 0.2s;
+  transform: scale(1.2); 
+  opacity: 1;
+  background-color: var(--color-dark);
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
+}
+
+.scrollButtonIcon {
+  margin: auto;
+}
+
+.right {
+  right: 4.2vh;
+}
+
+.left {
+  left: 3.2vh;
+}
+
+.disable {
+  visibility: hidden;
+}
+
+.mediaHorizontalListContainer {
+  display: flex;
+  width: min-content;
+  transition: 0.4s;
 }

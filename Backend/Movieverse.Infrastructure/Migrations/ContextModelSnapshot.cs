@@ -121,8 +121,8 @@ namespace Movieverse.Infrastructure.Migrations
 
                     b.Property<string>("Path")
                         .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("character varying(36)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Title")
                         .HasMaxLength(200)
@@ -1058,8 +1058,8 @@ namespace Movieverse.Infrastructure.Migrations
                                     b2.Property<int>("InWatchlistCount")
                                         .HasColumnType("integer");
 
-                                    b2.Property<short>("Rating")
-                                        .HasColumnType("smallint");
+                                    b2.Property<double>("Rating")
+                                        .HasColumnType("double precision");
 
                                     b2.Property<int>("UserReviews")
                                         .HasColumnType("integer");
@@ -1163,9 +1163,10 @@ namespace Movieverse.Infrastructure.Migrations
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<short>("Rating")
+                            b1.Property<double>("Rating")
                                 .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("smallint");
+                                .HasPrecision(3, 1)
+                                .HasColumnType("double precision");
 
                             b1.Property<int>("UserReviews")
                                 .ValueGeneratedOnUpdateSometimes()
@@ -1202,9 +1203,10 @@ namespace Movieverse.Infrastructure.Migrations
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<short>("Rating")
+                            b1.Property<double>("Rating")
                                 .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("smallint");
+                                .HasPrecision(3, 1)
+                                .HasColumnType("double precision");
 
                             b1.Property<int>("UserReviews")
                                 .ValueGeneratedOnUpdateSometimes()
@@ -1287,8 +1289,9 @@ namespace Movieverse.Infrastructure.Migrations
                                             b3.Property<int>("InWatchlistCount")
                                                 .HasColumnType("integer");
 
-                                            b3.Property<short>("Rating")
-                                                .HasColumnType("smallint");
+                                            b3.Property<double>("Rating")
+                                                .HasPrecision(3, 1)
+                                                .HasColumnType("double precision");
 
                                             b3.Property<int>("UserReviews")
                                                 .HasColumnType("integer");

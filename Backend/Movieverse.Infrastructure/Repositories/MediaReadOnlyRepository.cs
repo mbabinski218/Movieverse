@@ -64,16 +64,16 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 	{
 		_logger.LogDebug("Getting upcoming series...");
 
-		var series = await _dbContext.Medias
+		var medias = await _dbContext.Medias
 			.AsNoTracking()
 			.Where(m => m.Details.ReleaseDate <= DateTime.UtcNow)
 			.Where(m =>  m.PlatformIds.Any(p => p.Value == platformId.Value))
-			.OrderBy(m => m.Details.ReleaseDate)
+			.OrderByDescending(m => m.Details.ReleaseDate)
 			.ProjectToType<MediaDemoDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
 			.ConfigureAwait(false);
 
-		return series;
+		return medias;
 	}
 
 	

@@ -1,6 +1,6 @@
 import { MediaHorizontalList } from "../components/media/MediaHorizontalList";
 import { FilteredMediaDto } from "../core/dtos/media/filteredMediaDto";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Api } from "../Api";
 import "./Home.css";
 
@@ -15,9 +15,12 @@ export const Home: React.FC = () => {
 
 	return (
 		<div className="page">
-			{filteredMedia.map((filteredMedia) => (
-				<MediaHorizontalList key={filteredMedia.platformId} filteredMedia={filteredMedia} />
-			))}
+			<span className="page-title">What to watch</span>
+			<div>
+				{filteredMedia.map((filteredMedia) => (
+					<MediaHorizontalList key={filteredMedia.platformId} filteredMedia={filteredMedia} />
+				))}
+			</div>
 		</div>
 	);
 }

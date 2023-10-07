@@ -32,7 +32,8 @@ public sealed class MediaMapper : IRegister
 		config.NewConfig<Media, MediaDemoDto>()
 			.Map(dest => dest.Id, src => src.Id.GetValue())
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
-			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue());
+			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue())
+			.Map(dest => dest.Rating, src => src.BasicStatistics.Rating);
 		
 		config.NewConfig<Media, MediaDto>()
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
@@ -79,6 +80,9 @@ public sealed class MediaMapper : IRegister
 			.Map(dest => dest.Year, src => GetStartYear(src.Details.ReleaseDate))
 			.Map(dest => dest.Poster, src => src.PosterId.GetValue().ToString())
 			.Map(dest => dest.Description, src => GetDescription(src.Details.Storyline));
+		
+		config.NewConfig<PaginatedList<Media>, PaginatedList<MediaDemoDto>>()
+			.Map(dest => dest.Items, src => src.Items.Adapt<List<MediaDemoDto>>());
 	}
 	
 	private static short? GetStartYear(DateTimeOffset? date) => date is null ? null : (short?)date.Value.Year;

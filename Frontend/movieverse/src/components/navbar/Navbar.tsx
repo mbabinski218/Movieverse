@@ -27,10 +27,6 @@ export const Navbar: React.FC = () => {
     setMenuOpen(false);
   }, [setSearchBarOpen, setMenuOpen]);
 
-  const menuClick = useCallback(() => {
-    setMenuOpen(!menuOpen);
-  }, [setMenuOpen]);
-
   return (
     <div className="header">
       <NavbarBs className={menuOpen ? "background-dark" : ""}>
@@ -55,7 +51,9 @@ export const Navbar: React.FC = () => {
               <img src={Person} alt="person" className="person" />
               <span>Sign in</span>
             </a>
-            <img src={Menu} alt="menu" className="menu" onClick={menuClick}/>
+            <img src={Menu} alt="menu" className="menu" onClick={() => {
+              setMenuOpen(!menuOpen);
+            }}/>
         </Container>
       </NavbarBs>
       <div className={menuOpen ? "menu-open selected" : "menu-close"}>

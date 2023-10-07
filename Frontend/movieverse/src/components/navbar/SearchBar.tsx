@@ -36,10 +36,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onClick, sea
 
   return (
     <div className="search" id="search" ref={searchRef}> 
-      <div className="searchBar">
+      <div className="search-bar">
         <input placeholder="Search" onClick={onClick} onChange={(e => setInput(e.target.value))} />
         <a href="/find">
-          <img src={SearchIcon} className="search-icon" />
+          <img src={SearchIcon} alt="search" className="search-icon" />
         </a>          
       </div>
       <div className={searchBarOpen ? "list-open" : "list-close"} >

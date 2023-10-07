@@ -34,7 +34,11 @@ public sealed class MovieConfiguration : IEntityTypeConfiguration<Movie>
 		builder.Property(m => m.PrequelId)
 			.HasConversion(converter);
 
-		builder.OwnsOne(m => m.BasicStatistics);
+		builder.OwnsOne(m => m.BasicStatistics, basicStatisticsBuilder =>
+		{
+			basicStatisticsBuilder.Property(bs => bs.Rating)
+				.HasPrecision(Constants.ratingPrecision, Constants.ratingScale);
+		});	
 		
 		builder.OwnsOne(m => m.Details);
 		
