@@ -12,9 +12,10 @@ import Star from "../../assets/star.svg";
 interface MediaDemoProps {
 	mediaDemo: MediaDemoDto;
 	isOnWatchlist: boolean | null;
+	isWatchlistLoaded: boolean;
 }
 
-export const MediaDemo: React.FC<MediaDemoProps> = ({mediaDemo, isOnWatchlist}) => {
+export const MediaDemo: React.FC<MediaDemoProps> = ({mediaDemo, isOnWatchlist, isWatchlistLoaded}) => {
 	const [imgSrc, setImgSrc] = useState<string>(Blank);
 	const [trailerAvailable, setTrailerAvailable] = useState<boolean>(false);
 
@@ -41,7 +42,7 @@ export const MediaDemo: React.FC<MediaDemoProps> = ({mediaDemo, isOnWatchlist}) 
 			<img className="img" src={imgSrc} onError={onError} alt={mediaDemo.title} />
 			<div className="overlay">
 				<a className="item-title">{mediaDemo.title}</a>
-				<div className={isOnWatchlist !== null ? "add-to-watchlist enable-icon" : "add-to-watchlist disable-icon"}>
+				<div className={isWatchlistLoaded ? "add-to-watchlist enable-icon" : "add-to-watchlist disable-icon"}>
 					<img className="icon" src={isOnWatchlist ? Check : Plus} alt="like" />
 				</div>
 				<div className={trailerAvailable ? "trailer enable-icon" : "trailer disable-icon"} onClick={openTrailer}>

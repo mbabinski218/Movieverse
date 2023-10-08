@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FilteredMediaDto } from "../../core/dtos/media/filteredMediaDto";
 import { MediaDemo } from "./MediaDemo";
-import { WatchlistStatus } from "../../core/dtos/user/watchlistStatus";
+import { WatchlistStatusDto } from "../../core/dtos/user/watchlistStatusDto";
 import { Api } from "../../Api";
 import "./MediaHorizontalList.css";
 import leftArrow from "../../assets/arrow-left.svg";
@@ -96,16 +96,19 @@ export const MediaHorizontalList: React.FC<MediaHorizontalListProps> = ({filtere
     };
   }, [scrollButtons, scrollPosition]);
 
-  //TODO jeszcze o watchlist i to nie ma sensu jak nie zalogowany i musi być już po załadowaniu strony
   // Watchlist statuses
-  const [watchlistStatuses, setWatchlistStatuses] = useState<WatchlistStatus[]>([]);
+  const [watchlistStatuses, setWatchlistStatuses] = useState<WatchlistStatusDto[]>([]);
+  const [watchListLoaded, setWatchListLoaded] = useState<boolean>(false);
   useEffect(() => {
-    if (!filteredMedia.media?.items) {
+    if (!filteredMedia.media?.items) {  //TODO sprawdzic czy zalogoany
       return;
     }
 
     Api.getWatchlistStatuses(filteredMedia.media?.items?.map(x => x.id) ?? [])
-      .then(statuses => setWatchlistStatuses(statuses))
+      .then(statuses => {
+        setWatchListLoaded(true);
+        setWatchlistStatuses(statuses)
+      })
       .catch(err => console.error(err));
   }, []);
 
@@ -120,7 +123,7 @@ export const MediaHorizontalList: React.FC<MediaHorizontalListProps> = ({filtere
         <div className="mediaHorizontalListContainer" style={{transform: `translateX(-${scrollPosition}px)`}} ref={onContainerRefChange}>
           {filteredMedia.media?.items?.map((media) => (
             <div key={media.id} ref={itemRef}>
-              <MediaDemo mediaDemo={media} isOnWatchlist={watchlistStatuses.find(x => x.mediaId === media.id)?.isOnWatchlist ?? null}/>
+              <MediaDemo mediaDemo={media} isOnWatchlist={watchlistStatuses.find(x => x.mediaId === media.id)?.isOnWatchlist ?? null} isWatchlistLoaded={watchListLoaded}/>
             </div>
           ))}
         </div>

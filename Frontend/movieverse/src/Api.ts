@@ -2,7 +2,8 @@ import { QueryParams } from "./common/queryParams";
 import { PaginatedList } from "./core/types/paginatedList";
 import { SearchMediaDto } from "./core/dtos/media/searchMediaDto";
 import { FilteredMediaDto } from "./core/dtos/media/filteredMediaDto";
-import { WatchlistStatus } from "./core/dtos/user/watchlistStatus";
+import { WatchlistStatusDto } from "./core/dtos/user/watchlistStatusDto";
+import { GetWatchlistStatusesContract } from "./core/contracts/getWatchlistStatusesContract";
 
 export class Api {
 	static readonly url: string = "https://localhost:44375/api";
@@ -63,14 +64,44 @@ export class Api {
 		}
 	}
 
-	static async getWatchlistStatuses(mediaIds: string[])
-		: Promise<WatchlistStatus[]> {
+	static async getWatchlistStatuses(mediaIds: string[]) 
+		: Promise<WatchlistStatusDto[]> {
 		try {
-			throw new Error("Not implemented");
+			const body: GetWatchlistStatusesContract = {
+				mediaIds: mediaIds
+			}
+
+			return await fetch(`${this.url}/user/watchlist`, {
+				mode: "cors",
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": "Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjA1Yjc0ZDkxLWYzZmMtNGE2MC04N2ZkLTQzNzQzOGJlMWY4NSIsImVtYWlsIjoic3RyaW5nMkBzdHJpbmcucGwiLCJkaXNwbGF5TmFtZSI6IkJhcnRvc3oiLCJhZ2UiOiIxNSIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNjk2Nzg0MjIxLCJpc3MiOiJNb3ZpZXZlcnNlIiwiYXVkIjoiTW92aWV2ZXJzZSJ9.fkVtRr0i8xtJDpg7kkqYfhDwylfgewNiWGi6P3y_2kwYPcCyH1VN6D1Dpb13H8DdkMaDWwPpW2JohSqhJxr-DQ",
+				},
+				body: JSON.stringify(body)
+			})
+			.then(response => response.json())
+			.then(data => data as WatchlistStatusDto[])
 		}
 		catch (error) {
 			console.error(error);
 			throw error;
 		}
 	}
+
+	static async updateWatchlistStatus(mediaId: string) 
+	: Promise<void> {
+	try {
+		return await fetch(`${this.url}/user/watchlist/${mediaId}`, {
+			headers: {
+				Authorization: "Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjA1Yjc0ZDkxLWYzZmMtNGE2MC04N2ZkLTQzNzQzOGJlMWY4NSIsImVtYWlsIjoic3RyaW5nMkBzdHJpbmcucGwiLCJkaXNwbGF5TmFtZSI6IkJhcnRvc3oiLCJhZ2UiOiIxNSIsInJvbGUiOiJBZG1pbmlzdHJhdG9yIiwiZXhwIjoxNjk2Nzc5MDk0LCJpc3MiOiJNb3ZpZXZlcnNlIiwiYXVkIjoiTW92aWV2ZXJzZSJ9.nlThbNESyaBEGzEAeDNCg80TS3yzwbBEDMO2DaP71jquxbn7yisxx05qwOEuBTlfTYbwPCQ9cZWDuRGtDv9uTA",
+			}
+		})
+		.then(response => response.json())
+	}
+	catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
 }

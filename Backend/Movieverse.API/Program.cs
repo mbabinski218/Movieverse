@@ -36,7 +36,7 @@ services.AddSingleton<ExceptionHandlingMiddleware>();
 services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
 services.AddCors(options => options.AddPolicy("corsapp", corsBuilder =>
-    corsBuilder.WithOrigins(defaultSettings.Routes.Origin).AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
+    corsBuilder.WithOrigins(defaultSettings.Routes.Origin).AllowAnyMethod().AllowAnyHeader()));
 
 var app = builder.Build();
 

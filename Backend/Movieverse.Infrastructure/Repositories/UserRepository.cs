@@ -292,11 +292,13 @@ public sealed class UserRepository : IUserRepository
 	{
 		_logger.LogDebug("Find media info for user with id: {id}", id);
 
-		var mediaInfo = await _dbContext.Users
-			.Where(u => u.Id == id)
-			.SelectMany(u => u.MediaInfos)
-			.FirstOrDefaultAsync(mi => mi.MediaId.Value == mediaId.Value, cancellationToken);
-
+		var user = await FindByIdAsync(id, cancellationToken);
+		if (user.IsUnsuccessful)
+		{
+			return user.Error;
+		}
+		
+		var mediaInfo = user.Value.MediaInfos.FirstOrDefault(m => m.MediaId == mediaId);
 		return mediaInfo;
 	}
 

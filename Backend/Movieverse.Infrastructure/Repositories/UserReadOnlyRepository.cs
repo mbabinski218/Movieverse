@@ -34,13 +34,18 @@ public sealed class UserReadOnlyRepository : IUserReadOnlyRepository
 	public async Task<Result<IEnumerable<WatchlistStatusDto>>> GetWatchlistStatusesAsync(Guid userId, IEnumerable<MediaId> mediaIds, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Get watchlist statuses for user with id: {UserId}", userId);
-
-		var watchlistStatuses = await _dbContext.Users
+		
+		var statuses = await _dbContext.Users
+			.AsNoTracking()
 			.Where(x => x.Id == userId)
 			.SelectMany(x => x.MediaInfos)
-			.Where(x => mediaIds.Any(y => y.Value == x.MediaId.Value))
 			.ProjectToType<WatchlistStatusDto>()
 			.ToListAsync(cancellationToken);
+
+		var mediaIdsList = mediaIds.ToList();
+		var watchlistStatuses = statuses
+			.Where(x => mediaIdsList.Any(y => y.Value == x.MediaId))
+			.ToList();
 
 		return watchlistStatuses;
 	}
