@@ -20,10 +20,14 @@ export const MediaHorizontalList: React.FC<MediaHorizontalListProps> = ({filtere
   // Refs
   const containerRef = useRef<HTMLDivElement | null>(null);
   const itemRef = useRef<HTMLDivElement>(null);  
-
+  
   // Scroll
   const [scrollPosition, setScrollPosition] = useState<number>(0);
   const [scrollButtons, setScrollButtons] = useState<ScrollButtons>({ left: false, right: false });
+  
+  // Watchlist statuses
+  const [watchlistStatuses, setWatchlistStatuses] = useState<WatchlistStatusDto[]>([]);
+  const [watchListLoaded, setWatchListLoaded] = useState<boolean>(false);
 
   // On container ref change
   const onContainerRefChange = useCallback((node: HTMLDivElement | null) => {
@@ -97,8 +101,6 @@ export const MediaHorizontalList: React.FC<MediaHorizontalListProps> = ({filtere
   }, [scrollButtons, scrollPosition]);
 
   // Watchlist statuses
-  const [watchlistStatuses, setWatchlistStatuses] = useState<WatchlistStatusDto[]>([]);
-  const [watchListLoaded, setWatchListLoaded] = useState<boolean>(false);
   useEffect(() => {
     if (!filteredMedia.media?.items) {  //TODO sprawdzic czy zalogoany
       return;

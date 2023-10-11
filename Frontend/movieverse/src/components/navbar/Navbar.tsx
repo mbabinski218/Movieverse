@@ -39,15 +39,15 @@ export const Navbar: React.FC = () => {
               searchBarOpen={searchBarOpen} 
               onClick={searchBarClick}
             />
-            <a className="element button pro" href="/pro">
+            <a className="element navbar-button pro" href="/pro">
               <img src={Chart} alt="chart" className="chart" />
               <span>Pro</span>
             </a>
-            <a className="element button watchlist" href="/watchlist">
+            <a className="element navbar-button watchlist" href="/watchlist">
               <img src={Check} alt="check" className="check" />
               <span>Watchlist</span>
             </a>
-            <a className="element button user" href="/user">
+            <a className="element navbar-button user" href="/user">
               <img src={Person} alt="person" className="person" />
               <span>Sign in</span>
             </a>

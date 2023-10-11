@@ -18,11 +18,16 @@ interface MediaDemoProps {
 export const MediaDemo: React.FC<MediaDemoProps> = ({mediaDemo, isOnWatchlist, isWatchlistLoaded}) => {
 	const [imgSrc, setImgSrc] = useState<string>(Blank);
 	const [trailerAvailable, setTrailerAvailable] = useState<boolean>(false);
+	const [isOnUserWatchlist, setIsOnUserWatchlist] = useState<boolean | null>(isOnWatchlist);
 
 	const onError = useCallback((e: SyntheticEvent<HTMLImageElement, Event>): void => {
 		const img = e.target as HTMLImageElement;
 		img.src = Blank;
 	}, []);
+
+	useEffect(() => {
+		setIsOnUserWatchlist(isOnWatchlist);
+	}, [isOnWatchlist]);
 
 	useEffect(() => {
 		mediaDemo.posterId ? setImgSrc(CloudStore.getImageUrl(mediaDemo.posterId as string)) : setImgSrc(Blank);				
@@ -37,13 +42,23 @@ export const MediaDemo: React.FC<MediaDemoProps> = ({mediaDemo, isOnWatchlist, i
 		}
 	}, []);
 
+	const updateWatchlist = useCallback(() => {
+		// TODO sprawdzić czy jest zalogowany
+
+		Api.updateWatchlistStatus(mediaDemo.id as string)
+			.then(() => {
+				setIsOnUserWatchlist(!isOnUserWatchlist);
+			})
+			.catch(err => console.error(err));
+	}, [isOnUserWatchlist]);
+
 	return (
 		<div className="item zoom">
 			<img className="img" src={imgSrc} onError={onError} alt={mediaDemo.title} />
 			<div className="overlay">
 				<a className="item-title">{mediaDemo.title}</a>
-				<div className={isWatchlistLoaded ? "add-to-watchlist enable-icon" : "add-to-watchlist disable-icon"}>
-					<img className="icon" src={isOnWatchlist ? Check : Plus} alt="like" />
+				<div className={isWatchlistLoaded ? "add-to-watchlist enable-icon" : "add-to-watchlist disable-icon"} onClick={updateWatchlist}>
+					<img className="icon" src={isOnUserWatchlist ? Check : Plus} alt="like" />
 				</div>
 				<div className={trailerAvailable ? "trailer enable-icon" : "trailer disable-icon"} onClick={openTrailer}>
 					<img className="icon" src={Clapperboard} alt="trailer" />

@@ -87,11 +87,11 @@ a.element-link.nav-link:hover {
     text-decoration: underline;
 }
 
-.button {
+.navbar-button {
     position: relative;
 }
 
-.button::after {
+.navbar-button::after {
     position: absolute;
     content: "";
     width: inherit;
@@ -105,7 +105,7 @@ a.element-link.nav-link:hover {
     border-radius: 10px;
 }
 
-.button:hover::after {
+.navbar-button:hover::after {
     transform: scaleX(1);
     transform-origin: left;
 }

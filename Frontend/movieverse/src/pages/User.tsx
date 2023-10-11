@@ -1,3 +1,10 @@
+import { Authentication } from "../components/user/Authentication";
+import "./User.css";
+
 export const User: React.FC = () => {
-    return <h1>User</h1>
+    return (
+      <div className="user-page">
+        <Authentication />
+      </div>
+    )
   }
