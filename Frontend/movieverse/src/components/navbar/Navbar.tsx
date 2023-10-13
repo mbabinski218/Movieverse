@@ -1,7 +1,9 @@
 import { Container, Nav, Navbar as NavbarBs, Row, Col } from "react-bootstrap";
 import { useOutsideClickAlerter } from "../../hooks/useOutsideClickAlerter";
 import { SearchBar } from "./SearchBar";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AccessToken, LocalStorage } from "../../hooks/useLocalStorage";
+import jwtDecode from "jwt-decode";
 import Logo from "../../assets/logo.svg";
 import Chart from "../../assets/chart.svg";
 import Check from "../../assets/check.svg";
@@ -12,6 +14,7 @@ import "./Navbar.css";
 export const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [searchBarOpen, setSearchBarOpen] = useState<boolean>(false);
+  const [user, setUser] = useState<string | null>(null);
 
   const outsideSearchBarClick = useCallback(() => {
     setSearchBarOpen(false);
@@ -26,6 +29,23 @@ export const Navbar: React.FC = () => {
     setSearchBarOpen(true);
     setMenuOpen(false);
   }, [setSearchBarOpen, setMenuOpen]);
+
+  useEffect(() => { 
+    const accessToken = LocalStorage.accessToken;
+
+    if (!accessToken) {
+      setUser(null);
+      return;
+    }
+
+    try {
+      const decodedToken = jwtDecode(accessToken) as AccessToken;
+      setUser(decodedToken.displayName);
+    }
+    catch {
+      setUser(null);
+    }
+  });
 
   return (
     <div className="header">
@@ -47,9 +67,9 @@ export const Navbar: React.FC = () => {
               <img src={Check} alt="check" className="check" />
               <span>Watchlist</span>
             </a>
-            <a className="element navbar-button user" href="/user">
+            <a className="element navbar-button user" href={user ? "/account" : "/user"}>
               <img src={Person} alt="person" className="person" />
-              <span>Sign in</span>
+              <span>{user ? user : "Sign in"}</span>
             </a>
             <img src={Menu} alt="menu" className="menu" onClick={() => {
               setMenuOpen(!menuOpen);

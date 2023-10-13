@@ -50,7 +50,7 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
             
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(CreateJsonResponse("An unexpected error occurred."));
+            await context.Response.WriteAsync(CreateJsonResponse("An unexpected error occurred. Try again later."));
         }
     }
     

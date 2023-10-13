@@ -1,7 +1,7 @@
 export type LoginContract = {
   grantType: string;
-  email: string | null;
-  password: string | null;
-  refreshToken: string | null;
-  idToken: string | null;
+  email?: string | undefined;
+  password?: string | undefined;
+  refreshToken?: string | undefined;
+  idToken?: string | undefined;
 }

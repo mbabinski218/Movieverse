@@ -6,11 +6,13 @@ import { Error } from "../basic/Error";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { RegisterContract } from "../../core/contracts/registerContract";
 import { LoginContract } from "../../core/contracts/loginContract";
-import "./Authentication.css"
 import { Api } from "../../Api";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { LocalStorage, useLocalStorage } from "../../hooks/useLocalStorage";
+import { Success } from "../basic/Success";
+import { TokensDto } from "../../core/dtos/user/tokensDto";
+import { useNavigate } from "react-router-dom";
+import "./Authentication.css"
 
-//TODO localStorage
 // Interfaces
 interface AuthenticationProps {
   email: string;
@@ -48,6 +50,10 @@ const emptyAuthState: StateProps = {
 };
 
 export const Authentication: React.FC = () => {
+  // Local storage
+  const [accessToken, setAccessToken] = useLocalStorage<string | null>(LocalStorage.accessTokenKey, LocalStorage.accessToken);
+  const [refreshToken, setRefreshToken] = useLocalStorage<string | null>(LocalStorage.refreshTokenKey, LocalStorage.refreshToken);
+
   // States
   const [registerMode, setRegisterMode] = useState<boolean>(false);
   const [authenticationProps, setAuthenticationProps] = useState<AuthenticationProps>(emptyAuthProps);
@@ -55,6 +61,9 @@ export const Authentication: React.FC = () => {
 
   // Refs
   const googleLoginButton = useRef<HTMLDivElement>(null);
+
+  // Navigate
+  const navigate = useNavigate();
   
   // Change mode between sign in and register
   const changeMode = useCallback(() => {
@@ -93,12 +102,12 @@ export const Authentication: React.FC = () => {
   }, [authenticationProps]);
 
   // Show error message
-  const showError = (err: string) => {
+  const showError = (err: string | string[]) => {
     setStateProps({error: true, errorMessages: err, success: false, successMessages: []});
   };
 
   // Show success message
-  const showSuccess = (msg: string) => {
+  const showSuccess = (msg: string | string[]) => {
     setStateProps({error: false, errorMessages: [], success: true, successMessages: msg});
   };
 
@@ -112,23 +121,30 @@ export const Authentication: React.FC = () => {
     const loginContract: LoginContract = {
       grantType: "Password",
       email: authenticationProps.email,
-      password: authenticationProps.password,
-      refreshToken: null,
-      idToken: null
+      password: authenticationProps.password
     };
     
     Api.login(loginContract)
-      .then((res) => {
-        if (res) {
-          showSuccess("Login successful");
+      .then((res: Response) => {
+        if (res.ok) {                    
+          res.json().then((tokens: TokensDto) => {
+            setAccessToken(tokens.accessToken);
+            setRefreshToken(tokens.refreshToken);
+            navigate(-1);
+          })
+          .catch(() => {
+            showError("Login failed.");
+          });
         }
         else {
-          showError("Login failed");
-        }
-      })
-      .catch((err) => {
-        showError(err);
-      });
+          res.json().then((errors: string[]) => {
+            showError(errors);
+          })
+          .catch(() => {
+            showError("Login failed.");
+          });
+        }     
+    });
   }, [authenticationProps]);
 
   // Register
@@ -136,14 +152,14 @@ export const Authentication: React.FC = () => {
     if (authenticationProps.email === "" || 
         authenticationProps.username === "" || 
         authenticationProps.password === "" || 
-        authenticationProps. rePassword === "" || 
+        authenticationProps.rePassword === "" || 
         authenticationProps.age === "") {
-      showError("Set all required fields");
+      showError("Set all required fields.");
       return;
     }
       
     if (authenticationProps.password !== authenticationProps.rePassword) {
-      showError("Passwords do not match");
+      showError("Passwords do not match.");
       return;
     }
 
@@ -158,27 +174,21 @@ export const Authentication: React.FC = () => {
     };
 
     Api.register(registerContract)
-      .then((res) => {
-        if (res) {
-          showSuccess("Registration successful");          
-          changeMode();
+      .then((res: Response) => {
+        if (res.ok) {    
+            changeMode();                
+            showSuccess("Registration successful. Check your email for confirmation.");
         }
         else {
-          showError("Registration failed");
-        }
-      })
-      .catch((err) => {
-        showError(err);
-      });
+          res.json().then((errors: string[]) => {
+            showError(errors);
+          })
+          .catch(() => {
+            showError("Registration failed.");
+          });
+        }     
+    });
   }, [authenticationProps]);
-
-  // Sign in or register on enter key down
-  const onEnterDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== "Enter") {
-      return;
-    }
-    registerMode ? onRegister() : onSignIn();
-  }, [registerMode]);
 
   // Prevent entering e, E, +, -, , and . in age field
   const onNotAllowedKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -196,24 +206,30 @@ export const Authentication: React.FC = () => {
 
     const loginContract: LoginContract = {
       grantType: "Google",
-      email: null,
-      password: null,
-      refreshToken: null,
       idToken: response.credential
     };
 
     Api.login(loginContract)
-      .then((res) => {
-        if (res) {
-          showSuccess("Login successful");
+      .then((res: Response) => {
+        if (res.ok) {                    
+          res.json().then((tokens: TokensDto) => {
+            setAccessToken(tokens.accessToken);
+            setRefreshToken(tokens.refreshToken);
+            navigate(-1);
+          })
+          .catch(() => {
+            showError("Google login failed");
+          });
         }
         else {
-          showError("Login failed");
-        }
-      })
-      .catch((err) => {
-        showError(err);
-      });
+          res.json().then((errors: string[]) => {
+            showError(errors);
+          })
+          .catch(() => {
+            showError("Google login failed");
+          });
+        }     
+    });
   }, []);
 
   // Google login error
@@ -222,83 +238,92 @@ export const Authentication: React.FC = () => {
   }, []);
 
   // html
-  return (
-    <>
+  if (accessToken) {
+    return (
       <div className="auth">
-        <div>
-          <Input label={registerMode ? "*Email" : "Email"} 
-                 onChange={handleEmailChange} 
-                 value={authenticationProps.email}
-          />
-          {
-            registerMode &&
-            <>
-              <Input label="*Username" 
-                     onChange={handleUsernameChange} 
-                     value={authenticationProps.username}
-              />
-              <Input label="*Age" onChange={handleAgeChange} 
-                     value={authenticationProps.age} 
-                     type="number" 
-                     onKeyDown={onNotAllowedKeyDown}
-              />
-              <Input label="First name" 
-                     onChange={handleFirstNameChange} 
-                     value={authenticationProps.firstName} 
-              />
-              <Input label="Last name" 
-                     onChange={handleLastNameChange} 
-                     value={authenticationProps.lastName} 
-              />
-            </>
-          }
-          <Input label={registerMode ? "*Password" : "Password"} 
-                 onChange={handlePasswordChange} 
-                 onKeyDown={onEnterDown} 
-                 value={authenticationProps.password}
+          <Success success="Successfully logged in." />
+      </div>
+    );
+  }
+  else {
+    return (
+      <>
+        <div className="auth">
+          <div>
+            <Input label={registerMode ? "*Email" : "Email"} 
+                   onChange={handleEmailChange} 
+                   value={authenticationProps.email}
             />
-          {
-            registerMode &&
-            <Input label="*Re-enter password" 
-                   onChange={handleRePasswordChange} 
-                   onKeyDown={onEnterDown} 
-                   value={authenticationProps.rePassword}
+            {
+              registerMode &&
+              <>
+                <Input label="*Username" 
+                       onChange={handleUsernameChange} 
+                       value={authenticationProps.username}
+                />
+                <Input label="*Age" onChange={handleAgeChange} 
+                       value={authenticationProps.age} 
+                       type="number" 
+                       onKeyDown={onNotAllowedKeyDown}
+                />
+                <Input label="First name" 
+                       onChange={handleFirstNameChange} 
+                       value={authenticationProps.firstName} 
+                />
+                <Input label="Last name" 
+                       onChange={handleLastNameChange} 
+                       value={authenticationProps.lastName} 
+                />
+              </>
+            }
+            <Input label={registerMode ? "*Password" : "Password"} 
+                   onChange={handlePasswordChange} 
+                   type="password"
+                   value={authenticationProps.password}
+              />
+            {
+              registerMode &&
+              <Input label="*Re-enter password" 
+                     onChange={handleRePasswordChange}
+                     type="password"
+                     value={authenticationProps.rePassword}
+              />
+            }
+          </div>
+          <div className="auth-buttons">
+            <Button label={registerMode ? "Register" : "Sign in"} 
+                    primary={true} 
+                    onClick={registerMode ? onRegister : onSignIn}
             />
-          }
-        </div>
-        <div className="auth-buttons">
-          <Button label={registerMode ? "Register" : "Sign in"} 
-                  primary={true} 
-                  onClick={registerMode ? onRegister : onSignIn}
-          />
-          <LinkButton label={registerMode ? "Already have an account? Sign in" : "Create a new account"} 
-                      onClick={changeMode} 
-          />
-        </div>
-        <div className="auth-external">
-          <div className="auth-google-theme"    
-               ref={googleLoginButton}
-          >                  
-            <GoogleLogin onSuccess={onGoogleLoginSuccess} 
-                         onError={onGoogleLoginError} 
-                         locale="en-US" 
-                         width={googleLoginButton.current?.offsetWidth ?? 0} 
+            <LinkButton label={registerMode ? "Already have an account? Sign in" : "Create a new account"} 
+                        onClick={changeMode} 
             />
           </div>
+          <div className="auth-external">
+            <div className="auth-google-theme"    
+                 ref={googleLoginButton}
+            >                  
+              <GoogleLogin onSuccess={onGoogleLoginSuccess} 
+                           onError={onGoogleLoginError} 
+                           locale="en-US"                          
+                           width={googleLoginButton.current?.offsetWidth ?? 0} 
+              />
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="auth-error">
-      {
-        stateProps.error &&
-        <Error errors={stateProps.errorMessages} />
-      }
-      </div>
-      <div className="auth-success">
-      {
-        stateProps.success &&
-        <Error errors={stateProps.successMessages} />
-      }
-      </div>
-    </>
-  );
+        <div className="auth-error">
+        {
+          stateProps.error &&
+          <Error errors={stateProps.errorMessages} />
+        }
+        </div>
+        <div className="auth-success">
+        {
+          stateProps.success &&
+          <Success success={stateProps.successMessages} />
+        }
+        </div>
+      </>
+    );
+  }
 };

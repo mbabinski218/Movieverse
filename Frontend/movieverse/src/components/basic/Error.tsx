@@ -9,11 +9,16 @@ export const Error: React.FC<ErrorProps> = ({errors}) => {
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    if (typeof errors === "string") {
-      setErrorMessages([errors]);
-    } 
-    else {
-      setErrorMessages(errors);
+    try {
+      if (typeof errors === "string") {
+        setErrorMessages([errors]);
+      } 
+      else {
+        setErrorMessages(errors);
+      }
+    }
+    catch (err) {
+      setErrorMessages(["Fatal error. Try again later."]);
     }
   }, [errors]);
 

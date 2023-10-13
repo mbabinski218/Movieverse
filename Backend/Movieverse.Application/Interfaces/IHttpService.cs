@@ -8,5 +8,5 @@ public interface IHttpService
 	Guid? IdHeader { get; }
 	string? AccessToken { get; }
 	Guid? UserId { get; }
-	UserRole? Role { get; }
+	UserRole[]? Role { get; }
 }

@@ -1,0 +1,29 @@
+.success-container {
+  padding: 15px 20px 15px 20px;
+  background-color: var(--color-success);
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
+  border-radius: 10px;
+  animation: fadeIn ease 0.3s;
+  animation-fill-mode: forwards;
+}
+
+.success-message {
+  color: var(--color-dark);
+}
+
+.success-line {
+  margin-top: 5px;
+}
+
+.success-line:last-child {
+  display: none;
+}
+
+@keyframes fadeIn {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+   }
+}

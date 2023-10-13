@@ -326,7 +326,7 @@ public sealed class UserRepository : IUserRepository
 		{
 			new(ClaimNames.id, user.Id.ToString()),
 			new(ClaimNames.email, user.Email!),
-			new(ClaimNames.displayName, user.Information.FirstName ?? user.UserName!),
+			new(ClaimNames.displayName, string.IsNullOrWhiteSpace(user.Information.FirstName) ? user.UserName! : user.Information.FirstName),
 			new(ClaimNames.age, user.Information.Age.ToString()),
 		};
 		return claims;

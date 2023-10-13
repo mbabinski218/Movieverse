@@ -105,8 +105,8 @@ public sealed class HttpService : IHttpService
 	}
 
 	private bool _roleWasSet;
-	private UserRole? _role;
-	public UserRole? Role
+	private UserRole[]? _role;
+	public UserRole[]? Role
 	{
 		get
 		{
@@ -126,11 +126,29 @@ public sealed class HttpService : IHttpService
 			var handler = new JwtSecurityTokenHandler();
 		
 			var decodedToken = handler.CanReadToken(token) ? handler.ReadJwtToken(token) : null;
+
+			var roles = decodedToken?.Claims
+				.Where(c => c.Type == ClaimNames.role)
+				.Select(c => c.Value)
+				.ToList();
 			
-			var role = decodedToken?.Claims.FirstOrDefault(c => c.Type == ClaimNames.role)?.Value;
-			var parsedSuccessfully = UserRoleExtensions.TryParse(role, out var userRole);
-			_role = parsedSuccessfully ? userRole : null;
+			if (roles is null)
+			{
+				_role = null;
+				_roleWasSet = true;
+				return _role;
+			}
 			
+			var userRoles = new List<UserRole>();
+			foreach (var role in roles)
+			{
+				if (Enum.TryParse<UserRole>(role, out var userRole))
+				{
+					userRoles.Add(userRole);
+				}
+			}
+			
+			_role = userRoles.ToArray();
 			_roleWasSet = true;
 			return _role;
 		}

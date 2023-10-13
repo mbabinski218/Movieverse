@@ -6,10 +6,11 @@ interface InputProps {
   type?: string | undefined;
   onClick?: () => void | undefined;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void | undefined;
+  onSubmit?: (e: React.KeyboardEvent<HTMLInputElement>) => void | undefined;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void | undefined;
 }
 
-export const Input: React.FC<InputProps> = ({label, value, type, onClick, onChange, onKeyDown}) => {
+export const Input: React.FC<InputProps> = ({label, value, type, onClick, onChange, onSubmit, onKeyDown}) => {
   return (
     <div className="input" id="input"> 
       <div className="input-bar">
@@ -19,7 +20,8 @@ export const Input: React.FC<InputProps> = ({label, value, type, onClick, onChan
                type={type ?? "text"}   
                onClick={onClick} 
                onChange={onChange} 
-               onKeyDown={onKeyDown} 
+               onSubmit={onSubmit}
+               onKeyDown={onKeyDown}
         /> 
       </div>
     </div>

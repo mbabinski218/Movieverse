@@ -16,7 +16,8 @@ public sealed class PersonalDataHandler : AuthorizationHandler<PersonalDataRequi
 	
 	protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PersonalDataRequirement requirement)
 	{
-		if (_httpService.Role == UserRole.Administrator || _httpService.IdHeader == _httpService.UserId)
+		if ((_httpService.Role is not null && _httpService.Role.Contains(UserRole.Administrator)) 
+		    || _httpService.IdHeader == _httpService.UserId)
 		{
 			context.Succeed(requirement);
 			return Task.CompletedTask;
