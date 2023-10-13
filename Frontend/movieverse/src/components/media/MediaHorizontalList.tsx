@@ -6,6 +6,7 @@ import { Api } from "../../Api";
 import "./MediaHorizontalList.css";
 import leftArrow from "../../assets/arrow-left.svg";
 import rightArrow from "../../assets/arrow-right.svg";
+import { LocalStorage } from "../../hooks/useLocalStorage";
 
 interface MediaHorizontalListProps {
   filteredMedia: FilteredMediaDto;
@@ -102,7 +103,7 @@ export const MediaHorizontalList: React.FC<MediaHorizontalListProps> = ({filtere
 
   // Watchlist statuses
   useEffect(() => {
-    if (!filteredMedia.media?.items) {  //TODO sprawdzic czy zalogoany
+    if (!filteredMedia.media?.items || !LocalStorage.accessToken) {
       return;
     }
 
@@ -125,7 +126,10 @@ export const MediaHorizontalList: React.FC<MediaHorizontalListProps> = ({filtere
         <div className="mediaHorizontalListContainer" style={{transform: `translateX(-${scrollPosition}px)`}} ref={onContainerRefChange}>
           {filteredMedia.media?.items?.map((media) => (
             <div key={media.id} ref={itemRef}>
-              <MediaDemo mediaDemo={media} isOnWatchlist={watchlistStatuses.find(x => x.mediaId === media.id)?.isOnWatchlist ?? null} isWatchlistLoaded={watchListLoaded}/>
+              <MediaDemo mediaDemo={media} 
+                         isOnWatchlist={watchlistStatuses.find(x => x.mediaId === media.id)?.isOnWatchlist ?? null} 
+                         isWatchlistLoaded={watchListLoaded}
+              />
             </div>
           ))}
         </div>

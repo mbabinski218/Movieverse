@@ -7,6 +7,7 @@ import { Watchlist } from "./pages/Watchlist";
 import { Pro } from "./pages/Pro";
 import { Chart } from "./pages/Chart";
 import { User } from "./pages/User";
+import { Account } from "./pages/Account";
 import { Find } from "./pages/Find";
 import { Media } from "./pages/Media";
 import "./styles/variables.css";
@@ -27,6 +28,7 @@ const App: React.FC = () => {
             <Route path="/pro" element={<Pro />} />
             <Route path="/watchlist" element={<Watchlist />} />
             <Route path="/user" element={<User />} />
+            <Route path="/account" element={<Account />} />
             <Route path="/chart" element={<Chart />} />
             <Route path="/find" element={<Find />} />
           </Routes>

@@ -69,6 +69,8 @@ input:focus {
 
 .user {
     grid-area: user;
+    text-overflow: ellipsis;
+    overflow-x: clip;
 }
 
 .element-link {
@@ -157,8 +159,8 @@ a.element-link.nav-link:hover {
     color: var(--color-white);
     text-align: center;
     white-space: nowrap;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .content {
@@ -168,7 +170,7 @@ a.element-link.nav-link:hover {
     grid-template-areas: "logo search pro watchlist user menu";
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .content {
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-areas: 
@@ -176,37 +178,57 @@ a.element-link.nav-link:hover {
         "pro watchlist user";
     }
 
-    .element{
+    .element {
         padding-left: 0rem;
         padding-right: 0rem;
+    }
+
+    .user {
+        max-width: 18vh;
     }
 }
 
 @media (min-width: 768px) {
-    .element{
+    .element {
         padding-left: 0rem;
         padding-right: 0rem;
+    }
+
+    .user {
+        max-width: 15vh;
     }
 }
 
 @media (min-width: 992px) {
-    .element{
+    .element {
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+
+    .user {
+        max-width: 20vh;
     }
 }
 
 @media (min-width: 1200px) {
-    .element{
+    .element {
         padding-left: 1.5rem;
         padding-right: 1.5rem;
+    }
+
+    .user {
+        max-width: 25vh;
     }
 }
 
 @media (min-width: 1400px) {
-    .element{
+    .element {
         padding-left: 2rem;
         padding-right: 2rem;
+    }
+
+    .user {
+        max-width: 30vh;
     }
 }
 

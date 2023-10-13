@@ -1,6 +1,7 @@
 import { CloudStore } from "../../CloudStore";
 import { MediaDemoDto } from "../../core/dtos/media/mediaDemoDto";
 import { SyntheticEvent, useCallback, useEffect, useState } from "react";
+import { LocalStorage } from "../../hooks/useLocalStorage";
 import { Api } from "../../Api";
 import "./MediaDemo.css";
 import Blank from "../../assets/blank.png";
@@ -43,14 +44,18 @@ export const MediaDemo: React.FC<MediaDemoProps> = ({mediaDemo, isOnWatchlist, i
 	}, []);
 
 	const updateWatchlist = useCallback(() => {
-		// TODO sprawdzić czy jest zalogowany
+		if (!isWatchlistLoaded || !LocalStorage.accessToken) {
+			return;
+		}
 
 		Api.updateWatchlistStatus(mediaDemo.id as string)
-			.then(() => {
-				setIsOnUserWatchlist(!isOnUserWatchlist);
+			.then((res) => {
+				if (res.ok) {
+					setIsOnUserWatchlist(!isOnUserWatchlist);
+				}				
 			})
 			.catch(err => console.error(err));
-	}, [isOnUserWatchlist]);
+	}, [isWatchlistLoaded, isOnUserWatchlist]);
 
 	return (
 		<div className="item zoom">
