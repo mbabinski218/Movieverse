@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Input } from "../basic/Input";
 import { Button } from "../basic/Button";
 import { LinkButton } from "../basic/LinkButton";
@@ -51,8 +51,8 @@ const emptyAuthState: StateProps = {
 
 export const Authentication: React.FC = () => {
   // Local storage
-  const [accessToken, setAccessToken] = useLocalStorage<string | null>(LocalStorage.accessTokenKey, LocalStorage.accessToken);
-  const [refreshToken, setRefreshToken] = useLocalStorage<string | null>(LocalStorage.refreshTokenKey, LocalStorage.refreshToken);
+  const [accessToken, setAccessToken] = useLocalStorage<string | null>(LocalStorage.accessTokenKey, LocalStorage.getAccessToken());
+  const [refreshToken, setRefreshToken] = useLocalStorage<string | null>(LocalStorage.refreshTokenKey, LocalStorage.getRefreshToken());
 
   // States
   const [registerMode, setRegisterMode] = useState<boolean>(false);
@@ -64,6 +64,12 @@ export const Authentication: React.FC = () => {
 
   // Navigate
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (accessToken) {
+      navigate(-1);
+    }
+  });
   
   // Change mode between sign in and register
   const changeMode = useCallback(() => {
@@ -192,7 +198,12 @@ export const Authentication: React.FC = () => {
 
   // Prevent entering e, E, +, -, , and . in age field
   const onNotAllowedKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "e" || e.key === "E" || e.key === "+" || e.key === "-" || e.key === "," || e.key === ".") {
+    if (e.key === "e" || 
+        e.key === "E" || 
+        e.key === "+" || 
+        e.key === "-" || 
+        e.key === "," || 
+        e.key === ".") {
       e.preventDefault();
     }
   }, []);

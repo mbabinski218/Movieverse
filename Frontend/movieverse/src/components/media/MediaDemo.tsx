@@ -44,7 +44,7 @@ export const MediaDemo: React.FC<MediaDemoProps> = ({mediaDemo, isOnWatchlist, i
 	}, []);
 
 	const updateWatchlist = useCallback(() => {
-		if (!isWatchlistLoaded || !LocalStorage.accessToken) {
+		if (!isWatchlistLoaded || !LocalStorage.getAccessToken()) {
 			return;
 		}
 

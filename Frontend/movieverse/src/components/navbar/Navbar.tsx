@@ -9,6 +9,7 @@ import Chart from "../../assets/chart.svg";
 import Check from "../../assets/check.svg";
 import Person from "../../assets/person.svg";
 import Menu from "../../assets/bars.svg";
+import MenuClose from "../../assets/bars-close.svg";
 import "./Navbar.css";
 
 export const Navbar: React.FC = () => {
@@ -18,20 +19,20 @@ export const Navbar: React.FC = () => {
 
   const outsideSearchBarClick = useCallback(() => {
     setSearchBarOpen(false);
-  }, [setSearchBarOpen]);
+  }, []);
 
   const searchRef = useRef(null);
   useOutsideClickAlerter(searchRef, () => {
     outsideSearchBarClick();
   });
 
-  const searchBarClick = useCallback(() => {
+  const searchBarSelect = useCallback(() => {
     setSearchBarOpen(true);
     setMenuOpen(false);
-  }, [setSearchBarOpen, setMenuOpen]);
+  }, []);
 
   useEffect(() => { 
-    const accessToken = LocalStorage.accessToken;
+    const accessToken = LocalStorage.getAccessToken();
 
     if (!accessToken) {
       setUser(null);
@@ -57,7 +58,7 @@ export const Navbar: React.FC = () => {
             <SearchBar
               searchRef={searchRef}
               searchBarOpen={searchBarOpen} 
-              onClick={searchBarClick}
+              onSelect={searchBarSelect}
             />
             <a className="element navbar-button pro" href="/pro">
               <img src={Chart} alt="chart" className="chart" />
@@ -71,7 +72,7 @@ export const Navbar: React.FC = () => {
               <img src={Person} alt="person" className="person" />
               <span>{user ? user : "Sign in"}</span>
             </a>
-            <img src={Menu} alt="menu" className="menu" onClick={() => {
+            <img src={menuOpen ? MenuClose : Menu} alt="menu" className="menu" onClick={() => {
               setMenuOpen(!menuOpen);
             }}/>
         </Container>

@@ -60,13 +60,18 @@ export const MediaHorizontalList: React.FC<MediaHorizontalListProps> = ({filtere
     if (scrollPosition > 0) {
       if (scrollPosition - scrollStep <= 0) {
         setScrollPosition(0);
-        setScrollButtons({ left: false, right: true });
+        
+        const containerWidth = containerRef.current?.offsetWidth || 0;
+        const screenWidth = window.innerWidth;
+
+        setScrollButtons({ left: false, right: containerWidth >= screenWidth });
       }
       else {
         setScrollPosition(scrollPosition - scrollStep);
+        setScrollButtons({ left: true, right: true });
       }
     }
-  }, [scrollPosition, calculateScrollStep, setScrollButtons, setScrollPosition]);
+  }, [scrollPosition]);
 
   // Right button scroll click
   const rightButtonScrollClick = useCallback(() => {
@@ -84,7 +89,7 @@ export const MediaHorizontalList: React.FC<MediaHorizontalListProps> = ({filtere
       setScrollPosition(newPosition);
       setScrollButtons({ left: true, right: true });
     }    
-  }, [scrollPosition, calculateScrollStep, setScrollButtons, setScrollPosition]);
+  }, [scrollPosition]);
 
   // Recalculate on window resize
   useEffect(() => {
@@ -103,7 +108,7 @@ export const MediaHorizontalList: React.FC<MediaHorizontalListProps> = ({filtere
 
   // Watchlist statuses
   useEffect(() => {
-    if (!filteredMedia.media?.items || !LocalStorage.accessToken) {
+    if (!filteredMedia.media?.items || !LocalStorage.getAccessToken()) {
       return;
     }
 
@@ -120,12 +125,22 @@ export const MediaHorizontalList: React.FC<MediaHorizontalListProps> = ({filtere
     <div>
       <span className="platfromName">{filteredMedia.platformName}</span>
       <div className="mediaHorizontalList">          
-        <div className={scrollButtons.left ? "scrollButton left" : "scrollButton disable"} onClick={leftButtonScrollClick}>
-          <img className="scrollButtonIcon" src={leftArrow} alt="left arrow" />
+        <div className={scrollButtons.left ? "scrollButton left" : "scrollButton disable"} 
+             onClick={leftButtonScrollClick}
+        >
+          <img className="scrollButtonIcon" 
+               src={leftArrow} 
+               alt="left arrow" 
+          />
         </div>
-        <div className="mediaHorizontalListContainer" style={{transform: `translateX(-${scrollPosition}px)`}} ref={onContainerRefChange}>
+        <div className="mediaHorizontalListContainer" 
+             style={{transform: `translateX(-${scrollPosition}px)`}} 
+             ref={onContainerRefChange}
+        >
           {filteredMedia.media?.items?.map((media) => (
-            <div key={media.id} ref={itemRef}>
+            <div key={media.id} 
+                 ref={itemRef}
+            >
               <MediaDemo mediaDemo={media} 
                          isOnWatchlist={watchlistStatuses.find(x => x.mediaId === media.id)?.isOnWatchlist ?? null} 
                          isWatchlistLoaded={watchListLoaded}
@@ -133,8 +148,13 @@ export const MediaHorizontalList: React.FC<MediaHorizontalListProps> = ({filtere
             </div>
           ))}
         </div>
-        <div className={scrollButtons.right ? "scrollButton right" : "scrollButton disable"} onClick={rightButtonScrollClick}>
-          <img className="scrollButtonIcon" src={rightArrow} alt="right arrow" />
+        <div className={scrollButtons.right ? "scrollButton right" : "scrollButton disable"} 
+             onClick={rightButtonScrollClick}
+        >
+          <img className="scrollButtonIcon" 
+               src={rightArrow} 
+               alt="right arrow" 
+          />
         </div>      
       </div>
     </div>

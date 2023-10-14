@@ -27,10 +27,14 @@ export const SearchList: React.FC<SearchListProps> = ({searchResult}) => {
 					}
 
 					return (
-						<a className="items" key={result.id} href={`/media/${result.id}`}>
+						<a className="items" 
+							 key={result.id} 
+							 href={`/media/${result.id}`}
+						>
 							<img className="poster"
 									 src={imgSrc} 
-									 onError={onError}/>
+									 onError={onError}
+							/>
 							<div className="info">
 								<span className="title">{result.title}</span>
 								<span className="year">{result.year ? result.year : "Unknown release date"}</span>

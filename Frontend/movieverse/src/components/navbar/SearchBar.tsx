@@ -9,11 +9,11 @@ import "./SearchBar.css";
 
 interface SearchBarProps {
   searchBarOpen: boolean;
-  onClick: () => void;
+  onSelect: () => void;
   searchRef: React.MutableRefObject<null>;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onClick, searchRef}) => {
+export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onSelect, searchRef}) => {
   const [input, setInput] = useState<string>("");
   const [searchResult, setSearchResult] = useState<PaginatedList<SearchMediaDto>>(PaginatedListWrapper.empty<SearchMediaDto>());
 
@@ -37,7 +37,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onClick, sea
   return (
     <div className="search" id="search" ref={searchRef}> 
       <div className="search-bar">
-        <input placeholder="Search" onClick={onClick} onChange={(e => setInput(e.target.value))} />
+        <input placeholder="Search" onSelect={onSelect} onChange={(e => setInput(e.target.value))} />
         <a href="/find">
           <img src={SearchIcon} alt="search" className="search-icon" />
         </a>          

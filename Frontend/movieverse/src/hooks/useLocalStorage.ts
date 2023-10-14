@@ -4,9 +4,19 @@ export class LocalStorage {
   static readonly accessTokenKey: string = "accessToken";
   static readonly refreshTokenKey: string = "refreshToken";
 
-  static readonly accessToken: string | null = localStorage.getItem(this.accessTokenKey);
-  static readonly refreshToken: string | null = localStorage.getItem(this.refreshTokenKey);
-  static readonly bearerToken: string = `Bearer ${this.accessToken ? JSON.parse(this.accessToken!) : null}`;
+  static getAccessToken(): string | null {
+    const token = localStorage.getItem(this.accessTokenKey);
+    return token ? JSON.parse(token) : null;
+  }
+
+  static getRefreshToken(): string | null {
+    const token = localStorage.getItem(this.refreshTokenKey);
+    return token ? JSON.parse(token) : null;
+  }
+
+  static getBearerToken(): string {
+    return `Bearer ${this.getAccessToken()}`;
+  }
 }
 
 export interface AccessToken {
