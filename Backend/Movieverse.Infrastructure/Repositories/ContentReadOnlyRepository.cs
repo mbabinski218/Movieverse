@@ -39,5 +39,5 @@ public sealed class ContentReadOnlyRepository : IContentReadOnlyRepository
 	private async Task<Content?> FindByIdAsync(ContentId id, CancellationToken cancellationToken) =>
 		await _dbContext.Contents
 			.FirstOrDefaultAsync(c => c.Id == id, cancellationToken)
-			.ConfigureAwait(false);
+			;
 }

@@ -36,7 +36,7 @@ public sealed class AddPlatformHandler : IRequestHandler<AddPlatformCommand, Res
         var platform = Platform.Create(request.Name, imageId, request.Price);
         platform.AddDomainEvent(new ImageChanged(imageId, request.Image));
 
-        var addResult = await _platformRepository.AddAsync(platform, cancellationToken).ConfigureAwait(false);
+        var addResult = await _platformRepository.AddAsync(platform, cancellationToken);
         if (addResult.IsUnsuccessful)
 		{
 	        _logger.LogDebug("Platform {name} could not be added.", request.Name);
@@ -49,7 +49,7 @@ public sealed class AddPlatformHandler : IRequestHandler<AddPlatformCommand, Res
 	        return Error.Invalid(PlatformResources.CannotCreatePlatform);
         }
         
-		await _outputCacheStore.EvictByTagAsync(platform.Id.ToString(), cancellationToken).ConfigureAwait(false);
+		await _outputCacheStore.EvictByTagAsync(platform.Id.ToString(), cancellationToken);
 		
 		_logger.LogDebug("Platform {name} added successfully.", request.Name);
 		return Result.Ok();

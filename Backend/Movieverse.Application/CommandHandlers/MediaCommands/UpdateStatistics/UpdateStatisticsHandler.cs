@@ -39,7 +39,7 @@ public sealed class UpdateStatisticsHandler : IRequestHandler<UpdateStatisticsCo
 	{
 		_logger.LogDebug("Updating statistics...");
 		
-		var medias = await _mediaRepository.GetAllAsync(cancellationToken).ConfigureAwait(false);
+		var medias = await _mediaRepository.GetAllAsync(cancellationToken);
 		if (medias.IsUnsuccessful)
 		{
 			return medias.Error;
@@ -111,10 +111,10 @@ public sealed class UpdateStatisticsHandler : IRequestHandler<UpdateStatisticsCo
 			media.AdvancedStatistics.Popularity[^1].Position = position;
 			media.AdvancedStatistics.Popularity[^1].Change = media.AdvancedStatistics.Popularity[^2].Position - position;
 			
-			await _outputCacheStore.EvictByTagAsync(media.Id.ToString(), cancellationToken).ConfigureAwait(false);
+			await _outputCacheStore.EvictByTagAsync(media.Id.ToString(), cancellationToken);
 		}
 
-		var updateResult = await _mediaRepository.UpdateRangeAsync(medias.Value, cancellationToken).ConfigureAwait(false);
+		var updateResult = await _mediaRepository.UpdateRangeAsync(medias.Value, cancellationToken);
 		if (updateResult.IsUnsuccessful)
 		{
 			return updateResult.Error;

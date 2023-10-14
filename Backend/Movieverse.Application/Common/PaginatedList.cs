@@ -30,14 +30,14 @@ public sealed class PaginatedList<TKey> : IPaginatedList<TKey>
 	public static async Task<PaginatedList<TKey>> CreateAsync(IQueryable<TKey> source, short? pageNumber, short? pageSize, 
 		CancellationToken cancellationToken = default)
 	{
-		var count = (short)await source.CountAsync(cancellationToken).ConfigureAwait(false);
+		var count = (short)await source.CountAsync(cancellationToken);
 
 		if (pageSize.HasValue && pageNumber.HasValue)
 		{
 			source = source.Skip((pageNumber.Value - 1) * pageSize.Value).Take(pageSize.Value);
 		}
 
-		var items = await source.ToListAsync(cancellationToken).ConfigureAwait(false);
+		var items = await source.ToListAsync(cancellationToken);
 
 		return new PaginatedList<TKey>
 		{

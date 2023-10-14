@@ -26,7 +26,7 @@ public sealed class PersonToMediaAddedHandler : INotificationHandler<PersonToMed
 		_logger.LogDebug("Adding media with id {MediaId} to person with id {PersonId}", notification.MediaId.ToString(), 
 			notification.PersonId.ToString());
 		
-		var person = await _personRepository.FindAsync(notification.PersonId, cancellationToken).ConfigureAwait(false);
+		var person = await _personRepository.FindAsync(notification.PersonId, cancellationToken);
 		ResultException.ThrowIfUnsuccessful(person);
 		
 		person.Value.AddMediaId(notification.MediaId);

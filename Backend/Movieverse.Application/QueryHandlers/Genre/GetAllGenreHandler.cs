@@ -23,7 +23,7 @@ public sealed class GetAllGenreHandler : IRequestHandler<GetAllGenresQuery, Resu
 	{
 		_logger.LogDebug("Retrieving all genres");
 		
-		var genre = await _genreRepository.GetAllAsync(request.PageNumber, request.PageSize, cancellationToken).ConfigureAwait(false);
+		var genre = await _genreRepository.GetAllAsync(request.PageNumber, request.PageSize, cancellationToken);
 		return genre.IsSuccessful ? genre : genre.Error;
 	}
 }

@@ -22,7 +22,7 @@ public sealed class GetGenreHandler : IRequestHandler<GetGenreQuery, Result<Genr
 	{
 		_logger.LogDebug("Retrieving genre with id: {Id}", request.Id);
 		
-		var genre = await _genreRepository.FindAsync(request.Id, cancellationToken).ConfigureAwait(false);
+		var genre = await _genreRepository.FindAsync(request.Id, cancellationToken);
 		return genre.IsSuccessful ? genre.Value : genre.Error;
 	}
 }

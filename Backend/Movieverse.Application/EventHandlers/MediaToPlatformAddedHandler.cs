@@ -24,7 +24,7 @@ public sealed class MediaToPlatformAddedHandler : INotificationHandler<MediaToPl
 	{
 		_logger.LogDebug("Adding media with id {MediaId} to platform with id {PlatformId}", notification.MediaId, notification.PlatformId);
 		
-		var media = await _mediaRepository.FindAsync(notification.MediaId, cancellationToken).ConfigureAwait(false);
+		var media = await _mediaRepository.FindAsync(notification.MediaId, cancellationToken);
 		ResultException.ThrowIfUnsuccessful(media);
 		
 		media.Value.AddPlatform(notification.PlatformId);

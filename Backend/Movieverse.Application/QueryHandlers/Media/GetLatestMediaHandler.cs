@@ -27,12 +27,12 @@ public sealed class GetLatestMediaHandler : IRequestHandler<GetLatestMediaQuery,
 
 		return request.PlatformId is null
 			? await GetAllLatestMediaAsync(request.PageNumber, request.PageSize).ConfigureAwait(false) 
-			: await GetLatestMediaByPlaceAsync(request.PlatformId, request.PageNumber, request.PageSize).ConfigureAwait(false);
+			: await GetLatestMediaByPlaceAsync(request.PlatformId, request.PageNumber, request.PageSize);
 	}
 	
 	private async Task<Result<IEnumerable<FilteredMediaDto>>> GetAllLatestMediaAsync(short? pageNumber, short? pageSize)
 	{
-		var platforms = await _platformRepository.GetAllAsync().ConfigureAwait(false);
+		var platforms = await _platformRepository.GetAllAsync();
 		if (platforms.IsUnsuccessful)
 		{
 			return platforms.Error;
@@ -42,7 +42,7 @@ public sealed class GetLatestMediaHandler : IRequestHandler<GetLatestMediaQuery,
 		
 		foreach (var platform in platforms.Value)
 		{
-			var latestMediaResult = await _mediaRepository.GetLatestMediaAsync(platform.Id.Value, pageNumber, pageSize).ConfigureAwait(false);
+			var latestMediaResult = await _mediaRepository.GetLatestMediaAsync(platform.Id.Value, pageNumber, pageSize);
 			if (latestMediaResult.IsUnsuccessful)
 			{
 				return latestMediaResult.Error;
@@ -61,13 +61,13 @@ public sealed class GetLatestMediaHandler : IRequestHandler<GetLatestMediaQuery,
 	
 	private async Task<Result<IEnumerable<FilteredMediaDto>>> GetLatestMediaByPlaceAsync(PlatformId platformId, short? pageNumber, short? pageSize)
 	{
-		var platform = await _platformRepository.FindAsync(platformId).ConfigureAwait(false);
+		var platform = await _platformRepository.FindAsync(platformId);
 		if (platform.IsUnsuccessful)
 		{
 			return platform.Error;
 		}
 		
-		var latestMediaResult = await _mediaRepository.GetLatestMediaAsync(platform.Value.Id, pageNumber, pageSize).ConfigureAwait(false);
+		var latestMediaResult = await _mediaRepository.GetLatestMediaAsync(platform.Value.Id, pageNumber, pageSize);
 		if (latestMediaResult.IsUnsuccessful)
 		{
 			return latestMediaResult.Error;

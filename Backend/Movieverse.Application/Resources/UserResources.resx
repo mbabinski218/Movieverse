@@ -90,4 +90,10 @@
     <data name="UserAlreadyHavePersonality" xml:space="preserve">
         <value>User already have personality</value>
     </data>
+    <data name="EmailOrUserNameAlreadyExist" xml:space="preserve">
+        <value>Email or username already taken</value>
+    </data>
+    <data name="FailedToLogin" xml:space="preserve">
+        <value>Failed to login</value>
+    </data>
 </root>

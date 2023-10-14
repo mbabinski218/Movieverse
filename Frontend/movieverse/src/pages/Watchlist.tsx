@@ -1,3 +1,9 @@
+import { useEffect } from "react"
+
 export const Watchlist: React.FC = () => {
-    return <h1>Watchlist</h1>
-  }
+  useEffect(() => {
+    document.title = "Watchlist - Movieverse"
+  }, [])
+
+  return <h1>Watchlist</h1>
+}

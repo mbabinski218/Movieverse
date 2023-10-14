@@ -26,7 +26,7 @@ public sealed class PersonReadOnlyRepository : IPersonReadOnlyRepository
 		
 		var person = await _dbContext.Persons
 			.FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
-			.ConfigureAwait(false);
+			;
 		
 		return person is null ? Error.NotFound(PersonResources.PersonDoesNotExist) : person;
 	}
@@ -35,7 +35,7 @@ public sealed class PersonReadOnlyRepository : IPersonReadOnlyRepository
 	{
 		_logger.LogDebug("Adding person with id {id}...", person.Id.ToString());
 		
-		await _dbContext.Persons.AddAsync(person, cancellationToken).ConfigureAwait(false);
+		await _dbContext.Persons.AddAsync(person, cancellationToken);
 		return Result.Ok();
 	}
 }

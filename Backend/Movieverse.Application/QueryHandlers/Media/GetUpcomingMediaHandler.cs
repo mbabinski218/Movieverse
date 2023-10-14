@@ -37,7 +37,7 @@ public sealed class GetUpcomingMediaHandler : IRequestHandler<GetUpcomingMediaQu
 
 	private async Task<Result<IEnumerable<FilteredMediaDto>>> UpcomingTheatersAsync(short count, CancellationToken cancellationToken)
 	{
-		var movies = await _mediaRepository.GetUpcomingMoviesAsync(null, count, cancellationToken).ConfigureAwait(false);
+		var movies = await _mediaRepository.GetUpcomingMoviesAsync(null, count, cancellationToken);
 		if (movies.IsUnsuccessful)
 		{
 			return movies.Error;
@@ -56,7 +56,7 @@ public sealed class GetUpcomingMediaHandler : IRequestHandler<GetUpcomingMediaQu
 	
 	private async Task<Result<IEnumerable<FilteredMediaDto>>> UpcomingVodAsync(short count, CancellationToken cancellationToken)
 	{
-		var platforms = await _platformRepository.GetAllAsync(cancellationToken).ConfigureAwait(false);
+		var platforms = await _platformRepository.GetAllAsync(cancellationToken);
 		if (platforms.IsUnsuccessful)
 		{
 			return platforms.Error;
@@ -65,7 +65,7 @@ public sealed class GetUpcomingMediaHandler : IRequestHandler<GetUpcomingMediaQu
 		var upcomingMedia = new List<FilteredMediaDto>();
 		foreach (var platform in platforms.Value)
 		{
-			var medias = await _mediaRepository.GetUpcomingMediaAsync(platform.Id.Value, count, cancellationToken).ConfigureAwait(false);
+			var medias = await _mediaRepository.GetUpcomingMediaAsync(platform.Id.Value, count, cancellationToken);
 			if (medias.IsUnsuccessful)
 			{
 				continue;

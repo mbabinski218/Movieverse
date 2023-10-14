@@ -32,7 +32,7 @@ public sealed class PlatformReadOnlyRepository : IPlatformReadOnlyRepository
 		var platform = await _dbContext.Platforms
 			.AsNoTracking()
 			.FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
-			.ConfigureAwait(false);
+			;
 		
 		return platform is null ? Error.NotFound(PlatformResources.PlatformDoesNotExist) : new PlatformDto
 		{
@@ -50,7 +50,7 @@ public sealed class PlatformReadOnlyRepository : IPlatformReadOnlyRepository
 		return await _dbContext.Platforms
 			.AsNoTracking()
 			.ToListAsync(cancellationToken)
-			.ConfigureAwait(false);
+			;
 	}
 
 	public async Task<Result<IEnumerable<MediaId>>> GetAllMediaIdsAsync(PlatformId id, CancellationToken cancellationToken = default)

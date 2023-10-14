@@ -30,7 +30,7 @@ public sealed class GenreRepository : IGenreRepository
 		
 		var genre = await _dbContext.Genres
 			.FirstOrDefaultAsync(g => g.Id == id, cancellationToken)
-			.ConfigureAwait(false);
+			;
 		
 		return genre is null ? Error.NotFound(GenreResources.GenreNotFound) : genre;
 	}
@@ -39,7 +39,7 @@ public sealed class GenreRepository : IGenreRepository
 	{
 		_logger.LogDebug("Adding genre with id {Id} to database", genre.Id.ToString());
 		
-		await _dbContext.Genres.AddAsync(genre, cancellationToken).ConfigureAwait(false);
+		await _dbContext.Genres.AddAsync(genre, cancellationToken);
 		return Result.Ok();
 	}
 	
@@ -51,6 +51,6 @@ public sealed class GenreRepository : IGenreRepository
 			.AsNoTracking()
 			.ProjectToType<GenreDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			.ConfigureAwait(false);
+			;
 	}
 }

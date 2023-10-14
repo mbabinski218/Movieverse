@@ -41,11 +41,11 @@ public sealed class AddMediaHandler : IRequestHandler<AddMediaCommand, Result>
 		{
 			case nameof(Movie):
 				var movie = Movie.Create(mediaId, request.Title);
-				addResult = await _mediaRepository.AddMovieAsync(movie, cancellationToken).ConfigureAwait(false);
+				addResult = await _mediaRepository.AddMovieAsync(movie, cancellationToken);
 				break;
 			case nameof(Series):
 				var series = Series.Create(mediaId, request.Title);
-				addResult = await _mediaRepository.AddSeriesAsync(series, cancellationToken).ConfigureAwait(false);
+				addResult = await _mediaRepository.AddSeriesAsync(series, cancellationToken);
 				break; 
 			default:
 				addResult = Error.Invalid(MediaResources.InvalidMediaType);
@@ -62,7 +62,7 @@ public sealed class AddMediaHandler : IRequestHandler<AddMediaCommand, Result>
 			return Error.Invalid(MediaResources.CouldNotAddMedia);
 		}
 		
-		await _outputCacheStore.EvictByTagAsync(mediaId.ToString(), cancellationToken).ConfigureAwait(false);
+		await _outputCacheStore.EvictByTagAsync(mediaId.ToString(), cancellationToken);
 		return Result.Ok();
 	}
 }

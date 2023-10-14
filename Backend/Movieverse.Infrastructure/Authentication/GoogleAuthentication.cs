@@ -46,8 +46,8 @@ public sealed class GoogleAuthentication
 		}
 
 		return await _dbContext.Users.AnyAsync(x => x.Email == payload.Email)
-			? new GoogleUser(false, payload)
-			: new GoogleUser(true, payload);
+			? new GoogleUser(true, payload)
+			: new GoogleUser(false, payload);
 	}
 
 	public User GetUser(GoogleJsonWebSignature.Payload payload) =>
@@ -56,7 +56,8 @@ public sealed class GoogleAuthentication
 			payload.Email.Split('@')[0],
 			payload.GivenName,
 			payload.FamilyName,
-			0);
+			0
+		);
 
 
 	public bool IsEmailVerified(GoogleJsonWebSignature.Payload payload) => payload.EmailVerified;

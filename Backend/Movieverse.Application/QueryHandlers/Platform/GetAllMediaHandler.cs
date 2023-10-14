@@ -27,7 +27,7 @@ public sealed class GetAllMediaHandler : IRequestHandler<GetAllMediaQuery, Resul
 	{
 		_logger.LogDebug("Getting all media for platform with id {Id}", request.Id);
 		
-		var mediaIds = await _platformRepository.GetAllMediaIdsAsync(request.Id, cancellationToken).ConfigureAwait(false);
+		var mediaIds = await _platformRepository.GetAllMediaIdsAsync(request.Id, cancellationToken);
 		if (mediaIds.IsUnsuccessful)
 		{
 			return mediaIds.Error;

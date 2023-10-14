@@ -23,8 +23,9 @@ export class Api {
 			return response;
 		}
 
-		const refreshToken = LocalStorage.refreshToken;
+		const refreshToken = LocalStorage.getRefreshToken();
 		if (!refreshToken) {
+			console.log("No refresh token found.");
 			return response;
 		}
 
@@ -55,7 +56,18 @@ export class Api {
 		localStorage.setItem(LocalStorage.accessTokenKey, JSON.stringify(tokens.accessToken));
 		localStorage.setItem(LocalStorage.refreshTokenKey, JSON.stringify(tokens.refreshToken));
 
-		console.log("Token refreshed successfully. Retrying request...");
+		console.log("Token refreshed successfully. Retrying request...");		
+		const keys: HeadersInit | undefined = init?.headers;
+
+		if (!keys) {
+			console.log("No headers found.");
+			return response;
+		}
+
+		const headers: Headers = new Headers(keys);
+		headers.set("Authorization", LocalStorage.getBearerToken());
+		init!.headers = headers;
+		
 		return await fetch(url, init);
 	}
 
@@ -113,13 +125,14 @@ export class Api {
 		const body: GetWatchlistStatusesContract = {
 			mediaIds: mediaIds
 		}
-		
+
 		return await this.fetchWithAuthorization(`user/watchlist`, {
 			mode: "cors",
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				"Authorization": LocalStorage.bearerToken
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
 			},
 			body: JSON.stringify(body)
 			})
@@ -137,9 +150,10 @@ export class Api {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
-				"Authorization": `Bearer ${LocalStorage.accessToken}`
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
 			}
-			})
+		})
 	}
 
 	static async register(registerContract: RegisterContract) : Promise<Response> {
@@ -147,7 +161,8 @@ export class Api {
 			mode: "cors",
 			method: "POST",
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
 			},
 			body: JSON.stringify(registerContract)
 		})

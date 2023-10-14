@@ -31,7 +31,7 @@ public sealed class AddGenreHandler : IRequestHandler<AddGenreCommand, Result>
 		_logger.LogDebug("Adding genre {name}...", request.Name);
 		
 		var genre = Genre.Create(request.Name, request.Description);
-		var addResult = await _genreRepository.AddAsync(genre, cancellationToken).ConfigureAwait(false);
+		var addResult = await _genreRepository.AddAsync(genre, cancellationToken);
 		if (addResult.IsUnsuccessful)
 		{
 			_logger.LogDebug("Genre {name} could not be added.", request.Name);
@@ -44,7 +44,7 @@ public sealed class AddGenreHandler : IRequestHandler<AddGenreCommand, Result>
 			return Error.Invalid(GenreResources.CannotCreateGenre);
 		}
         
-		await _outputCacheStore.EvictByTagAsync(genre.Id.ToString(), cancellationToken).ConfigureAwait(false);
+		await _outputCacheStore.EvictByTagAsync(genre.Id.ToString(), cancellationToken);
 		
 		_logger.LogDebug("Genre {name} added.", request.Name);
 		return Result.Ok();

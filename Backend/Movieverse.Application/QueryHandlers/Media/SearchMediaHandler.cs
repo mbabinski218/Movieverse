@@ -23,6 +23,6 @@ public sealed class SearchMediaHandler : IRequestHandler<SearchMediaQuery, Resul
 	{
 		_logger.LogDebug("SearchMediaHandler.Handle - Searching media with string {Search}", request.Term);
 		
-		return await _mediaRepository.SearchMediaAsync(request.Term, request.PageNumber, request.PageSize, cancellationToken).ConfigureAwait(false);
+		return await _mediaRepository.SearchMediaAsync(request.Term, request.PageNumber, request.PageSize, cancellationToken);
 	}
 }

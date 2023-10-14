@@ -32,7 +32,7 @@ public sealed class GenreReadOnlyRepository : IGenreReadOnlyRepository
 		
 		var genre = await _dbContext.Genres
 			.FirstOrDefaultAsync(g => g.Id == id, cancellationToken)
-			.ConfigureAwait(false);
+			;
 		
 		return genre is null ? Error.NotFound(GenreResources.GenreNotFound) : _mapper.Map<GenreDto>(genre);
 	}
@@ -45,6 +45,6 @@ public sealed class GenreReadOnlyRepository : IGenreReadOnlyRepository
 		return await _dbContext.Genres
 			.ProjectToType<GenreDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			.ConfigureAwait(false);
+			;
 	}
 }

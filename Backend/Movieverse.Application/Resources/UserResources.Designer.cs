@@ -96,6 +96,15 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email or username already taken.
+        /// </summary>
+        public static string EmailOrUserNameAlreadyExist {
+            get {
+                return ResourceManager.GetString("EmailOrUserNameAlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter age.
         /// </summary>
         public static string EnterAge {
@@ -164,6 +173,15 @@ namespace Movieverse.Application.Resources {
         public static string FailedToAuthenticateViaGoogle {
             get {
                 return ResourceManager.GetString("FailedToAuthenticateViaGoogle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to login.
+        /// </summary>
+        public static string FailedToLogin {
+            get {
+                return ResourceManager.GetString("FailedToLogin", resourceCulture);
             }
         }
         

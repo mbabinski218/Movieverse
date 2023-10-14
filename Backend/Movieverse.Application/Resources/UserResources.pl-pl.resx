@@ -83,4 +83,10 @@
     <data name="UserAlreadyHavePersonality" xml:space="preserve">
         <value>Użytkownik ma już osobowość</value>
     </data>
+    <data name="EmailOrUserNameAlreadyExist" xml:space="preserve">
+        <value>Istnieje już użytkownik o takim emailu lub nazwie</value>
+    </data>
+    <data name="FailedToLogin" xml:space="preserve">
+        <value>Błąd podczas logowania</value>
+    </data>
 </root>

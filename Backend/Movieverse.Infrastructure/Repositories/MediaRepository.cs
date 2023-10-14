@@ -29,7 +29,7 @@ public sealed class MediaRepository : IMediaRepository
 		
 		var media = await _dbContext.Medias
 			.FirstOrDefaultAsync(m => m.Id == id, cancellationToken)
-			.ConfigureAwait(false);
+			;
 		
 		return media is null ? Error.NotFound("Not found") : media;
 	}
@@ -42,7 +42,7 @@ public sealed class MediaRepository : IMediaRepository
 			.Include(x => x.AdvancedStatistics)
 			.ThenInclude(x => x.Popularity)
 			.ToListAsync(cancellationToken)
-			.ConfigureAwait(false);
+			;
 	}
 	
 	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMediaAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
@@ -57,7 +57,7 @@ public sealed class MediaRepository : IMediaRepository
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()
 			.ToListAsync(cancellationToken)
-			.ConfigureAwait(false);
+			;
 		
 		return medias;
 	}
@@ -74,7 +74,7 @@ public sealed class MediaRepository : IMediaRepository
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()
 			.ToListAsync(cancellationToken)
-			.ConfigureAwait(false);
+			;
 
 		return movies;
 	}
@@ -83,7 +83,7 @@ public sealed class MediaRepository : IMediaRepository
 	{
 		_logger.LogDebug("Checking if media with id {id} exists...", id.ToString());
 		
-		var media = await FindAsync(id, cancellationToken).ConfigureAwait(false);
+		var media = await FindAsync(id, cancellationToken);
 		return media.IsSuccessful;
 	}
 
@@ -91,7 +91,7 @@ public sealed class MediaRepository : IMediaRepository
 	{
 		_logger.LogDebug("Checking if media with title {title} exists...", title);
 		
-		return await _dbContext.Medias.AnyAsync(m => m.Title == title, cancellationToken: cancellationToken).ConfigureAwait(false);
+		return await _dbContext.Medias.AnyAsync(m => m.Title == title, cancellationToken: cancellationToken);
 	}
 
 	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindMoviesByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
@@ -105,7 +105,7 @@ public sealed class MediaRepository : IMediaRepository
 			.AsNoTracking()
 			.ProjectToType<MediaInfoDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			.ConfigureAwait(false);
+			;
 	}
 
 	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindSeriesByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
@@ -119,14 +119,14 @@ public sealed class MediaRepository : IMediaRepository
 			.AsNoTracking()
 			.ProjectToType<MediaInfoDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			.ConfigureAwait(false);
+			;
 	}
 
 	public async Task<Result> AddMovieAsync(Movie media, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Adding media with id {id}...", media.Id.ToString());
 		
-		await _dbContext.Movies.AddAsync(media, cancellationToken).ConfigureAwait(false);
+		await _dbContext.Movies.AddAsync(media, cancellationToken);
 		return Result.Ok();
 	}
 	
@@ -134,7 +134,7 @@ public sealed class MediaRepository : IMediaRepository
 	{
 		_logger.LogDebug("Adding media with id {id}...", media.Id.ToString());
 		
-		await _dbContext.Series.AddAsync(media, cancellationToken).ConfigureAwait(false);
+		await _dbContext.Series.AddAsync(media, cancellationToken);
 		return Result.Ok();
 	}
 

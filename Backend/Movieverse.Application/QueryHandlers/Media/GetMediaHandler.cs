@@ -22,7 +22,7 @@ public sealed class GetMediaHandler : IRequestHandler<GetMediaQuery, Result<Medi
 	{
 		_logger.LogDebug("Getting media with id {Id}", request.Id);
 		
-		var media = await _mediaRepository.FindAsync(request.Id, cancellationToken).ConfigureAwait(false);
+		var media = await _mediaRepository.FindAsync(request.Id, cancellationToken);
 		return media.IsSuccessful ? media.Value : media.Error;
 	}
 }

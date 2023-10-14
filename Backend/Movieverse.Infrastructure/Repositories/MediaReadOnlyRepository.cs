@@ -33,7 +33,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 
 		var media = await _dbContext.Medias
 			.FirstOrDefaultAsync(m => m.Id == id, cancellationToken)
-			.ConfigureAwait(false);
+			;
 		
 		return media switch
 		{
@@ -55,7 +55,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()
 			.ToPaginatedListAsync(null, null, cancellationToken)
-			.ConfigureAwait(false);
+			;
 		
 		return medias;
 	}
@@ -71,7 +71,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.OrderByDescending(m => m.Details.ReleaseDate)
 			.ProjectToType<MediaDemoDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			.ConfigureAwait(false);
+			;
 
 		return medias;
 	}
@@ -89,7 +89,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()
 			.ToPaginatedListAsync(null, null, cancellationToken)
-			.ConfigureAwait(false);
+			;
 
 		return movies;
 	}
@@ -104,7 +104,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.Where(m => idsList.Contains(m.Id))
 			.ProjectToType<MediaInfoDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			.ConfigureAwait(false);
+			;
 	}
 	
 	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindSeriesByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
@@ -118,7 +118,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.Where(s => idsList.Contains(s.Id))
 			.ProjectToType<MediaInfoDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			.ConfigureAwait(false);
+			;
 	}
 
 	public async Task<Result<IPaginatedList<SearchMediaDto>>> SearchMediaAsync(string search, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
@@ -130,7 +130,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.Where(m => m.Title.ToLower().StartsWith(search.ToLower()))
 			.ProjectToType<SearchMediaDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			.ConfigureAwait(false);
+			;
 
 		return medias;
 	}

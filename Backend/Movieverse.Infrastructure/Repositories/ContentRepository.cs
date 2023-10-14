@@ -26,7 +26,7 @@ public sealed class ContentRepository : IContentRepository
 		
 		var content = await _dbContext.Contents
 			.FirstOrDefaultAsync(c => c.Id == id, cancellationToken)
-			.ConfigureAwait(false);
+			;
 		
 		return content is null ? Error.NotFound(ContentResources.ContentNotFound) : content;
 	}

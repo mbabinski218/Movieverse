@@ -1,3 +1,9 @@
+import { useEffect } from "react"
+
 export const Pro: React.FC = () => {
-    return <h1>Pro</h1>
-  }
+  useEffect(() => {
+    document.title = "Pro - Movieverse"
+  }, [])
+
+  return <h1>Pro</h1>
+}

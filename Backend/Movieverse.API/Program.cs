@@ -29,7 +29,7 @@ services.AddSwaggerGen();
 services.AddApplication(configuration);
 services.AddInfrastructure(configuration, defaultSettings.DatabaseName);
 
-services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+services.AddHttpContextAccessor();
 services.AddSingleton<IHttpService, HttpService>();
 services.AddSingleton<ExceptionHandlingMiddleware>();
 

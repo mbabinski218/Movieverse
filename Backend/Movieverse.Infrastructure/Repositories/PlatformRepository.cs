@@ -26,7 +26,7 @@ public sealed class PlatformRepository : IPlatformRepository
 		
 		var platform = await _dbContext.Platforms
 			.FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
-			.ConfigureAwait(false);
+			;
 		
 		return platform is null ? Error.NotFound(PlatformResources.PlatformDoesNotExist) : platform;
 	}
@@ -35,7 +35,7 @@ public sealed class PlatformRepository : IPlatformRepository
 	{
 		_logger.LogDebug("Getting all platforms...");
 
-		return await _dbContext.Platforms.AsNoTracking().ToListAsync(cancellationToken).ConfigureAwait(false);
+		return await _dbContext.Platforms.AsNoTracking().ToListAsync(cancellationToken);
 	}
 
 	public async Task<Result<List<MediaId>>> GetAllMediaIdsAsync(PlatformId id, CancellationToken cancellationToken = default)
@@ -54,7 +54,7 @@ public sealed class PlatformRepository : IPlatformRepository
 	{
 		_logger.LogDebug("Adding platform with id {id}...", platform.Id.ToString());
 		
-		await _dbContext.Platforms.AddAsync(platform, cancellationToken).ConfigureAwait(false);
+		await _dbContext.Platforms.AddAsync(platform, cancellationToken);
 		return Result.Ok();
 	}
 

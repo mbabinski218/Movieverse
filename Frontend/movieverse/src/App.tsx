@@ -14,27 +14,23 @@ import "./styles/variables.css";
 import "./App.css";
 
 const App: React.FC = () => {
-  useEffect(() => {
-    document.title = "Movieverse"
-  }, [])
-
   return (
-      <div className="app">      
-        <Navbar />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/media" element={<Media />} />
-            <Route path="/pro" element={<Pro />} />
-            <Route path="/watchlist" element={<Watchlist />} />
-            <Route path="/user" element={<User />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/chart" element={<Chart />} />
-            <Route path="/find" element={<Find />} />
-          </Routes>
-        </BrowserRouter>
-        <Footer />
-      </div>
+    <div className="app">      
+      <Navbar />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/media" element={<Media />} />
+          <Route path="/pro" element={<Pro />} />
+          <Route path="/watchlist" element={<Watchlist />} />
+          <Route path="/user" element={<User />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/chart" element={<Chart />} />
+          <Route path="/find" element={<Find />} />
+        </Routes>
+      </BrowserRouter>
+      <Footer />
+    </div>
   );
 }
 
