@@ -11,6 +11,7 @@ import { LocalStorage, useLocalStorage } from "../../hooks/useLocalStorage";
 import { Success } from "../basic/Success";
 import { TokensDto } from "../../core/dtos/user/tokensDto";
 import { useNavigate } from "react-router-dom";
+import { StateProps, emptyAuthState } from "../../common/stateProps";
 import "./Authentication.css"
 
 // Interfaces
@@ -24,13 +25,6 @@ interface AuthenticationProps {
   lastName: string;
 }
 
-interface StateProps {
-  error: boolean;
-  errorMessages: string[] | string;
-  success: boolean;
-  successMessages: string[] | string;
-}
-
 // Empty props
 const emptyAuthProps: AuthenticationProps = {
   email: "",
@@ -40,13 +34,6 @@ const emptyAuthProps: AuthenticationProps = {
   age: "",
   firstName: "",
   lastName: ""
-};
-
-const emptyAuthState: StateProps = {
-  error: false,
-  errorMessages: [],
-  success: false,
-  successMessages: []
 };
 
 export const Authentication: React.FC = () => {
@@ -69,7 +56,7 @@ export const Authentication: React.FC = () => {
     if (accessToken) {
       navigate(-1);
     }
-  });
+  }, []);
   
   // Change mode between sign in and register
   const changeMode = useCallback(() => {
@@ -78,7 +65,7 @@ export const Authentication: React.FC = () => {
     setStateProps(emptyAuthState);    
   }, [registerMode, emptyAuthProps, emptyAuthState]);
 
-  // Setters for input fields
+  // Handlers for input fields
   const handleEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setAuthenticationProps({...authenticationProps, email: e.target.value});
   }, [authenticationProps]);
@@ -274,7 +261,9 @@ export const Authentication: React.FC = () => {
                 />
                 <Input label="*Age" onChange={handleAgeChange} 
                        value={authenticationProps.age} 
-                       type="number" 
+                       type="number"
+                       min={1}
+                       max={200} 
                        onKeyDown={onNotAllowedKeyDown}
                 />
                 <Input label="First name" 

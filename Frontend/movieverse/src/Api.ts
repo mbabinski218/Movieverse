@@ -9,6 +9,8 @@ import { RegisterContract } from "./core/contracts/registerContract";
 import { LoginContract } from "./core/contracts/loginContract";
 import { StatusCodes } from "./StatusCodes";
 import { TokensDto } from "./core/dtos/user/tokensDto";
+import { UpdateUserContract } from "./core/contracts/updateUserContract";
+import { FormDataHelper } from "./common/formDataHelper";
 
 export class Api {
 	static readonly url: string = "https://localhost:44375/api";
@@ -177,6 +179,44 @@ export class Api {
 				"Accept-Language": this.culture
 			},
 			body: JSON.stringify(loginContract)
+		})
+	}
+
+	static async logout() : Promise<Response> {
+		return await fetch(`${this.url}/user/logout`, {
+			mode: "cors",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		})
+	}
+
+	static async getUserData() : Promise<Response> {
+		return await this.fetchWithAuthorization(`user`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		})
+	}
+
+	static async updateUserData(data: UpdateUserContract) : Promise<Response> {
+		const form = FormDataHelper.toFormData(data);
+
+		return await this.fetchWithAuthorization(`user`, {
+			mode: "cors",
+			method: "PUT",
+			headers: {
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			},
+			body: form
 		})
 	}
 }

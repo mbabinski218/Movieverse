@@ -89,4 +89,7 @@
     <data name="FailedToLogin" xml:space="preserve">
         <value>Błąd podczas logowania</value>
     </data>
+    <data name="FailedToChangeUsername" xml:space="preserve">
+        <value>Błąd podczas zmiany nazwy użytkownika</value>
+    </data>
 </root>

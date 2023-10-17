@@ -14,7 +14,7 @@ public sealed class DefaultOutputCachePolicy : IOutputCachePolicy
 		context.AllowCacheLookup = attemptOutputCaching;
 		context.AllowCacheStorage = attemptOutputCaching;
 		context.AllowLocking = true;
-        
+		
 		context.CacheVaryByRules.QueryKeys = "*";
 
 		return ValueTask.CompletedTask;
@@ -46,9 +46,7 @@ public sealed class DefaultOutputCachePolicy : IOutputCachePolicy
 	private static bool AttemptOutputCaching(OutputCacheContext context)
 	{
 		var method = context.HttpContext.Request.Method;
-		
-        return HttpMethods.IsGet(method) || 
-               HttpMethods.IsPost(method) || 
-               HttpMethods.IsPut(method);
+
+		return HttpMethods.IsGet(method);
 	}
 }

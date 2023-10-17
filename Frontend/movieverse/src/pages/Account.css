@@ -1,0 +1,41 @@
+.account-page {
+  display: block;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+  overflow: hidden;
+}
+
+@media (min-width: 992px) {
+  .account-page {
+      width: 400px;
+  }
+}
+
+.account-form {
+  padding: 15px 15px 15px 15px;
+  background-color: var(--color-dark);
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
+  border-radius: 10px;
+}
+
+.account-logout {
+  margin-top: 25px;
+}
+
+.account-buttons {
+  margin: 0px 5px 0px 5px;
+}
+
+.account-space {
+  padding-top: 25px;
+}
+
+.account-error {
+  margin-top: 25px;
+}
+
+.account-success {
+  margin-top: 25px;
+}

@@ -5,7 +5,7 @@ import "./User.css";
 export const User: React.FC = () => {
   useEffect(() => {
     document.title = "Sign in - Movieverse"
-  })
+  }, [])
 
   return (
     <div className="user-page">

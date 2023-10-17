@@ -177,6 +177,15 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to change username.
+        /// </summary>
+        public static string FailedToChangeUsername {
+            get {
+                return ResourceManager.GetString("FailedToChangeUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to login.
         /// </summary>
         public static string FailedToLogin {

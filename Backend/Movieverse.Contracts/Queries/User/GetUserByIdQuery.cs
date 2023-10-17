@@ -4,4 +4,4 @@ using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Contracts.Queries.User;
 
-public sealed record GetUserByIdQuery(Guid Id) : IRequest<Result<UserDto>>;
+public sealed record GetUserByIdQuery : IRequest<Result<UserDto>>;

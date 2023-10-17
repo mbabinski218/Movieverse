@@ -46,7 +46,7 @@ export const Navbar: React.FC = () => {
     catch {
       setUser(null);
     }
-  });
+  }, []);
 
   return (
     <div className="header">

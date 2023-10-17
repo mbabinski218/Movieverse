@@ -17,6 +17,11 @@ export class LocalStorage {
   static getBearerToken(): string {
     return `Bearer ${this.getAccessToken()}`;
   }
+
+  static clear(): void {
+    localStorage.removeItem(this.accessTokenKey);
+    localStorage.removeItem(this.refreshTokenKey);
+  }
 }
 
 export interface AccessToken {

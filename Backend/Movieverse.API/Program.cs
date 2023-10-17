@@ -35,9 +35,10 @@ services.AddSingleton<ExceptionHandlingMiddleware>();
 
 services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
-services.AddCors(options => options.AddPolicy("corsapp", corsBuilder =>
-    // corsBuilder.WithOrigins(defaultSettings.Routes.Origin).AllowAnyMethod().AllowAnyHeader()));
-    corsBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+const string cors = "corsapp";
+services.AddCors(options => options.AddPolicy(cors, corsBuilder =>
+    corsBuilder.WithOrigins(defaultSettings.Routes.Origin).AllowAnyMethod().AllowAnyHeader()));
+    // corsBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 var app = builder.Build();
 
@@ -51,6 +52,7 @@ await app.SeedDatabase();
 
 app.UseRouting();
 
+app.UseCors(cors);
 app.UseMetrics();
 app.UseOutputCache();
 
@@ -62,7 +64,6 @@ app.UseRequestLocalization(options =>
     options.RequestCultureProviders.Insert(0, new AppRequestCultureProvider(defaultSettings.Culture));
 });
 
-app.UseCors("corsapp");
 app.UseAuthentication();
 
 app.UseHttpsRedirection();

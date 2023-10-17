@@ -316,6 +316,14 @@ public sealed class UserRepository : IUserRepository
 		_logger.LogDebug("Add role {role} to user with id: {id}", role, user.Id);
 		
 		var result = await _userManager.AddToRoleAsync(user, role.ToString());
+		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToChangeUsername);
+	}
+
+	public async Task<Result> ChangeUsernameAsync(User user, string username, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Change username for user with id: {id}", user.Id);
+
+		var result = await _userManager.SetUserNameAsync(user, username);
 		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRole);
 	}
 

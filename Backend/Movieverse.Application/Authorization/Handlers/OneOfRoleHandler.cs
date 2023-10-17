@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Movieverse.Application.Authorization.Requirements;
 using Movieverse.Application.Interfaces;
-using Movieverse.Domain.Common.Types;
 
 namespace Movieverse.Application.Authorization.Handlers;
 
