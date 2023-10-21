@@ -26,7 +26,7 @@ public sealed class GetLatestMediaHandler : IRequestHandler<GetLatestMediaQuery,
 		_logger.LogDebug("Getting latest media...");
 
 		return request.PlatformId is null
-			? await GetAllLatestMediaAsync(request.PageNumber, request.PageSize).ConfigureAwait(false) 
+			? await GetAllLatestMediaAsync(request.PageNumber, request.PageSize)
 			: await GetLatestMediaByPlaceAsync(request.PlatformId, request.PageNumber, request.PageSize);
 	}
 	

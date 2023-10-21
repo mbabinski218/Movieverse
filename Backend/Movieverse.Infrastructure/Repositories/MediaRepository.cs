@@ -47,19 +47,18 @@ public sealed class MediaRepository : IMediaRepository
 	
 	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMediaAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting upcoming medias...");
+		_logger.LogDebug("Getting upcoming media...");
 		
-		var medias = await _dbContext.Medias
+		var media = await _dbContext.Medias
 			.AsNoTracking()
 			.Where(m => m.Details.ReleaseDate > DateTime.UtcNow)
 			.Where(m => platformId == null || m.PlatformIds.Any(p => p.Value == platformId.Value))
 			.OrderBy(m => m.Details.ReleaseDate)
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()
-			.ToListAsync(cancellationToken)
-			;
+			.ToListAsync(cancellationToken);
 		
-		return medias;
+		return media;
 	}
 
 	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMoviesAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
@@ -73,8 +72,7 @@ public sealed class MediaRepository : IMediaRepository
 			.OrderBy(m => m.Details.ReleaseDate)
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()
-			.ToListAsync(cancellationToken)
-			;
+			.ToListAsync(cancellationToken);
 
 		return movies;
 	}
@@ -104,8 +102,7 @@ public sealed class MediaRepository : IMediaRepository
 			.Where(m => idsList.Contains(m.Id))
 			.AsNoTracking()
 			.ProjectToType<MediaInfoDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			;
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
 	}
 
 	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindSeriesByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
@@ -118,8 +115,7 @@ public sealed class MediaRepository : IMediaRepository
 			.Where(s => idsList.Contains(s.Id))
 			.AsNoTracking()
 			.ProjectToType<MediaInfoDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			;
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
 	}
 
 	public async Task<Result> AddMovieAsync(Movie media, CancellationToken cancellationToken = default)
@@ -146,11 +142,11 @@ public sealed class MediaRepository : IMediaRepository
 		return await Task.FromResult(Result.Ok());
 	}
 
-	public async Task<Result> UpdateRangeAsync(List<Media> medias, CancellationToken cancellationToken = default)
+	public async Task<Result> UpdateRangeAsync(List<Media> media, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Updating {count} medias...", medias.Count.ToString());
+		_logger.LogDebug("Updating {count} media...", media.Count.ToString());
 		
-		_dbContext.Medias.UpdateRange(medias);
+		_dbContext.Medias.UpdateRange(media);
 		return await Task.FromResult(Result.Ok());
 	}
 }

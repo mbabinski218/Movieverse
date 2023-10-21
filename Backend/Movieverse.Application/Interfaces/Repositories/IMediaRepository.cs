@@ -19,5 +19,5 @@ public interface IMediaRepository
 	Task<Result> AddMovieAsync(Movie media, CancellationToken cancellationToken = default);
 	Task<Result> AddSeriesAsync(Series media, CancellationToken cancellationToken = default);
 	Task<Result> UpdateAsync(Media media, CancellationToken cancellationToken = default);
-	Task<Result> UpdateRangeAsync(List<Media> medias, CancellationToken cancellationToken = default);
+	Task<Result> UpdateRangeAsync(List<Media> media, CancellationToken cancellationToken = default);
 }

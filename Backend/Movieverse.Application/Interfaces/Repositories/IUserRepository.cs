@@ -25,4 +25,5 @@ public interface IUserRepository
 	Task<Result> AddPersonalityAsync(Guid id, PersonId personId, CancellationToken cancellationToken = default);
 	Task<Result<MediaInfo?>> FindMediaInfoAsync(Guid id, MediaId mediaId, CancellationToken cancellationToken = default);
 	Task<Result> ChangeUsernameAsync(User user, string username, CancellationToken cancellationToken = default);
+	Task<Result> ChangeEmailAsync(User user, string email, CancellationToken cancellationToken = default);
 }

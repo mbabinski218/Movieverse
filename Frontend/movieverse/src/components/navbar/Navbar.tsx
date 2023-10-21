@@ -16,6 +16,7 @@ export const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [searchBarOpen, setSearchBarOpen] = useState<boolean>(false);
   const [user, setUser] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<string[] | null>(null);
 
   const outsideSearchBarClick = useCallback(() => {
     setSearchBarOpen(false);
@@ -42,6 +43,7 @@ export const Navbar: React.FC = () => {
     try {
       const decodedToken = jwtDecode(accessToken) as AccessToken;
       setUser(decodedToken.displayName);
+      setUserRole(decodedToken.role);
     }
     catch {
       setUser(null);
@@ -105,6 +107,25 @@ export const Navbar: React.FC = () => {
               <Nav.Link href="/chart" className="element-link">Most popular</Nav.Link>
               <Nav.Link href="/chart" className="element-link">Born today</Nav.Link>
             </Col>
+            {
+              userRole?.includes("Administrator") &&
+              <Col>
+                <div className="category">
+                  <span>Administrator panel</span>
+                </div>
+                <Nav.Link href="/media/add" className="element-link">Add new media</Nav.Link>
+                <Nav.Link href="/user/addRole" className="element-link">Add or remove role</Nav.Link>
+              </Col>
+            }
+            {
+              (userRole?.includes("Critic") && !userRole?.includes("Administrator"))  && 
+              <Col>
+              <div className="category">
+                <span>Critic panel</span>
+              </div>
+              <Nav.Link href="/media/add" className="element-link">Add new media</Nav.Link>
+            </Col>
+            }
           </Row>
         </Container>
       </div>

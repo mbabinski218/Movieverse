@@ -2,7 +2,6 @@
   position: relative;
   margin: 5px 5px 5px 5px;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 

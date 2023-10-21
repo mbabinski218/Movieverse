@@ -3,6 +3,7 @@ import { MediaDemoDto } from "../../core/dtos/media/mediaDemoDto";
 import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { LocalStorage } from "../../hooks/useLocalStorage";
 import { Api } from "../../Api";
+import { Link } from "react-router-dom";
 import "./MediaDemo.css";
 import Blank from "../../assets/blank.png";
 import Clapperboard from "../../assets/clapperboard.svg";
@@ -19,7 +20,9 @@ interface MediaDemoProps {
 export const MediaDemo: React.FC<MediaDemoProps> = ({mediaDemo, isOnWatchlist, isWatchlistLoaded}) => {
 	const [imgSrc, setImgSrc] = useState<string>(Blank);
 	const [trailerAvailable, setTrailerAvailable] = useState<boolean>(false);
+	const [trailerUrl, setTrailerUrl] = useState<string>("");
 	const [isOnUserWatchlist, setIsOnUserWatchlist] = useState<boolean | null>(isOnWatchlist);
+	const link = `/media/${mediaDemo.id}`;
 
 	const onError = useCallback((e: SyntheticEvent<HTMLImageElement, Event>): void => {
 		const img = e.target as HTMLImageElement;
@@ -35,11 +38,11 @@ export const MediaDemo: React.FC<MediaDemoProps> = ({mediaDemo, isOnWatchlist, i
 		setTrailerAvailable(mediaDemo.trailerId ? true : false);		
 	}, [mediaDemo]);
 
-	const openTrailer = useCallback(() => {
+	const setTrailerHandler = useCallback((e: React.MouseEvent<HTMLElement>) => {
 		if (mediaDemo.trailerId) {
-			Api.getVideoPath(mediaDemo.trailerId as string)
-				.then(url => window.location.href = url)
-				.catch(err => console.error(err));
+				Api.getVideoPath(mediaDemo.trailerId as string)
+					.then(url => setTrailerUrl(url))
+					.catch(err => console.error(err));
 		}
 	}, []);
 
@@ -58,21 +61,23 @@ export const MediaDemo: React.FC<MediaDemoProps> = ({mediaDemo, isOnWatchlist, i
 	}, [isWatchlistLoaded, isOnUserWatchlist]);
 
 	return (
-		<div className="item zoom">
-			<img className="img" src={imgSrc} onError={onError} alt={mediaDemo.title} />
-			<div className="overlay">
-				<a className="item-title">{mediaDemo.title}</a>
-				<div className={isWatchlistLoaded ? "add-to-watchlist enable-icon" : "add-to-watchlist disable-icon"} onClick={updateWatchlist}>
-					<img className="icon" src={isOnUserWatchlist ? Check : Plus} alt="like" />
-				</div>
-				<div className={trailerAvailable ? "trailer enable-icon" : "trailer disable-icon"} onClick={openTrailer}>
-					<img className="icon" src={Clapperboard} alt="trailer" />
-				</div>
-				<div className="icon rating">
-					<img className="star" src={Star} alt="star" />
-					<span className="rating-value">{mediaDemo.rating}</span>
+			<div className="item zoom">
+				<Link to={link}>
+					<img className="img" src={imgSrc} onError={onError} alt={mediaDemo.title} />
+				</Link>
+				<div className="overlay">
+					<Link className="item-title" to={link}>{mediaDemo.title}</Link>
+					<div className={isWatchlistLoaded ? "add-to-watchlist enable-icon" : "add-to-watchlist disable-icon"} onClick={updateWatchlist}>
+						<img className="icon" src={isOnUserWatchlist ? Check : Plus} alt="like" />
+					</div>
+					<Link className={trailerAvailable ? "trailer enable-icon" : "trailer disable-icon"} onMouseDown={setTrailerHandler} to={trailerUrl}>
+						<img className="icon" src={Clapperboard} alt="trailer" />
+					</Link>
+					<div className="icon rating">
+						<img className="star" src={Star} alt="star" />
+						<span className="rating-value">{mediaDemo.rating}</span>
+					</div>
 				</div>
 			</div>
-		</div>
 	);
 }

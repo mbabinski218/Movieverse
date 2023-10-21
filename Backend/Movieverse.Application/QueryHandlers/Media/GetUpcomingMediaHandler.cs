@@ -65,8 +65,8 @@ public sealed class GetUpcomingMediaHandler : IRequestHandler<GetUpcomingMediaQu
 		var upcomingMedia = new List<FilteredMediaDto>();
 		foreach (var platform in platforms.Value)
 		{
-			var medias = await _mediaRepository.GetUpcomingMediaAsync(platform.Id.Value, count, cancellationToken);
-			if (medias.IsUnsuccessful)
+			var media = await _mediaRepository.GetUpcomingMediaAsync(platform.Id.Value, count, cancellationToken);
+			if (media.IsUnsuccessful)
 			{
 				continue;
 			}
@@ -75,7 +75,7 @@ public sealed class GetUpcomingMediaHandler : IRequestHandler<GetUpcomingMediaQu
 			{
 				PlatformId = platform.Id,
 				PlatformName = platform.Name,
-				Media = medias.Value
+				Media = media.Value
 			});
 		}
 

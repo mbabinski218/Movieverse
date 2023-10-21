@@ -1,8 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Movieverse.Application.Common;
 using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
+using Movieverse.Contracts.DataTransferObjects.Person;
 using Movieverse.Domain.AggregateRoots;
+using Movieverse.Domain.Common;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Persistence;
@@ -30,7 +34,20 @@ public sealed class PersonReadOnlyRepository : IPersonReadOnlyRepository
 		
 		return person is null ? Error.NotFound(PersonResources.PersonDoesNotExist) : person;
 	}
-	
+
+	public async Task<Result<IPaginatedList<SearchPersonDto>>> SearchAsync(string? term, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Searching persons with term: {Term}", term);
+		
+		var persons = await _dbContext.Persons
+			.AsNoTracking()
+			.Where(p => term == null || (p.Information.FirstName + " " + p.Information.LastName).ToLower().StartsWith(term.ToLower()))
+			.ProjectToType<SearchPersonDto>()
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
+
+		return persons;
+	}
+
 	public async Task<Result> AddAsync(Person person, CancellationToken cancellationToken)
 	{
 		_logger.LogDebug("Adding person with id {id}...", person.Id.ToString());

@@ -2,11 +2,9 @@
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Common;
 using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.DataTransferObjects.Genre;
-using Movieverse.Domain.Common;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Persistence;
@@ -31,20 +29,18 @@ public sealed class GenreReadOnlyRepository : IGenreReadOnlyRepository
 		_logger.LogDebug("Finding genre with id {Id} from database", id);
 		
 		var genre = await _dbContext.Genres
-			.FirstOrDefaultAsync(g => g.Id == id, cancellationToken)
-			;
+			.FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
 		
 		return genre is null ? Error.NotFound(GenreResources.GenreNotFound) : _mapper.Map<GenreDto>(genre);
 	}
 	
-	public async Task<Result<IPaginatedList<GenreDto>>> GetAllAsync(short? pageNumber = null, short? pageSize = null, 
-		CancellationToken cancellationToken = default)
+	public async Task<Result<IEnumerable<GenreDto>>> GetAllAsync(CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Getting all genres from database");
 		
 		return await _dbContext.Genres
+			.AsNoTracking()
 			.ProjectToType<GenreDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			;
+			.ToListAsync(cancellationToken);
 	}
 }

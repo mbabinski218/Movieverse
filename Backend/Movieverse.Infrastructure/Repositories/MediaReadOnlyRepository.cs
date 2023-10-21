@@ -32,8 +32,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		_logger.LogDebug("Finding media with id {id}...", id.ToString());
 
 		var media = await _dbContext.Medias
-			.FirstOrDefaultAsync(m => m.Id == id, cancellationToken)
-			;
+			.FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
 		
 		return media switch
 		{
@@ -45,37 +44,46 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 	
 	public async Task<Result<IPaginatedList<MediaDemoDto>>> GetUpcomingMediaAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting upcoming medias...");
+		_logger.LogDebug("Getting upcoming media...");
 		
-		var medias = await _dbContext.Medias
+		var media = await _dbContext.Medias
 			.AsNoTracking()
 			.Where(m => m.Details.ReleaseDate > DateTime.UtcNow)
 			.Where(m => platformId == null || m.PlatformIds.Any(p => p.Value == platformId.Value))
 			.OrderBy(m => m.Details.ReleaseDate)
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()
-			.ToPaginatedListAsync(null, null, cancellationToken)
-			;
+			.ToPaginatedListAsync(null, null, cancellationToken);
 		
-		return medias;
+		return media;
 	}
 
+	//TODO sprawdzić co jest szybsze
 	public async Task<Result<IPaginatedList<MediaDemoDto>>> GetLatestMediaAsync(PlatformId platformId, short? pageNumber = null, short? pageSize = null, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting upcoming series...");
+		_logger.LogDebug("Getting latest series...");
 
-		var medias = await _dbContext.Medias
+		var media = await _dbContext.Medias
 			.AsNoTracking()
 			.Where(m => m.Details.ReleaseDate <= DateTime.UtcNow)
-			.Where(m =>  m.PlatformIds.Any(p => p.Value == platformId.Value))
+			.Where(m => m.PlatformIds.Any(p => p.Value == platformId.Value))
 			.OrderByDescending(m => m.Details.ReleaseDate)
-			.ProjectToType<MediaDemoDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			;
-
-		return medias;
+			.ToListAsync(cancellationToken);
+		
+		var result = _mapper.Map<List<MediaDemoDto>>(media);
+		
+		return result.ToPaginatedList(pageNumber, pageSize);
+		
+		// var media = await _dbContext.Medias
+		// 	.AsNoTracking()
+		// 	.Where(m => m.Details.ReleaseDate <= DateTime.UtcNow)
+		// 	.Where(m =>  m.PlatformIds.Any(p => p.Value == platformId.Value))
+		// 	.OrderByDescending(m => m.Details.ReleaseDate)
+		// 	.ProjectToType<MediaDemoDto>()
+		// 	.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
+		//
+		//  return media;
 	}
-
 	
 	public async Task<Result<IPaginatedList<MediaDemoDto>>> GetUpcomingMoviesAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
 	{
@@ -88,8 +96,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.OrderBy(m => m.Details.ReleaseDate)
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()
-			.ToPaginatedListAsync(null, null, cancellationToken)
-			;
+			.ToPaginatedListAsync(null, null, cancellationToken);
 
 		return movies;
 	}
@@ -103,8 +110,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		return await _dbContext.Movies
 			.Where(m => idsList.Contains(m.Id))
 			.ProjectToType<MediaInfoDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			;
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
 	}
 	
 	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindSeriesByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
@@ -117,21 +123,47 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.AsNoTracking()
 			.Where(s => idsList.Contains(s.Id))
 			.ProjectToType<MediaInfoDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			;
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
 	}
 
 	public async Task<Result<IPaginatedList<SearchMediaDto>>> SearchMediaAsync(string search, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Searching media with string {Search}...", search);
 		
-		var medias = await _dbContext.Medias
+		var media = await _dbContext.Medias
 			.AsNoTracking()
 			.Where(m => m.Title.ToLower().StartsWith(search.ToLower()))
 			.ProjectToType<SearchMediaDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			;
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
 
-		return medias;
+		return media;
+	}
+	
+	public async Task<Result<IPaginatedList<SearchMediaDto>>> SearchMoviesWithFiltersAsync(string? search, GenreId? genre, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Searching movies with string {Search}...", search);
+		
+		var media = await _dbContext.Movies
+			.AsNoTracking()
+			.Where(m => search == null || m.Title.ToLower().StartsWith(search.ToLower()))
+			.Where(m => genre == null || m.GenreIds.Any(g => g.Value == genre.Value))
+			.ProjectToType<SearchMediaDto>()
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
+
+		return media;
+	}
+	
+	public async Task<Result<IPaginatedList<SearchMediaDto>>> SearchSeriesWithFiltersAsync(string? search, GenreId? genre, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Searching series with string {Search}...", search);
+		
+		var media = await _dbContext.Series
+			.AsNoTracking()
+			.Where(m => search == null || m.Title.ToLower().StartsWith(search.ToLower()))
+			.Where(m => genre == null || m.GenreIds.Any(g => g.Value == genre.Value))
+			.ProjectToType<SearchMediaDto>()
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
+
+		return media;
 	}
 }

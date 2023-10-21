@@ -50,9 +50,23 @@ public sealed class UpdateHandler : IRequestHandler<UpdateCommand, Result<UserDt
 		}
 		
 		var user = findResult.Value;
-		
-		if (request.UserName is not null) await _userRepository.ChangeUsernameAsync(user, request.UserName, cancellationToken);
-		if (request.Email is not null) user.Email = request.Email;
+
+		if (request.UserName is not null)
+		{
+			var result = await _userRepository.ChangeUsernameAsync(user, request.UserName, cancellationToken);
+			if (result.IsUnsuccessful)
+			{
+				return result.Error;
+			}
+		}
+		if (request.Email is not null)
+		{
+			var result = await _userRepository.ChangeEmailAsync(user, request.Email, cancellationToken);
+			if (result.IsUnsuccessful)
+			{
+				return result.Error;
+			}
+		}
 		if (request.Information is not null)
 		{
 			if (request.Information.FirstName is not null) user.Information.FirstName = request.Information.FirstName;

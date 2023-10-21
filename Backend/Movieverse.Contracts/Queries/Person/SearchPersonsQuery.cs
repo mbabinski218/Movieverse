@@ -1,3 +1,12 @@
-﻿namespace Movieverse.Contracts.Queries.Person;
+﻿using MediatR;
+using Movieverse.Contracts.DataTransferObjects.Person;
+using Movieverse.Domain.Common;
+using Movieverse.Domain.Common.Result;
 
-public record SearchPersonsQuery();
+namespace Movieverse.Contracts.Queries.Person;
+
+public sealed record SearchPersonsQuery(	
+	string? Term,
+	short? PageNumber,
+	short? PageSize
+	) : IRequest<Result<IPaginatedList<SearchPersonDto>>>;

@@ -11,6 +11,8 @@ import { StatusCodes } from "./StatusCodes";
 import { TokensDto } from "./core/dtos/user/tokensDto";
 import { UpdateUserContract } from "./core/contracts/updateUserContract";
 import { FormDataHelper } from "./common/formDataHelper";
+import { SearchPersonDto } from "./core/dtos/person/searchPersonDto";
+import { GenreDto } from "./core/dtos/genre/genreDto";
 
 export class Api {
 	static readonly url: string = "https://localhost:44375/api";
@@ -73,6 +75,16 @@ export class Api {
 		return await fetch(url, init);
 	}
 
+	static async getGenres(): Promise<GenreDto[]> {
+		return await fetch(`${this.url}/genre`)
+		.then(response => response.json())
+		.then(data => data as GenreDto[])
+		.catch(error => {
+			console.error(error);
+			throw error;
+		})	
+	}
+
 	static async searchMedia(searchTerm: string, pageNumber: number | null = null, pageSize: number | null = null)
 		: Promise<PaginatedList<SearchMediaDto>> {
 		const queryParams = new QueryParams();
@@ -90,7 +102,56 @@ export class Api {
 				console.error(error);
 				throw error;
 			})			
-		}
+	}
+
+	static async searchWithFiltersMedia(term: string | null, type: string, genreId: string | null, pageNumber: number | null = null, pageSize: number | null = null)
+	: Promise<PaginatedList<SearchMediaDto>> {
+	const queryParams = new QueryParams();
+
+	if (term !== null) {
+		queryParams.add("term", term);
+	}
+
+	queryParams.add("type", type);
+
+	if (genreId !== null) {
+		queryParams.add("genreId", genreId);
+	}
+
+	if (pageNumber !== null && pageSize !== null) {
+		queryParams.add("pageNumber", pageNumber.toString());
+		queryParams.add("pageSize", pageSize.toString());
+	}
+	
+	return await fetch(`${this.url}/media/searchWithFilters?${queryParams.toString()}`)
+		.then(response => response.json())
+		.then(data => data as PaginatedList<SearchMediaDto>)
+		.catch(error => {
+			console.error(error);
+			throw error;
+		})			
+	}
+
+	static async searchPersons(searchTerm: string | null, pageNumber: number | null = null, pageSize: number | null = null)
+	: Promise<PaginatedList<SearchPersonDto>> {
+	const queryParams = new QueryParams();
+	if (searchTerm !== null) {
+		queryParams.add("term", searchTerm);
+	}
+
+	if (pageNumber !== null && pageSize !== null) {
+		queryParams.add("pageNumber", pageNumber.toString());
+		queryParams.add("pageSize", pageSize.toString());
+	}
+	
+	return await fetch(`${this.url}/person/search?${queryParams.toString()}`)
+		.then(response => response.json())
+		.then(data => data as PaginatedList<SearchPersonDto>)
+		.catch(error => {
+			console.error(error);
+			throw error;
+		})			
+	}
 
 	static async getLatestMedia(platformId: string | null = null, pageNumber: number | null = null, pageSize: number | null = null)
 		: Promise<FilteredMediaDto[]> {
@@ -123,7 +184,7 @@ export class Api {
 			})
 	}
 
-	static async getWatchlistStatuses(mediaIds: string[]) : Promise<WatchlistStatusDto[]> {
+	static async getWatchlistStatuses(mediaIds: string[]): Promise<WatchlistStatusDto[]> {
 		const body: GetWatchlistStatusesContract = {
 			mediaIds: mediaIds
 		}
@@ -146,7 +207,7 @@ export class Api {
 			})
 	}
 
-	static async updateWatchlistStatus(mediaId: string) : Promise<Response> {
+	static async updateWatchlistStatus(mediaId: string): Promise<Response> {
 		return await this.fetchWithAuthorization(`user/watchlist/${mediaId}`, {
 			mode: "cors",
 			method: "PUT",
@@ -158,7 +219,7 @@ export class Api {
 		})
 	}
 
-	static async register(registerContract: RegisterContract) : Promise<Response> {
+	static async register(registerContract: RegisterContract): Promise<Response> {
 		return await fetch(`${this.url}/user/register`, {
 			mode: "cors",
 			method: "POST",
@@ -170,7 +231,7 @@ export class Api {
 		})
 	}
 
-	static async login(loginContract: LoginContract) : Promise<Response> {
+	static async login(loginContract: LoginContract): Promise<Response> {
 		return await fetch(`${this.url}/user/login`, {
 			mode: "cors",
 			method: "POST",
@@ -195,6 +256,7 @@ export class Api {
 	}
 
 	static async getUserData() : Promise<Response> {
+		console.log(LocalStorage.getBearerToken());
 		return await this.fetchWithAuthorization(`user`, {
 			mode: "cors",
 			method: "GET",

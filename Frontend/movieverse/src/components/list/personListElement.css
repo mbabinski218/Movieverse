@@ -1,0 +1,42 @@
+.ple-element {
+  display: grid;
+  grid-template-areas: 
+    "image title"                          
+    "image age"                          
+    "image description";
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: 0.1fr 0.1fr 0.5fr;
+}
+
+.ple-element:hover {
+  color: var(--color-gold);
+  cursor: pointer;
+}
+
+.ple-title {
+  grid-area: title;
+  font-weight: bold;
+  padding-left: 10px;
+}
+
+.ple-age {
+  grid-area: age;
+  padding-left: 10px;
+}
+
+.ple-description {
+  grid-area: description;
+  padding-top: 10px;
+  padding-left: 10px;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.ple-image {
+  grid-area: image;
+  height: 150px;
+  width: 101px;
+}

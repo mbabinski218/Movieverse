@@ -31,4 +31,12 @@ public sealed class PersonController : ApiController
 	    await mediator.Send(command, cancellationToken).Then(
 		    Ok,
 		    err => StatusCode(err.Code, err.Messages));
+    
+    [AllowAnonymous]
+    [OutputCache(NoStore = true)]
+    [HttpGet("search")]
+    public async Task<ActionResult> Search([FromQuery] SearchPersonsQuery query, CancellationToken cancellationToken) =>
+	    await mediator.Send(query, cancellationToken).Then(
+		    Ok,
+		    err => StatusCode(err.Code, err.Messages));
 }

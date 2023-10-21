@@ -59,6 +59,7 @@ export const Account: React.FC = () => {
         };        
         setAccountCurrentProps(accountProps);
       })
+
   }, []);
 
   // Show error message
@@ -112,7 +113,7 @@ export const Account: React.FC = () => {
   }, []);
 
   // Can update
- const canUpdate = useCallback(() => {
+ const canUpdate = useCallback(() => {  
   return accountProps.email !== "" ||
          accountProps.username !== "" ||
          accountProps.age !== "" ||
@@ -167,7 +168,7 @@ export const Account: React.FC = () => {
     Api.logout()
       .then(() => {
         LocalStorage.clear();
-        navigate("/user");
+        navigate("/user", { replace: true });
         window.location.reload();
       })
       .catch(err => {

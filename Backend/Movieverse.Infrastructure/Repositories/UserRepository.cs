@@ -326,6 +326,15 @@ public sealed class UserRepository : IUserRepository
 		var result = await _userManager.SetUserNameAsync(user, username);
 		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRole);
 	}
+	
+	public async Task<Result> ChangeEmailAsync(User user, string email, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Change username for user with id: {id}", user.Id);
+
+		var result = await _userManager.SetEmailAsync(user, email);
+		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRole);
+	}
+
 
 	private async Task<Result> RemoveTokens(User user, CancellationToken cancellationToken = default)
 	{

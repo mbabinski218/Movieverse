@@ -38,7 +38,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onSelect, se
     <div className="search" id="search" ref={searchRef}> 
       <div className="search-bar">
         <input placeholder="Search" onSelect={onSelect} onChange={(e => setInput(e.target.value))} />
-        <a href="/find">
+        <a href={input ? `/find?term=${input}` : "find"}>
           <img src={SearchIcon} alt="search" className="search-icon" />
         </a>          
       </div>

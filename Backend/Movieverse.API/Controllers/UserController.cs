@@ -60,7 +60,8 @@ public sealed class UserController : ApiController
 	
 	
 	[PolicyAuthorize(Policies.personalData)]
-	[OutputCache(PolicyName = CachePolicies.byUserId)]
+	// [OutputCache(PolicyName = CachePolicies.byUserId)]
+	[OutputCache(NoStore = true)]
 	[HttpGet]
 	public async Task<ActionResult<UserDto>> Get(CancellationToken cancellationToken) => 
 		await mediator.Send(new GetUserByIdQuery(), cancellationToken).Then(
