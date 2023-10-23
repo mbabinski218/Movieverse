@@ -22,18 +22,17 @@ public sealed class ContentRepository : IContentRepository
 
 	public async Task<Result<Content>> FindAsync(ContentId id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Finding content with id {id}...", id.ToString());
+		_logger.LogDebug("Database - Finding content with id {id}...", id.ToString());
 		
 		var content = await _dbContext.Contents
-			.FirstOrDefaultAsync(c => c.Id == id, cancellationToken)
-			;
+			.SingleOrDefaultAsync(c => c.Id == id, cancellationToken);
 		
 		return content is null ? Error.NotFound(ContentResources.ContentNotFound) : content;
 	}
 
 	public async Task<Result> UpdateAsync(Content content, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Updating content with id {id}...", content.Id.ToString());
+		_logger.LogDebug("Database - Updating content with id {id}...", content.Id.ToString());
 
 		_dbContext.Contents.Update(content);
 		return await Task.FromResult(Result.Ok());
@@ -41,7 +40,7 @@ public sealed class ContentRepository : IContentRepository
 
 	public async Task<Result<bool>> ExistsAsync(ContentId id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Checking if content with id {Id} exists", id);
+		_logger.LogDebug("Database - Checking if content with id {Id} exists", id);
 		
 		var image = await FindByIdAsync(id, cancellationToken);
 		return image is not null;
@@ -49,7 +48,7 @@ public sealed class ContentRepository : IContentRepository
 
 	public async Task<Result> AddAsync(Content content, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Adding content with id {Id}", content.Id);
+		_logger.LogDebug("Database - Adding content with id {Id}", content.Id);
 		
 		await _dbContext.Contents.AddAsync(content, cancellationToken);
 		return Result.Ok();
@@ -57,7 +56,7 @@ public sealed class ContentRepository : IContentRepository
 
 	public async Task<Result<string>> GetContentTypeAsync(ContentId id, CancellationToken cancellationToken)
 	{
-		_logger.LogDebug("Getting content type for content with id {Id}", id);
+		_logger.LogDebug("Database - Getting content type for content with id {Id}", id);
 		
 		var image = await FindByIdAsync(id, cancellationToken);
 		return image is not null ? image.ContentType : Error.NotFound(ContentResources.ContentNotFound);
@@ -65,12 +64,12 @@ public sealed class ContentRepository : IContentRepository
 
 	public async Task<Result<string>> GetPathAsync(ContentId id, CancellationToken cancellationToken)
 	{
-		_logger.LogDebug("Getting path for content with id {Id}", id);
+		_logger.LogDebug("Database - Getting path for content with id {Id}", id);
 
 		var image = await FindByIdAsync(id, cancellationToken);
 		return image is not null ? image.Path : Error.NotFound(ContentResources.ContentNotFound);
 	}
 	
 	private async Task<Content?> FindByIdAsync(ContentId id, CancellationToken cancellationToken) =>
-		await _dbContext.Contents.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+		await _dbContext.Contents.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 }

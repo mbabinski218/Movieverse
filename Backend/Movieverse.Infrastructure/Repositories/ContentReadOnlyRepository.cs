@@ -22,7 +22,7 @@ public sealed class ContentReadOnlyRepository : IContentReadOnlyRepository
 	
 	public async Task<Result<string>> GetContentTypeAsync(ContentId id, CancellationToken cancellationToken)
 	{
-		_logger.LogDebug("Getting content type for content with id {Id}", id);
+		_logger.LogDebug("Database - Getting content type for content with id {Id}", id);
 		
 		var image = await FindByIdAsync(id, cancellationToken);
 		return image is not null ? image.ContentType : Error.NotFound(ContentResources.ContentNotFound);
@@ -30,7 +30,7 @@ public sealed class ContentReadOnlyRepository : IContentReadOnlyRepository
 
 	public async Task<Result<string>> GetPathAsync(ContentId id, CancellationToken cancellationToken)
 	{
-		_logger.LogDebug("Getting path for content with id {Id}", id);
+		_logger.LogDebug("Database - Getting path for content with id {Id}", id);
 
 		var image = await FindByIdAsync(id, cancellationToken);
 		return image is not null ? image.Path : Error.NotFound(ContentResources.ContentNotFound);

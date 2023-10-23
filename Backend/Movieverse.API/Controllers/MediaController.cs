@@ -43,14 +43,6 @@ public sealed class MediaController : ApiController
 			err => StatusCode(err.Code, err.Messages));
 	
 	[AllowAnonymous]
-	[OutputCache(NoStore = true)] // TODO Można dodać cache jakoś chyba
-	[HttpGet("upcoming")]
-	public async Task<ActionResult> GetUpcoming([FromBody] GetUpcomingMediaQuery query, CancellationToken cancellationToken) =>
-		await mediator.Send(query, cancellationToken).Then(
-			Ok,
-			err => StatusCode(err.Code, err.Messages));
-	
-	[AllowAnonymous]
 	[OutputCache(NoStore = true)]
 	[HttpGet("latest")]
 	public async Task<ActionResult> GetUpcoming([FromQuery] GetLatestMediaQuery query, CancellationToken cancellationToken) =>
@@ -70,6 +62,14 @@ public sealed class MediaController : ApiController
 	[OutputCache(NoStore = true)]
 	[HttpGet("searchWithFilters")]
 	public async Task<ActionResult> SearchWithFilters([FromQuery] SearchMediaWithFiltersQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
+	[OutputCache(NoStore = true)]
+	[HttpGet("chart")]
+	public async Task<ActionResult> Chart([FromQuery] MediaChartQuery query, CancellationToken cancellationToken) =>
 		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));

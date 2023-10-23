@@ -25,7 +25,7 @@ public sealed class UserReadOnlyRepository : IUserReadOnlyRepository
 	}
 	public async Task<Result<UserDto>> FindAsync(Guid id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Find user with id: {id}", id);
+		_logger.LogDebug("Database - Find user with id: {id}", id);
 
 		var user = await _dbContext.Users.FindAsync(new object?[] { id }, cancellationToken);
 		return user is null ? Error.NotFound(UserResources.UserDoesNotExist) : _mapper.Map<UserDto>(user);
@@ -33,7 +33,7 @@ public sealed class UserReadOnlyRepository : IUserReadOnlyRepository
 
 	public async Task<Result<IEnumerable<WatchlistStatusDto>>> GetWatchlistStatusesAsync(Guid userId, IEnumerable<MediaId> mediaIds, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Get watchlist statuses for user with id: {UserId}", userId);
+		_logger.LogDebug("Database - Get watchlist statuses for user with id: {UserId}", userId);
 		
 		var statuses = await _dbContext.Users
 			.AsNoTracking()
@@ -48,5 +48,20 @@ public sealed class UserReadOnlyRepository : IUserReadOnlyRepository
 			.ToList();
 
 		return watchlistStatuses;
+	}
+
+	public async Task<Result<IEnumerable<MediaId>>> GetWatchlistAsync(Guid userId, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - get watchlist for user with id: {UserId}", userId);
+		
+		var watchlist = await _dbContext.Users
+			.AsNoTracking()
+			.Where(x => x.Id == userId)
+			.SelectMany(x => x.MediaInfos)
+			.Where(x => x.IsOnWatchlist)
+			.Select(x => x.MediaId)
+			.ToListAsync(cancellationToken);
+
+		return watchlist;
 	}
 }

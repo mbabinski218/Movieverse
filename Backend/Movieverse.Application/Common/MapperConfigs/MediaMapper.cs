@@ -77,7 +77,7 @@ public sealed class MediaMapper : IRegister
 		config.NewConfig<Media, SearchMediaDto>()
 			.Map(dest => dest.Id, src => src.Id.GetValue())
 			.Map(dest => dest.Title, src => src.Title)
-			.Map(dest => dest.Year, src => GetStartYear(src.Details.ReleaseDate))
+			.Map(dest => dest.ReleaseDate, src => src.Details.ReleaseDate)
 			.Map(dest => dest.Poster, src => src.PosterId.GetValue().ToString())
 			.Map(dest => dest.Description, src => GetDescription(src.Details.Storyline));
 		
@@ -86,6 +86,8 @@ public sealed class MediaMapper : IRegister
 	}
 	
 	private static short? GetStartYear(DateTimeOffset? date) => date is null ? null : (short?)date.Value.Year;
+	
+	private static DateTime? ToDateTime(DateTimeOffset? date) => date?.DateTime;
 
 	private static string? GetDescription(string? description)
 	{

@@ -66,7 +66,7 @@ export const Navbar: React.FC = () => {
               <img src={Chart} alt="chart" className="chart" />
               <span>Pro</span>
             </a>
-            <a className="element navbar-button watchlist" href="/watchlist">
+            <a className="element navbar-button watchlist" href="/chart/watchlist">
               <img src={Check} alt="check" className="check" />
               <span>Watchlist</span>
             </a>
@@ -86,26 +86,25 @@ export const Navbar: React.FC = () => {
               <div className="category">
                 <span>Movies</span>
               </div>
-              <Nav.Link href="/chart" className="element-link">Release calendar</Nav.Link>
-              <Nav.Link href="/chart" className="element-link">Top 100</Nav.Link>
-              <Nav.Link href="/chart" className="element-link">Most popular</Nav.Link>
-              <Nav.Link href="/chart" className="element-link">For you</Nav.Link>
+              <Nav.Link href="/chart/movies/releaseCalendar" className="element-link">Release calendar</Nav.Link>
+              <Nav.Link href="/chart/movies/top100" className="element-link">Top 100</Nav.Link>
+              <Nav.Link href="/chart/movies/mostPopular" className="element-link">Most popular</Nav.Link>
+              <Nav.Link href="/chart/movies/recommended" className="element-link">For you</Nav.Link>
             </Col>
             <Col>
               <div className="category">
                 <span>Series</span>
               </div>
-              <Nav.Link href="/chart" className="element-link">Release calendar</Nav.Link>
-              <Nav.Link href="/chart" className="element-link">Top 100</Nav.Link>
-              <Nav.Link href="/chart" className="element-link">Most popular</Nav.Link>
-              <Nav.Link href="/chart" className="element-link">For you</Nav.Link>
+              <Nav.Link href="/chart/series/releaseCalendar" className="element-link">Release calendar</Nav.Link>
+              <Nav.Link href="/chart/series/top100" className="element-link">Top 100</Nav.Link>
+              <Nav.Link href="/chart/series/mostPopular" className="element-link">Most popular</Nav.Link>
+              <Nav.Link href="/chart/series/recommended" className="element-link">For you</Nav.Link>
             </Col>
             <Col>
               <div className="category">
-                <span>Actors</span>
+                <span>Persons</span>
               </div>
-              <Nav.Link href="/chart" className="element-link">Most popular</Nav.Link>
-              <Nav.Link href="/chart" className="element-link">Born today</Nav.Link>
+              <Nav.Link href="/chart/persons/bornToday" className="element-link">Born today</Nav.Link>
             </Col>
             {
               userRole?.includes("Administrator") &&

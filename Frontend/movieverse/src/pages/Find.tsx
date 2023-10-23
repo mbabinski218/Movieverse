@@ -21,7 +21,7 @@ export const Find: React.FC = () => {
   const [filters, setFilters] = useState<Filters>({ type: "Movie", genre: null });
   const [genre, setGenre] = useState<GenreDto[]>([]);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [list, setList] = useState<PaginatedList<SearchMediaDto | SearchPersonDto>>(PaginatedListWrapper.empty());
+  const [list, setList] = useState<PaginatedList<SearchMediaDto | SearchPersonDto>>(PaginatedListWrapper.empty);
 
   useEffect(() => {    
     document.title = "Find - Movieverse";
@@ -98,10 +98,11 @@ export const Find: React.FC = () => {
         filters.type !== "Person" &&
         <List element={MediaListElement}
               list={PaginatedListWrapper.mapTo<SearchMediaDto, ListItem>(list as PaginatedList<SearchMediaDto>, (item) => {
+                const date = item.releaseDate ? new Date(item.releaseDate).getFullYear().toString() : "Unknown release date";
                 return {
                   id: item.id,
                   label: item.title,
-                  stats: item.year,
+                  stats: date,
                   description: item.description,
                   image: item.poster
                 }
@@ -113,7 +114,7 @@ export const Find: React.FC = () => {
                 return {
                   id: item.id,
                   label: item.fullName,
-                  stats: item.age,
+                  stats: item.age?.toString() ?? "Unknown age",
                   description: item.biography,
                   image: item.picture
                 }

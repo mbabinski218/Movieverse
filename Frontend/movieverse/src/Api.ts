@@ -281,4 +281,73 @@ export class Api {
 			body: form
 		})
 	}
+
+	static async getWatchlist(pageNumber: number | null = null, pageSize: number | null = null) : Promise<Response> {
+		const queryParams = new QueryParams();
+		
+		if (pageNumber !== null && pageSize !== null) {
+			queryParams.add("pageNumber", pageNumber.toString());
+			queryParams.add("pageSize", pageSize.toString());
+		}
+		
+		return await this.fetchWithAuthorization(`user/watchlist`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		}, queryParams);
+	}
+
+	static async getMediaChart(type: string | null = null, category: string | null = null, pageNumber: number | null = null, pageSize: number | null = null) : Promise<Response> {
+		const queryParams = new QueryParams();
+		
+		if (type !== null) {
+			queryParams.add("type", type);
+		}
+
+		if (category !== null) {
+			queryParams.add("category", category);
+		}
+
+		if (pageNumber !== null && pageSize !== null) {
+			queryParams.add("pageNumber", pageNumber.toString());
+			queryParams.add("pageSize", pageSize.toString());
+		}
+		
+		return await this.fetchWithAuthorization(`media/chart`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		}, queryParams);
+	}
+
+	static async getPersonsChart(category: string | null = null, pageNumber: number | null = null, pageSize: number | null = null) : Promise<Response> {
+		const queryParams = new QueryParams();
+
+		if (category !== null) {
+			queryParams.add("category", category);
+		}
+
+		if (pageNumber !== null && pageSize !== null) {
+			queryParams.add("pageNumber", pageNumber.toString());
+			queryParams.add("pageSize", pageSize.toString());
+		}
+		
+		return await this.fetchWithAuthorization(`person/chart`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		}, queryParams);
+	}
 }

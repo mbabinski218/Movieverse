@@ -35,4 +35,7 @@
     <data name="PersonDoesNotExist" xml:space="preserve">
         <value>Osoba nie istnieje</value>
     </data>
+    <data name="InvalidChartCategory" xml:space="preserve">
+        <value>Błędna kategoria wykresu</value>
+    </data>
 </root>

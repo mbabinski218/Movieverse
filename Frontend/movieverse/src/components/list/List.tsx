@@ -8,7 +8,7 @@ import { ThemeProvider } from "react-bootstrap";
 export interface ListItem {
   id: string;
   label: string;
-  stats: number | null;
+  stats: string | null;
   description: string | null;
   image: string | null;
 }
@@ -36,7 +36,12 @@ export const List: React.FC<ListProps> = ({element: Element, list, onPageChange}
           list.items.map((item, index) => {
             return (
               <div key={item.id}>
-                <Element {...item}/>
+                <Element id={item.id}
+                         label={`${index + 1}. ${item.label}`}
+                         stats={item.stats}
+                         description={item.description}
+                         image={item.image}
+                />
                 {
                   index !== list.items.length - 1 &&
                   <hr className="break"/>

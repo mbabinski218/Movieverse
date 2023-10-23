@@ -1,6 +1,7 @@
 import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { CloudStore } from "../../CloudStore";
 import { ListItem } from "./List"
+import { Link } from "react-router-dom";
 import "./mediaListElement.css"
 import Blank from "../../assets/blank.png";
 
@@ -17,11 +18,11 @@ export const MediaListElement: React.FC<ListItem> = ({ id, label, stats, descrip
 	}, []);
 
   return (
-    <div className="mle-element">
+    <Link className="mle-element" to={`/media/${id}`}>
       <img className="mle-image" src={imgSrc} onError={onError} alt={label} />
       <span className="mle-title">{label}</span>
       <span className="mle-year">{stats}</span>
       <span className="mle-description">{description}</span>
-    </div>
+    </Link>
   )
 }

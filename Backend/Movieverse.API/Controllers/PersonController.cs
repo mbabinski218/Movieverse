@@ -6,7 +6,9 @@ using Movieverse.API.Common;
 using Movieverse.API.Common.Extensions;
 using Movieverse.Application.Authorization;
 using Movieverse.Contracts.Commands.Person;
+using Movieverse.Contracts.DataTransferObjects.Person;
 using Movieverse.Contracts.Queries.Person;
+using Movieverse.Domain.Common;
 
 namespace Movieverse.API.Controllers;
 
@@ -35,7 +37,15 @@ public sealed class PersonController : ApiController
     [AllowAnonymous]
     [OutputCache(NoStore = true)]
     [HttpGet("search")]
-    public async Task<ActionResult> Search([FromQuery] SearchPersonsQuery query, CancellationToken cancellationToken) =>
+    public async Task<ActionResult<IPaginatedList<SearchPersonDto>>> Search([FromQuery] SearchPersonsQuery query, CancellationToken cancellationToken) =>
+	    await mediator.Send(query, cancellationToken).Then(
+		    Ok,
+		    err => StatusCode(err.Code, err.Messages));
+    
+    [AllowAnonymous]
+    [OutputCache(NoStore = true)]
+    [HttpGet("chart")]
+    public async Task<ActionResult<IPaginatedList<SearchPersonDto>>> Search([FromQuery] PersonsChartQuery query, CancellationToken cancellationToken) =>
 	    await mediator.Send(query, cancellationToken).Then(
 		    Ok,
 		    err => StatusCode(err.Code, err.Messages));

@@ -105,6 +105,15 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid chart category.
+        /// </summary>
+        public static string InvalidChartCategory {
+            get {
+                return ResourceManager.GetString("InvalidChartCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last name is too long.
         /// </summary>
         public static string LastNameIsTooLong {

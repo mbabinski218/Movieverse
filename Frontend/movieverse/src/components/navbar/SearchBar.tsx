@@ -15,7 +15,7 @@ interface SearchBarProps {
 
 export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onSelect, searchRef}) => {
   const [input, setInput] = useState<string>("");
-  const [searchResult, setSearchResult] = useState<PaginatedList<SearchMediaDto>>(PaginatedListWrapper.empty<SearchMediaDto>());
+  const [searchResult, setSearchResult] = useState<PaginatedList<SearchMediaDto>>(PaginatedListWrapper.empty<SearchMediaDto>);
 
   const debouncedInput = useDebounce(input);
 
@@ -26,7 +26,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onSelect, se
           setSearchResult(res);
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     }
     else {
@@ -38,7 +38,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onSelect, se
     <div className="search" id="search" ref={searchRef}> 
       <div className="search-bar">
         <input placeholder="Search" onSelect={onSelect} onChange={(e => setInput(e.target.value))} />
-        <a href={input ? `/find?term=${input}` : "find"}>
+        <a href={input ? `/find?term=${input}` : "/find"}>
           <img src={SearchIcon} alt="search" className="search-icon" />
         </a>          
       </div>

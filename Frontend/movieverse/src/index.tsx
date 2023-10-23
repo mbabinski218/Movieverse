@@ -11,8 +11,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <GoogleOAuthProvider clientId={environment.googleClientId}>
-     <React.StrictMode> {/* Elementy są renderowane dwa razy w trybie ścisłym (temu api może być wywoływane dwa razy) */}
+     {/* <React.StrictMode> Elementy są renderowane dwa razy w trybie ścisłym (temu api może być wywoływane dwa razy) */}
       <App />
-    </React.StrictMode>
+    {/* </React.StrictMode> */}
   </GoogleOAuthProvider>
 );

@@ -44,7 +44,7 @@ public sealed class UserRepository : IUserRepository
 
 	public async Task<Result<User>> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Find user with id: {id}", id);
+		_logger.LogDebug("Database - Find user with id: {id}", id);
 		
 		var user = await _dbContext.Users.FindAsync(new object?[] { id }, cancellationToken);
 		return user is null ? Error.NotFound(UserResources.UserDoesNotExist) : user;
@@ -52,7 +52,7 @@ public sealed class UserRepository : IUserRepository
 
 	public async Task<Result<User>> FindByEmailAsync(string email, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Find user with email: {email}", email);
+		_logger.LogDebug("Database - Find user with email: {email}", email);
 		
 		var user = await _userManager.FindByEmailAsync(email);
 		return user is null ? Error.NotFound(UserResources.UserDoesNotExist) : user;
@@ -60,7 +60,7 @@ public sealed class UserRepository : IUserRepository
 
 	public async Task<Result<string>> GenerateEmailConfirmationTokenAsync(User user, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Generate email confirmation token for user with id: {id}", user.Id);
+		_logger.LogDebug("Database - Generate email confirmation token for user with id: {id}", user.Id);
 		
 		var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 		return token;
@@ -68,7 +68,7 @@ public sealed class UserRepository : IUserRepository
 	
 	public async Task<Result<string>> RegisterAsync(User user, string? password, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Register user with email: {email}", user.Email);
+		_logger.LogDebug("Database - Register user with email: {email}", user.Email);
 
 		IdentityResult result;
 		if (password is null)
@@ -105,7 +105,7 @@ public sealed class UserRepository : IUserRepository
 
 	public async Task<Result> ConfirmEmailAsync(User user, string token, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Confirm email for user with id: {id}", user.Id);
+		_logger.LogDebug("Database - Confirm email for user with id: {id}", user.Id);
 		
 		var result = await _userManager.ConfirmEmailAsync(user, token);
 		if (!result.Succeeded)
@@ -119,7 +119,7 @@ public sealed class UserRepository : IUserRepository
 
 	public async Task<Result> UpdateAsync(User user, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Update user with id: {id}", user.Id);
+		_logger.LogDebug("Database - Update user with id: {id}", user.Id);
 		
 		_dbContext.Users.Update(user);
 		return await Task.FromResult(Result.Ok());
@@ -127,7 +127,7 @@ public sealed class UserRepository : IUserRepository
 	
 	public async Task<Result<TokensDto>> LoginAsync(User user, string password, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Login user with id: {id}", user.Id);
+		_logger.LogDebug("Database - Login user with id: {id}", user.Id);
 
 		if (!await _userManager.IsEmailConfirmedAsync(user).ConfigureAwait(false))
 		{
@@ -211,7 +211,7 @@ public sealed class UserRepository : IUserRepository
 		var googleUser = await _googleAuthentication.AuthenticateAsync(idToken);
 		if (googleUser.IsUnsuccessful)
 		{
-			_logger.LogError("Failed to authenticate via Google");
+			_logger.LogError("Database - Failed to authenticate via Google");
 			return googleUser.Error;
 		}
 		
@@ -222,7 +222,7 @@ public sealed class UserRepository : IUserRepository
 			var token = await RegisterAsync(newUser, null, cancellationToken);
 			if (token.IsUnsuccessful)
 			{
-				_logger.LogError("Failed to register user");
+				_logger.LogError("Database - Failed to register user");
 				return token.Error;
 			}
 
@@ -235,7 +235,7 @@ public sealed class UserRepository : IUserRepository
 		var userResult = await FindByEmailAsync(googleUser.Value.Payload.Email, cancellationToken);
 		if (userResult.IsUnsuccessful)
 		{
-			_logger.LogError("Failed to find user");
+			_logger.LogError("Database - Failed to find user");
 			return userResult.Error;
 		}
 		var user = userResult.Value;
@@ -263,7 +263,7 @@ public sealed class UserRepository : IUserRepository
 
 	public async Task<Result> LogoutAsync(User user, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Logout user with id: {id}", user.Id);
+		_logger.LogDebug("Database - Logout user with id: {id}", user.Id);
 
 		return await RemoveTokens(user, cancellationToken);
 	}
@@ -281,7 +281,7 @@ public sealed class UserRepository : IUserRepository
 
 	public async Task<Result> AddPersonalityAsync(Guid id, PersonId personId, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Add personality with id: {personId} to user with id: {id}", personId, id);
+		_logger.LogDebug("Database - Add personality with id: {personId} to user with id: {id}", personId, id);
 		
 		var user = await FindByIdAsync(id, cancellationToken);
 		if(user.IsUnsuccessful)
@@ -299,7 +299,7 @@ public sealed class UserRepository : IUserRepository
 
 	public async Task<Result<MediaInfo?>> FindMediaInfoAsync(Guid id, MediaId mediaId, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Find media info for user with id: {id}", id);
+		_logger.LogDebug("Database - Find media info for user with id: {id}", id);
 
 		var user = await FindByIdAsync(id, cancellationToken);
 		if (user.IsUnsuccessful)
@@ -313,7 +313,7 @@ public sealed class UserRepository : IUserRepository
 
 	public async Task<Result> AddRoleAsync(User user, UserRole role, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Add role {role} to user with id: {id}", role, user.Id);
+		_logger.LogDebug("Database - Add role {role} to user with id: {id}", role, user.Id);
 		
 		var result = await _userManager.AddToRoleAsync(user, role.ToString());
 		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToChangeUsername);
@@ -321,7 +321,7 @@ public sealed class UserRepository : IUserRepository
 
 	public async Task<Result> ChangeUsernameAsync(User user, string username, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Change username for user with id: {id}", user.Id);
+		_logger.LogDebug("Database - Change username for user with id: {id}", user.Id);
 
 		var result = await _userManager.SetUserNameAsync(user, username);
 		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRole);
@@ -329,7 +329,7 @@ public sealed class UserRepository : IUserRepository
 	
 	public async Task<Result> ChangeEmailAsync(User user, string email, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Change username for user with id: {id}", user.Id);
+		_logger.LogDebug("Database - Change username for user with id: {id}", user.Id);
 
 		var result = await _userManager.SetEmailAsync(user, email);
 		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRole);
@@ -367,7 +367,7 @@ public sealed class UserRepository : IUserRepository
 			var role = await _roleManager.FindByNameAsync(userRole);
 			if (role is null)
 			{
-				_logger.LogError("Role {role} does not exist", userRole);
+				_logger.LogError("Database - Role {role} does not exist", userRole);
 				return Error.Invalid(UserResources.CloudNotSignIn);
 			}
 			

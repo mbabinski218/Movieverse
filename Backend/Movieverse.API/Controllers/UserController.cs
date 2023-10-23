@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.OutputCaching;
 using Movieverse.API.Common;
 using Movieverse.API.Common.Extensions;
 using Movieverse.Application.Authorization;
-using Movieverse.Application.Caching.Policies;
 using Movieverse.Contracts.Commands.User;
+using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Contracts.DataTransferObjects.User;
 using Movieverse.Contracts.Queries.User;
+using Movieverse.Domain.Common;
 
 namespace Movieverse.API.Controllers;
 
@@ -90,7 +91,16 @@ public sealed class UserController : ApiController
 	// [OutputCache(PolicyName = CachePolicies.byUserId)]
 	[OutputCache(NoStore = true)]
 	[HttpPost("watchlist")]
-	public async Task<ActionResult<IEnumerable<WatchlistStatusDto>>> GetWatchlist([FromBody] GetWatchlistStatusesQuery query, CancellationToken cancellationToken) =>
+	public async Task<ActionResult<IEnumerable<WatchlistStatusDto>>> GetWatchlistStatuses([FromBody] GetWatchlistStatusesQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[PolicyAuthorize(Policies.personalData)]
+	// [OutputCache(PolicyName = CachePolicies.byUserId)]
+	[OutputCache(NoStore = true)]
+	[HttpGet("watchlist")]
+	public async Task<ActionResult<IPaginatedList<SearchMediaDto>>> GetWatchlist([FromQuery] GetWatchlistQuery query, CancellationToken cancellationToken) =>
 		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));

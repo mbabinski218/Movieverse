@@ -26,18 +26,17 @@ public sealed class PersonReadOnlyRepository : IPersonReadOnlyRepository
 
 	public async Task<Result<Person>> FindAsync(PersonId id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting person with id {id}...", id.ToString());
+		_logger.LogDebug("Database - Getting person with id {id}...", id.ToString());
 		
 		var person = await _dbContext.Persons
-			.FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
-			;
+			.SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
 		
 		return person is null ? Error.NotFound(PersonResources.PersonDoesNotExist) : person;
 	}
 
 	public async Task<Result<IPaginatedList<SearchPersonDto>>> SearchAsync(string? term, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Searching persons with term: {Term}", term);
+		_logger.LogDebug("Database - Searching persons with term: {Term}", term);
 		
 		var persons = await _dbContext.Persons
 			.AsNoTracking()
@@ -48,9 +47,22 @@ public sealed class PersonReadOnlyRepository : IPersonReadOnlyRepository
 		return persons;
 	}
 
+	public async Task<Result<IPaginatedList<SearchPersonDto>>> FindPersonsBornTodayAsync(short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Getting persons born today...");
+		
+		var persons = await _dbContext.Persons
+			.AsNoTracking()
+			.Where(p => p.LifeHistory.BirthDate != null && p.LifeHistory.BirthDate.Value.Date == DateTimeOffset.UtcNow.Date)
+			.ProjectToType<SearchPersonDto>()
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
+
+		return persons;
+	}
+
 	public async Task<Result> AddAsync(Person person, CancellationToken cancellationToken)
 	{
-		_logger.LogDebug("Adding person with id {id}...", person.Id.ToString());
+		_logger.LogDebug("Database - Adding person with id {id}...", person.Id.ToString());
 		
 		await _dbContext.Persons.AddAsync(person, cancellationToken);
 		return Result.Ok();

@@ -1,7 +1,7 @@
 export interface SearchMediaDto {
     id: string;
     title: string;
-    year: number;
+    releaseDate: string | null;
     poster: string | null;
     description: string | null;
 }

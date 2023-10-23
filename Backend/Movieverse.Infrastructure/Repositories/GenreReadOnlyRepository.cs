@@ -26,17 +26,17 @@ public sealed class GenreReadOnlyRepository : IGenreReadOnlyRepository
 	
 	public async Task<Result<GenreDto>> FindAsync(GenreId id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Finding genre with id {Id} from database", id);
+		_logger.LogDebug("Database - Finding genre with id {Id} from database", id);
 		
 		var genre = await _dbContext.Genres
-			.FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
+			.SingleOrDefaultAsync(g => g.Id == id, cancellationToken);
 		
 		return genre is null ? Error.NotFound(GenreResources.GenreNotFound) : _mapper.Map<GenreDto>(genre);
 	}
 	
 	public async Task<Result<IEnumerable<GenreDto>>> GetAllAsync(CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting all genres from database");
+		_logger.LogDebug("Database - Getting all genres from database");
 		
 		return await _dbContext.Genres
 			.AsNoTracking()

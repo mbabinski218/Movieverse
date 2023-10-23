@@ -26,6 +26,8 @@ export const SearchList: React.FC<SearchListProps> = ({searchResult}) => {
 						imgSrc = CloudStore.getImageUrl(result.poster as string);
 					}
 
+					const date = result.releaseDate ? new Date(result.releaseDate).getFullYear().toString() : "Unknown release date";
+
 					return (
 						<a className="items" 
 							 key={result.id} 
@@ -37,7 +39,7 @@ export const SearchList: React.FC<SearchListProps> = ({searchResult}) => {
 							/>
 							<div className="info">
 								<span className="title">{result.title}</span>
-								<span className="year">{result.year ? result.year : "Unknown release date"}</span>
+								<span className="year">{date}</span>
 								<span className="description">{result.description}</span>
 							</div>							
 						</a>

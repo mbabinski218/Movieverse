@@ -63,4 +63,10 @@
     <data name="PlaceNotFound" xml:space="preserve">
         <value>Place not found</value>
     </data>
+    <data name="InvalidChartCategory" xml:space="preserve">
+        <value>Invalid chart category</value>
+    </data>
+    <data name="InvalidChartType" xml:space="preserve">
+        <value>Invalid chart type</value>
+    </data>
 </root>

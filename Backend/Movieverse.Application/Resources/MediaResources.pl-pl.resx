@@ -57,4 +57,10 @@ Szczegóły za długie</value>
     <data name="PlaceNotFound" xml:space="preserve">
         <value>Nie znaleziono</value>
     </data>
+    <data name="InvalidChartCategory" xml:space="preserve">
+        <value>Nie istnieje taka kategoria</value>
+    </data>
+    <data name="InvalidChartType" xml:space="preserve">
+        <value>Nie istnieje taki typ</value>
+    </data>
 </root>

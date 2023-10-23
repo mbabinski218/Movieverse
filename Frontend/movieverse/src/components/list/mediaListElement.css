@@ -6,6 +6,8 @@
     "image description";
   grid-template-columns: min-content 1fr;
   grid-template-rows: 0.1fr 0.1fr 0.5fr;
+  text-decoration: none;
+  color: var(--color-white);
 }
 
 .mle-element:hover {

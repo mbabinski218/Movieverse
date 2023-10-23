@@ -10,11 +10,11 @@ namespace Movieverse.Application.QueryHandlers.Media;
 
 public sealed class GetLatestMediaHandler : IRequestHandler<GetLatestMediaQuery, Result<IEnumerable<FilteredMediaDto>>>
 {
-	private readonly ILogger<GetUpcomingMediaHandler> _logger;
+	private readonly ILogger<GetLatestMediaHandler> _logger;
 	private readonly IMediaReadOnlyRepository _mediaRepository;
 	private readonly IPlatformReadOnlyRepository _platformRepository;
 
-	public GetLatestMediaHandler(ILogger<GetUpcomingMediaHandler> logger, IMediaReadOnlyRepository mediaRepository, IPlatformReadOnlyRepository platformRepository)
+	public GetLatestMediaHandler(ILogger<GetLatestMediaHandler> logger, IMediaReadOnlyRepository mediaRepository, IPlatformReadOnlyRepository platformRepository)
 	{
 		_logger = logger;
 		_mediaRepository = mediaRepository;

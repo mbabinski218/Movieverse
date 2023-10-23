@@ -1,6 +1,7 @@
 import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { CloudStore } from "../../CloudStore";
 import { ListItem } from "./List"
+import { Link } from "react-router-dom";
 import "./personListElement.css"
 import Blank from "../../assets/blank.png";
 
@@ -17,11 +18,11 @@ export const PersonListElement: React.FC<ListItem> = ({ id, label, stats, descri
 	}, []);
 
   return (
-    <div className="ple-element">
+    <Link className="ple-element" to={`/person/${id}`}>
       <img className="ple-image" src={imgSrc} onError={onError} alt={label} />
       <span className="ple-title">{label}</span>
       <span className="ple-age">{`Age: ${stats}`}</span>
       <span className="ple-description">{description}</span>
-    </div>
+    </Link>
   )
 }
