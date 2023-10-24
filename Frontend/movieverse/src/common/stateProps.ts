@@ -5,7 +5,7 @@ export interface StateProps {
   successMessages: string[] | string;
 }
 
-export const emptyAuthState: StateProps = {
+export const emptyState: StateProps = {
   error: false,
   errorMessages: [],
   success: false,

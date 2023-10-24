@@ -14,8 +14,8 @@ import "./App.css";
 const App: React.FC = () => {
   return (
     <div className="app">      
-      <Navbar />
       <BrowserRouter>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/media/:id" element={<Media />} />
@@ -25,8 +25,8 @@ const App: React.FC = () => {
           <Route path="/chart/:type/:category?" element={<Chart />} />
           <Route path="/find" element={<Find />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
-      <Footer />
     </div>
   );
 }

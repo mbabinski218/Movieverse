@@ -3,7 +3,7 @@ import { RefObject, useEffect } from "react";
 export const useOutsideClickAlerter = (ref: RefObject<HTMLDivElement>, callback: () => void) => {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (!ref.current?.contains(e.target as HTMLInputElement)) {
+      if (!ref.current?.contains(e.target as HTMLDivElement)) {
         callback();
       }
     }

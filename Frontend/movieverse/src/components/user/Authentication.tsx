@@ -11,7 +11,7 @@ import { LocalStorage, useLocalStorage } from "../../hooks/useLocalStorage";
 import { Success } from "../basic/Success";
 import { TokensDto } from "../../core/dtos/user/tokensDto";
 import { useNavigate } from "react-router-dom";
-import { StateProps, emptyAuthState } from "../../common/stateProps";
+import { StateProps, emptyState } from "../../common/stateProps";
 import "./Authentication.css"
 
 // Interfaces
@@ -44,7 +44,7 @@ export const Authentication: React.FC = () => {
   // States
   const [registerMode, setRegisterMode] = useState<boolean>(false);
   const [authenticationProps, setAuthenticationProps] = useState<AuthenticationProps>(emptyAuthProps);
-  const [stateProps, setStateProps] = useState<StateProps>(emptyAuthState);
+  const [stateProps, setStateProps] = useState<StateProps>(emptyState);
 
   // Refs
   const googleLoginButton = useRef<HTMLDivElement>(null);
@@ -62,8 +62,8 @@ export const Authentication: React.FC = () => {
   const changeMode = useCallback(() => {
     setRegisterMode(!registerMode);
     setAuthenticationProps(emptyAuthProps);
-    setStateProps(emptyAuthState);    
-  }, [registerMode, emptyAuthProps, emptyAuthState]);
+    setStateProps(emptyState);    
+  }, [registerMode, emptyAuthProps, emptyState]);
 
   // Handlers for input fields
   const handleEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,6 +183,29 @@ export const Authentication: React.FC = () => {
     });
   }, [authenticationProps]);
 
+  // Resend confirmation email
+  const resendConfirmationEmail = useCallback(() => {
+    if (authenticationProps.email === "") {
+      showError("Email cannot be empty.");
+      return;
+    }
+
+    Api.resendConfirmationEmail(authenticationProps.email)
+      .then((res: Response) => {
+        if (res.ok) {    
+            showSuccess("Email sent successfully.");
+        }
+        else {
+          res.json().then((errors: string[]) => {
+            showError(errors);
+          })
+          .catch(() => {
+            showError("Email sending failed.");
+          });
+        }     
+    });
+  }, [authenticationProps.email]);
+
   // Prevent entering e, E, +, -, , and . in age field
   const onNotAllowedKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "e" || 
@@ -298,6 +321,12 @@ export const Authentication: React.FC = () => {
             <LinkButton label={registerMode ? "Already have an account? Sign in" : "Create a new account"} 
                         onClick={changeMode} 
             />
+            {
+              !registerMode &&
+              <LinkButton label={"Resend confirmation email"}
+                          onClick={resendConfirmationEmail}
+              />
+            }
           </div>
           <div className="auth-external">
             <div className="auth-google-theme"    

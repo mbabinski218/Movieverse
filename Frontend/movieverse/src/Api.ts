@@ -13,6 +13,7 @@ import { UpdateUserContract } from "./core/contracts/updateUserContract";
 import { FormDataHelper } from "./common/formDataHelper";
 import { SearchPersonDto } from "./core/dtos/person/searchPersonDto";
 import { GenreDto } from "./core/dtos/genre/genreDto";
+import { AddMediaContract } from "./core/contracts/addMediaContract";
 
 export class Api {
 	static readonly url: string = "https://localhost:44375/api";
@@ -348,6 +349,36 @@ export class Api {
 				"Accept-Language": this.culture,
 				"Authorization": LocalStorage.getBearerToken()
 			}
+		}, queryParams);
+	}
+
+	static async addMedia(body: AddMediaContract) : Promise<Response> {		
+		return await this.fetchWithAuthorization(`media`, {
+			mode: "cors",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			},
+			body: JSON.stringify(body)
+		});
+	}
+
+	static async resendConfirmationEmail(email: string) : Promise<Response> {
+		const queryParams = new QueryParams();
+
+		if (email !== null) {
+			queryParams.add("email", email);
+		}
+
+		return await this.fetchWithAuthorization(`user/resend-email-confirmation`, {
+			mode: "cors",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			},
 		}, queryParams);
 	}
 }

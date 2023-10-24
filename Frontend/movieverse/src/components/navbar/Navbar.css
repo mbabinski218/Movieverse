@@ -84,6 +84,11 @@ input:focus {
     left: 30%;
 }
 
+.element-link:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 a.element-link.nav-link {
     color: var(--color-white);
 }

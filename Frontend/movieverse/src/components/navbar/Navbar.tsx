@@ -3,6 +3,7 @@ import { useOutsideClickAlerter } from "../../hooks/useOutsideClickAlerter";
 import { SearchBar } from "./SearchBar";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AccessToken, LocalStorage } from "../../hooks/useLocalStorage";
+import { AddMediaMenu } from "../media/AddMediaMenu";
 import jwtDecode from "jwt-decode";
 import Logo from "../../assets/logo.svg";
 import Chart from "../../assets/chart.svg";
@@ -15,6 +16,7 @@ import "./Navbar.css";
 export const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [searchBarOpen, setSearchBarOpen] = useState<boolean>(false);
+  const [addMediaMenuOpen, setAddMediaMenuOpen] = useState<boolean>(false);
   const [user, setUser] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string[] | null>(null);
 
@@ -30,6 +32,16 @@ export const Navbar: React.FC = () => {
   const searchBarSelect = useCallback(() => {
     setSearchBarOpen(true);
     setMenuOpen(false);
+  }, []);
+
+  const openAddMediaMenu = useCallback(() => {
+    setAddMediaMenuOpen(true);
+    setSearchBarOpen(false);
+    setMenuOpen(false);
+  }, []);
+
+  const colseAddMediaMenu = useCallback(() => {
+    setAddMediaMenuOpen(false);
   }, []);
 
   useEffect(() => { 
@@ -110,24 +122,28 @@ export const Navbar: React.FC = () => {
               userRole?.includes("Administrator") &&
               <Col>
                 <div className="category">
-                  <span>Administrator panel</span>
+                  <span>Utility panel</span>
                 </div>
-                <Nav.Link href="/media/add" className="element-link">Add new media</Nav.Link>
+                <span onClick={openAddMediaMenu} className="element-link">Add new media</span>
                 <Nav.Link href="/user/addRole" className="element-link">Add or remove role</Nav.Link>
-              </Col>
-            }
-            {
-              (userRole?.includes("Critic") && !userRole?.includes("Administrator"))  && 
+              </Col> ||
+              (userRole?.includes("Critic") || userRole?.includes("Pro")) &&
               <Col>
               <div className="category">
-                <span>Critic panel</span>
+                <span>Utility panel</span>
               </div>
-              <Nav.Link href="/media/add" className="element-link">Add new media</Nav.Link>
+              <span onClick={openAddMediaMenu} className="element-link">Add new media</span>
             </Col>
             }
           </Row>
         </Container>
       </div>
+      {
+        addMediaMenuOpen &&
+        <AddMediaMenu onClose={colseAddMediaMenu}
+                      onSuccessfulAdd={colseAddMediaMenu}
+        />
+      }
     </div>          
   )
 };

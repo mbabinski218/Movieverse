@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { LocalStorage } from "../hooks/useLocalStorage";
 import { UpdateUserContract } from "../core/contracts/updateUserContract";
-import { StateProps, emptyAuthState } from "../common/stateProps";
+import { StateProps, emptyState } from "../common/stateProps";
 import { Success } from "../components/basic/Success";
 import { Error } from "../components/basic/Error";
 import { Input, InputFile } from "../components/basic/Input";
@@ -34,7 +34,7 @@ const emptyAccountProps: AccountProps = {
 export const Account: React.FC = () => {
   const [accountProps, setAccountProps] = useState<AccountProps>(emptyAccountProps);
   const [accountCurrentProps, setAccountCurrentProps] = useState<AccountProps>(emptyAccountProps);
-  const [stateProps, setStateProps] = useState<StateProps>(emptyAuthState);
+  const [stateProps, setStateProps] = useState<StateProps>(emptyState);
   const navigate = useNavigate();
 
   useEffect(() => {

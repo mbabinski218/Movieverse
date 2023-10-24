@@ -10,7 +10,7 @@ import "./SearchBar.css";
 interface SearchBarProps {
   searchBarOpen: boolean;
   onSelect: () => void;
-  searchRef: React.MutableRefObject<null>;
+  searchRef?: React.MutableRefObject<null> | undefined;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onSelect, searchRef}) => {

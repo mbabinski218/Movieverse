@@ -141,7 +141,7 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Media with title already exists.
+        ///   Looks up a localized string similar to Media with this title already exists.
         /// </summary>
         public static string MediaWithTitleAlreadyExists {
             get {
