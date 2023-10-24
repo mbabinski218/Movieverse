@@ -16,10 +16,11 @@ export interface ListItem {
 export interface ListProps {
   element: React.FC<ListItem>;
   list: PaginatedList<ListItem>;
+  pageSize: number;
   onPageChange?: ((event: ChangeEvent<unknown>, page: number) => void) | undefined
 }
 
-export const List: React.FC<ListProps> = ({element: Element, list, onPageChange}) => {
+export const List: React.FC<ListProps> = ({element: Element, list, pageSize, onPageChange}) => {
   const theme = useTheme();
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export const List: React.FC<ListProps> = ({element: Element, list, onPageChange}
             return (
               <div key={item.id}>
                 <Element id={item.id}
-                         label={`${index + 1}. ${item.label}`}
+                         label={`${index + 1 + (pageSize * (list.pageNumber ? list.pageNumber - 1 : 0 ))}. ${item.label}`}
                          stats={item.stats}
                          description={item.description}
                          image={item.image}

@@ -127,6 +127,7 @@ export const Chart: React.FC = () => {
       </div>
       <List element={MediaListElement}
             list={list}
+            pageSize={pageSize}
             onPageChange={onPageChange}
       />
     </div>

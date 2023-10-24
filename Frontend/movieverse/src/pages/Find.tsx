@@ -22,6 +22,7 @@ export const Find: React.FC = () => {
   const [genre, setGenre] = useState<GenreDto[]>([]);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [list, setList] = useState<PaginatedList<SearchMediaDto | SearchPersonDto>>(PaginatedListWrapper.empty);
+  const pageSize = 10;
 
   useEffect(() => {    
     document.title = "Find - Movieverse";
@@ -29,13 +30,13 @@ export const Find: React.FC = () => {
 
   useEffect(() => {
     if (filters.type === "Person") {
-      Api.searchPersons(term, pageNumber, 10)
+      Api.searchPersons(term, pageNumber, pageSize)
         .then(setList)
         .catch(console.error);
     } 
     else {
       const genreId = genre.find(g => g.name === filters.genre)?.id ?? null;
-      Api.searchWithFiltersMedia(term, filters.type, genreId, pageNumber, 10)
+      Api.searchWithFiltersMedia(term, filters.type, genreId, pageNumber, pageSize)
         .then(setList)
         .catch(console.error);
     }
@@ -107,6 +108,7 @@ export const Find: React.FC = () => {
                   image: item.poster
                 }
               })}
+              pageSize={pageSize}
               onPageChange={onPageChange}
         /> ||      
         <List element={PersonListElement}
@@ -119,6 +121,7 @@ export const Find: React.FC = () => {
                   image: item.picture
                 }
               })}
+              pageSize={pageSize}
               onPageChange={onPageChange}
         />
       }
