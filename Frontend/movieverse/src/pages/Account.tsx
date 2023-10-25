@@ -179,6 +179,9 @@ export const Account: React.FC = () => {
 
   return (
     <div className="account-page">
+      <div className="account-title">
+        <span>Account</span>
+      </div>
       <div className="account-form">
         <Input label={`Email: ${accountCurrentProps.email}`}
                onChange={handleEmailChange} 

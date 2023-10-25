@@ -4,6 +4,8 @@ import { SearchBar } from "./SearchBar";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AccessToken, LocalStorage } from "../../hooks/useLocalStorage";
 import { AddMediaMenu } from "../media/AddMediaMenu";
+import { RoleEditor } from "../user/RoleEditor";
+import { UserRoles } from "../../UserRoles";
 import jwtDecode from "jwt-decode";
 import Logo from "../../assets/logo.svg";
 import Chart from "../../assets/chart.svg";
@@ -17,6 +19,7 @@ export const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [searchBarOpen, setSearchBarOpen] = useState<boolean>(false);
   const [addMediaMenuOpen, setAddMediaMenuOpen] = useState<boolean>(false);
+  const [roleEditorOpen, setRoleEditorOpen] = useState<boolean>(false);
   const [user, setUser] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string[] | null>(null);
 
@@ -36,12 +39,20 @@ export const Navbar: React.FC = () => {
 
   const openAddMediaMenu = useCallback(() => {
     setAddMediaMenuOpen(true);
-    setSearchBarOpen(false);
     setMenuOpen(false);
   }, []);
 
   const colseAddMediaMenu = useCallback(() => {
     setAddMediaMenuOpen(false);
+  }, []);
+
+  const openRoleEditor = useCallback(() => {
+    setRoleEditorOpen(true);
+    setMenuOpen(false);
+  }, []);
+
+  const closeRoleEditor = useCallback(() => {
+    setRoleEditorOpen(false);
   }, []);
 
   useEffect(() => { 
@@ -119,15 +130,16 @@ export const Navbar: React.FC = () => {
               <Nav.Link href="/chart/persons/bornToday" className="element-link">Born today</Nav.Link>
             </Col>
             {
-              userRole?.includes("Administrator") &&
+              userRole?.includes(UserRoles.Administrator) &&
               <Col>
                 <div className="category">
                   <span>Utility panel</span>
                 </div>
                 <span onClick={openAddMediaMenu} className="element-link">Add new media</span>
-                <Nav.Link href="/user/addRole" className="element-link">Add or remove role</Nav.Link>
+                <br />
+                <span onClick={openRoleEditor} className="element-link">Role editor</span>
               </Col> ||
-              (userRole?.includes("Critic") || userRole?.includes("Pro")) &&
+              (userRole?.includes(UserRoles.Critic) || userRole?.includes(UserRoles.Pro)) &&
               <Col>
               <div className="category">
                 <span>Utility panel</span>
@@ -143,6 +155,10 @@ export const Navbar: React.FC = () => {
         <AddMediaMenu onClose={colseAddMediaMenu}
                       onSuccessfulAdd={colseAddMediaMenu}
         />
+      }
+      {
+        roleEditorOpen &&
+        <RoleEditor onClose={closeRoleEditor}/>
       }
     </div>          
   )

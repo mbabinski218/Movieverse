@@ -311,12 +311,36 @@ public sealed class UserRepository : IUserRepository
 		return mediaInfo;
 	}
 
-	public async Task<Result> AddRoleAsync(User user, UserRole role, CancellationToken cancellationToken = default)
+	private async Task<Result<IEnumerable<string>>> GetRolesAsync(User user, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Database - Add role {role} to user with id: {id}", role, user.Id);
+		_logger.LogDebug("Database - Get roles for user with id: {id}", user.Id);
 		
-		var result = await _userManager.AddToRoleAsync(user, role.ToString());
-		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToChangeUsername);
+		var roles = await _userManager.GetRolesAsync(user);
+		return roles.Count != 0 ? Result<IEnumerable<string>>.Ok(roles) : Error.InternalError(UserResources.FatalError);
+	}
+	
+	public async Task<Result> UpdateRolesAsync(User user, IList<string> roles, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Update roles for user with id: {id}", user.Id);
+
+		var currentRoles = await GetRolesAsync(user, cancellationToken);
+		if (currentRoles.IsUnsuccessful)
+		{
+			return currentRoles.Error;
+		}
+		var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles.Value);
+		if (!removeResult.Succeeded)
+		{
+			return Error.InternalError(UserResources.FatalError);
+		}
+
+		if (!roles.Contains("User"))
+		{
+			roles.Add("User");
+		}
+		
+		var result = await _userManager.AddToRolesAsync(user, roles);
+		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRoles);
 	}
 
 	public async Task<Result> ChangeUsernameAsync(User user, string username, CancellationToken cancellationToken = default)
@@ -324,7 +348,7 @@ public sealed class UserRepository : IUserRepository
 		_logger.LogDebug("Database - Change username for user with id: {id}", user.Id);
 
 		var result = await _userManager.SetUserNameAsync(user, username);
-		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRole);
+		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToChangeUsername);
 	}
 	
 	public async Task<Result> ChangeEmailAsync(User user, string email, CancellationToken cancellationToken = default)
@@ -332,7 +356,7 @@ public sealed class UserRepository : IUserRepository
 		_logger.LogDebug("Database - Change username for user with id: {id}", user.Id);
 
 		var result = await _userManager.SetEmailAsync(user, email);
-		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRole);
+		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToChangeEmail);
 	}
 
 

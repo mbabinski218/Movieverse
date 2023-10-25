@@ -14,6 +14,7 @@ import { FormDataHelper } from "./common/formDataHelper";
 import { SearchPersonDto } from "./core/dtos/person/searchPersonDto";
 import { GenreDto } from "./core/dtos/genre/genreDto";
 import { AddMediaContract } from "./core/contracts/addMediaContract";
+import { UpdateRolesContract } from "./core/contracts/updateRolesContract";
 
 export class Api {
 	static readonly url: string = "https://localhost:44375/api";
@@ -378,7 +379,20 @@ export class Api {
 			headers: {
 				"Content-Type": "application/json",
 				"Accept-Language": this.culture
-			},
+			}
 		}, queryParams);
+	}
+
+	static async updateRoles(body: UpdateRolesContract) : Promise<Response> {
+		return await this.fetchWithAuthorization(`user/roles`, {
+			mode: "cors",
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			},
+			body: JSON.stringify(body)
+		});
 	}
 }

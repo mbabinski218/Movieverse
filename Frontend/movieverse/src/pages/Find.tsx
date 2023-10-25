@@ -6,8 +6,8 @@ import { SearchMediaDto } from "../core/dtos/media/searchMediaDto";
 import { Api } from "../Api";
 import { GenreDto } from "../core/dtos/genre/genreDto";
 import { List, ListItem } from "../components/list/List";
-import { PersonListElement } from "../components/list/personListElement";
-import { MediaListElement } from "../components/list/mediaListElement";
+import { PersonListElement } from "../components/list/PersonListElement";
+import { MediaListElement } from "../components/list/MediaListElement";
 import "./Find.css";
 
 interface Filters {

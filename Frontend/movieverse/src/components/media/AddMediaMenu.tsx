@@ -7,6 +7,7 @@ import { StateProps, emptyState } from "../../common/stateProps";
 import { Success } from "../basic/Success";
 import { Error } from "../basic/Error";
 import { useNavigate } from "react-router-dom";
+import { PageBlur } from "../basic/PageBlur";
 import "./AddMediaMenu.css";
 import Close from "../../assets/bars-close.svg";
 
@@ -39,6 +40,7 @@ export const AddMediaMenu: React.FC<AddMediaMenuProps> = (props) => {
 
   const handleAddButtonClick = useCallback(() => {
     if (title === null || title.length === 0) {
+      showError("Title is required!")
       return;
     }
 
@@ -77,7 +79,7 @@ export const AddMediaMenu: React.FC<AddMediaMenuProps> = (props) => {
 
   return (
     <>
-      <div className="media-page-blur" />
+      <PageBlur />
       <div className="media-window">
         <div className="media-add-menu">
           <span className="media-add-title">Add new media</span>

@@ -78,8 +78,15 @@ public sealed class UserController : ApiController
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
 	
+	[PolicyAuthorize(Policies.administrator)]
+	[OutputCache(NoStore = true)]
+	[HttpPut("roles")]
+	public async Task<ActionResult> UpdateRoles([FromBody] UpdateRolesCommand command, CancellationToken cancellationToken) =>
+		await mediator.Send(command, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
 	[PolicyAuthorize(Policies.atLeastUser)]
-	// [OutputCache(PolicyName = CachePolicies.byUserId)]
 	[OutputCache(NoStore = true)]
 	[HttpPut("watchlist/{MediaId:guid}")]
 	public async Task<ActionResult> UpdateWatchlist([FromRoute] UpdateWatchlistCommand command, CancellationToken cancellationToken) =>
@@ -88,7 +95,6 @@ public sealed class UserController : ApiController
 			err => StatusCode(err.Code, err.Messages));
 	
 	[PolicyAuthorize(Policies.atLeastUser)]
-	// [OutputCache(PolicyName = CachePolicies.byUserId)]
 	[OutputCache(NoStore = true)]
 	[HttpPost("watchlist")]
 	public async Task<ActionResult<IEnumerable<WatchlistStatusDto>>> GetWatchlistStatuses([FromBody] GetWatchlistStatusesQuery query, CancellationToken cancellationToken) =>

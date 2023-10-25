@@ -75,8 +75,8 @@
     <data name="InvalidRefreshToken" xml:space="preserve">
         <value>Invalid refresh token</value>
     </data>
-    <data name="FailedToAddRole" xml:space="preserve">
-        <value>Failed to add role</value>
+    <data name="FailedToAddRoles" xml:space="preserve">
+        <value>Failed to add roles</value>
     </data>
     <data name="CloudNotSignIn" xml:space="preserve">
         <value>Cloud not sign in</value>
@@ -98,5 +98,11 @@
     </data>
     <data name="FailedToChangeUsername" xml:space="preserve">
         <value>Failed to change username</value>
+    </data>
+    <data name="FatalError" xml:space="preserve">
+        <value>Fatal error</value>
+    </data>
+    <data name="FailedToChangeEmail" xml:space="preserve">
+        <value>Failed to change email</value>
     </data>
 </root>

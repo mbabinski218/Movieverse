@@ -1,4 +1,4 @@
-.account-page {
+.pro-page {
   display: block;
   margin-top: 30px;
   margin-left: auto;
@@ -8,12 +8,12 @@
 }
 
 @media (min-width: 767px) {
-  .account-page {
+  .pro-page {
       width: 400px;
   }
 }
 
-.account-title {
+.pro-title {
   display: flex;
   cursor: default;
   font-size: var(--font-xl);
@@ -23,26 +23,13 @@
   margin-left: 10px;
 }
 
-
-.account-form {
+.pro-menu {
   padding: 15px 15px 15px 15px;
   background-color: var(--color-dark);
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
   border-radius: 10px;
 }
 
-.account-logout {
-  margin-top: 25px;
-}
-
-.account-space {
-  padding-top: 25px;
-}
-
-.account-error {
-  margin-top: 25px;
-}
-
-.account-success {
-  margin-top: 25px;
+.pro-menu-info {
+  
 }

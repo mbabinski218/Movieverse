@@ -29,6 +29,7 @@ services.AddSwaggerGen();
 services.AddApplication(configuration);
 services.AddInfrastructure(configuration, defaultSettings.DatabaseName);
 
+services.AddHttpClient();
 services.AddHttpContextAccessor();
 services.AddSingleton<IHttpService, HttpService>();
 services.AddSingleton<ExceptionHandlingMiddleware>();

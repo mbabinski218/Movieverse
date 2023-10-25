@@ -56,8 +56,8 @@
     <data name="EnterRefreshToken" xml:space="preserve">
         <value>Podaj refresh token</value>
     </data>
-    <data name="FailedToAddRole" xml:space="preserve">
-        <value>Błąd podczas dodawania do roli</value>
+    <data name="FailedToAddRoles" xml:space="preserve">
+        <value>Błąd podczas dodawania do ról</value>
     </data>
     <data name="FailedToAuthenticateViaGoogle" xml:space="preserve">
         <value>Błąd podczas logowania przez Google</value>
@@ -91,5 +91,11 @@
     </data>
     <data name="FailedToChangeUsername" xml:space="preserve">
         <value>Błąd podczas zmiany nazwy użytkownika</value>
+    </data>
+    <data name="FatalError" xml:space="preserve">
+        <value>Błąd krytyczny</value>
+    </data>
+    <data name="FailedToChangeEmail" xml:space="preserve">
+        <value>Błąd podczas zmianyadresu email</value>
     </data>
 </root>

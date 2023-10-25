@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import Pagination from '@mui/material/Pagination';
 import { useTheme } from '@mui/material/styles';
 import { PaginatedList } from "../../core/types/paginatedList";
@@ -49,7 +49,10 @@ export const List: React.FC<ListProps> = ({element: Element, list, pageSize, onP
                 }
               </div>
             )
-          }) ||
+          }) 
+        }
+        {
+          list.items.length === 0 &&
           <div className="list-empty">
             <span>No results</span>
           </div>

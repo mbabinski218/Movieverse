@@ -56,7 +56,7 @@ export const Authentication: React.FC = () => {
     if (accessToken) {
       navigate(-1);
     }
-  }, []);
+  }, [accessToken]);
   
   // Change mode between sign in and register
   const changeMode = useCallback(() => {

@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
 import { List, ListItem } from "../components/list/List"
-import { MediaListElement } from "../components/list/mediaListElement"
+import { MediaListElement } from "../components/list/MediaListElement"
 import { PaginatedList, PaginatedListWrapper } from "../core/types/paginatedList"
 import { SearchMediaDto } from "../core/dtos/media/searchMediaDto"
 import { LocalStorage } from "../hooks/useLocalStorage";

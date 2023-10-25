@@ -2,7 +2,7 @@ import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { CloudStore } from "../../CloudStore";
 import { ListItem } from "./List"
 import { Link } from "react-router-dom";
-import "./mediaListElement.css"
+import "./MediaListElement.css"
 import Blank from "../../assets/blank.png";
 
 export const MediaListElement: React.FC<ListItem> = ({ id, label, stats, description, image }) => {

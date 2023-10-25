@@ -1,4 +1,4 @@
-﻿namespace Movieverse.Application.Caching.Policies;
+﻿namespace Movieverse.Application.Caching;
 
 public static class CachePolicies
 {
