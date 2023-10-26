@@ -21,4 +21,7 @@
     <data name="FailedToPay" xml:space="preserve">
         <value>Failed to pay</value>
     </data>
+    <data name="FailedToGetPlan" xml:space="preserve">
+        <value>Failed to get plan</value>
+    </data>
 </root>

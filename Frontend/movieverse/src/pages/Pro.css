@@ -28,8 +28,42 @@
   background-color: var(--color-dark);
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
   border-radius: 10px;
+  margin-bottom: 30px;
+  animation: fadein 0.5s;
 }
 
 .pro-menu-info {
-  
+  font-size: var(--font-l);
+  color: var(--color-white);
+  margin-bottom: 15px;
+  animation: moveDown 0.4s ease, fadein 1s;
+}
+
+@keyframes fadein {
+  from { opacity: 0}
+  to   { opacity: 1}
+}
+
+.pro-menu-info-gold {
+  display: table;
+  color: var(--color-gold); 
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pro-menu-info-bold {
+  font-weight: bold;
+}
+
+.pro-menu-info-m {
+  font-size: var(--font-m);
+}
+
+@keyframes moveDown {
+  from {
+    margin-top: -32px;
+  }
+  to {
+    margin-top: 0;
+  }
 }

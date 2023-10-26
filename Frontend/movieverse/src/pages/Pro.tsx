@@ -6,9 +6,12 @@ import { LocalStorage } from "../hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
 import { Success } from "../components/basic/Success";
 import { Error } from "../components/basic/Error";
+import { Api } from "../Api";
+import { PlanResponse } from "../core/dtos/payment/PlanResponse";
 import "./Pro.css"
 
 export const Pro: React.FC = () => {
+  const [plan, setPlan] = useState<PlanResponse | null>(null);
   const [stateProps, setStateProps] = useState<StateProps>(emptyState);
   const navigate = useNavigate();
 
@@ -27,7 +30,32 @@ export const Pro: React.FC = () => {
     if (!LocalStorage.getAccessToken()) {
       navigate("/user");
     }
-    document.title = "Pro - Movieverse"
+    document.title = "Pro - Movieverse";
+
+    Api.paypalAuthorization()
+    .then(res => {
+      if(res.ok) {
+        res.json()
+          .then(res => res as {accessToken: string})
+          .then(res => Api.paypalPlan(res.accessToken))
+          .then(res => {
+            if(res.ok) {
+              res.json()
+                .then(res => res as PlanResponse)
+                .then(setPlan)
+            }
+            else {
+              showError("Error while loading the plan. Please try again later.");
+            }
+          })
+      }
+      else {
+        showError("Error with the authorization. Please try again later.");
+      }
+    })
+    .catch(() => {
+      showError("Fatal error. Please try again later.");
+    })
   }, [])
 
   const showError = (err: string | string[]) => {
@@ -39,11 +67,11 @@ export const Pro: React.FC = () => {
   };
 
   const createSubscriptionHandler = useCallback((data: Record<string, unknown>, actions: CreateSubscriptionActions): Promise<string> => {
-    
+    return Promise.resolve("Subscription created");
   }, []);
 
   const onApproveHandler = useCallback((data: OnApproveData, actions: OnApproveActions): Promise<void> => {
-    
+    return Promise.resolve();
   }, []);
 
   const onCancelHandler = useCallback((data: Record<string, unknown>, actions: OnCancelledActions): void => {
@@ -51,7 +79,7 @@ export const Pro: React.FC = () => {
   }, []);
 
   const onErrorHandler = useCallback((err: Record<string, unknown>): void => {
-    showError(err.toString());
+    showError("Error while creating the subscription. Please try again later.");
   }, []);
 
   return (
@@ -60,15 +88,23 @@ export const Pro: React.FC = () => {
         <span>Upgrade to pro</span>
       </div>
       <div className="pro-menu">
-        <div className="pro-menu-info">
-
-        </div>
+        {
+          plan &&
+          <div className="pro-menu-info">
+            <span className="pro-menu-info-bold">{plan?.name}</span>
+            <br/>
+            <span className="pro-menu-info-m">{plan?.description}</span>
+            <br/><br/>
+            <span className="pro-menu-info-gold pro-menu-info-m">{plan ? `${plan?.price} ${plan?.currency} per month` : ""}</span>
+          </div>          
+        }
         <PayPalScriptProvider options={initialOptions}>
-          <PayPalButtons style={{ label: "subscribe", shape: "pill", }}
+          <PayPalButtons style={{ color:"white", label: "subscribe", shape: "pill", }}
                          createSubscription={createSubscriptionHandler}
                          onApprove={onApproveHandler}
                          onCancel={onCancelHandler}
                          onError={onErrorHandler}
+                         disabled={plan === null}
           />
         </PayPalScriptProvider>
       </div>

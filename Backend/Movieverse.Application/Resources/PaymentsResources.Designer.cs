@@ -60,6 +60,15 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to get plan.
+        /// </summary>
+        internal static string FailedToGetPlan {
+            get {
+                return ResourceManager.GetString("FailedToGetPlan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to pay.
         /// </summary>
         internal static string FailedToPay {

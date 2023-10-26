@@ -1,4 +1,4 @@
-﻿namespace Movieverse.Contracts.Payments.PayPal;
+﻿namespace Movieverse.Application.Payments.PayPal.Models;
 
 public sealed class ClientMetadata
 {

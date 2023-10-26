@@ -395,4 +395,34 @@ export class Api {
 			body: JSON.stringify(body)
 		});
 	}
+
+	static async paypalAuthorization() : Promise<Response> {
+		return await this.fetchWithAuthorization(`payment/paypal/authorization`, {
+			mode: "cors",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		});
+	}
+
+	static async paypalPlan(paypalAccessToken: string) : Promise<Response> {
+		const queryParams = new QueryParams();
+
+		if (paypalAccessToken) {
+			queryParams.add("paypalAccessToken", paypalAccessToken);
+		}
+
+		return await this.fetchWithAuthorization(`payment/paypal/plan`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		}, queryParams);
+	}
 }

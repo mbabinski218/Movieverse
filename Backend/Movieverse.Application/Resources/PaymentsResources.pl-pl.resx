@@ -14,4 +14,7 @@
     <data name="FailedToPay" xml:space="preserve">
         <value>Nie udało się dokonać płatności</value>
     </data>
+    <data name="FailedToGetPlan" xml:space="preserve">
+        <value>Nie udało się pobrać planu</value>
+    </data>
 </root>

@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -16,14 +17,14 @@ public sealed class AuthorizationHandler : IRequestHandler<AuthorizationRequest,
 {
 	private readonly ILogger<AuthorizationHandler> _logger;
 	private readonly IHttpClientFactory _httpClientFactory;
-	private readonly PaymentsSettings _paymentsSettings;
+	private readonly Common.Settings.PayPal _settings;
 
 	public AuthorizationHandler(ILogger<AuthorizationHandler> logger, IHttpClientFactory httpClientFactory, 
 		IOptions<PaymentsSettings> paymentsSettings)
 	{
 		_logger = logger;
 		_httpClientFactory = httpClientFactory;
-		_paymentsSettings = paymentsSettings.Value;
+		_settings = paymentsSettings.Value.PayPal;
 	}
 
 	public async Task<Result<AuthorizationResponse>> Handle(AuthorizationRequest request, CancellationToken cancellationToken)
@@ -32,22 +33,20 @@ public sealed class AuthorizationHandler : IRequestHandler<AuthorizationRequest,
 
 		try
 		{
-			var httpClient = _httpClientFactory.CreateClient("PayPalClient");
+			using var httpClient = _httpClientFactory.CreateClient("PayPalClient");
 
-			var authorizationByteArray = Encoding.ASCII.GetBytes($"{_paymentsSettings.PayPal.ClientId}:{_paymentsSettings.PayPal.ClientSecret}");
-			var authorizationString = Convert.ToBase64String(authorizationByteArray);
-			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authorizationString);
+			// var authorizationByteArray = Encoding.ASCII.GetBytes($"{_settings.ClientId}:{_settings.ClientSecret}");
+			// var authorizationString = Convert.ToBase64String(authorizationByteArray);
+			httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", _settings.BasicAuth);
 
 			var nameValueCollection = new List<KeyValuePair<string, string>>
 			{
 				new("grant_type", "client_credentials")
 			};
 			
-			var response = await httpClient.PostAsync($"{_paymentsSettings.PayPal.BaseUrl}{PayPalEndpoints.authorization}",
-				new FormUrlEncodedContent(nameValueCollection), cancellationToken);
-
-			var responseString = await response.Content.ReadAsStringAsync(cancellationToken);
-			var responseJson = JsonConvert.DeserializeObject<AuthorizationResponse>(responseString);
+			var requestUri = $"{_settings.Url}{_settings.Endpoints.Authorization}";
+			var response = await httpClient.PostAsync(requestUri, new FormUrlEncodedContent(nameValueCollection), cancellationToken);
+			var responseJson = await response.Content.ReadFromJsonAsync<Models.Authorization>(cancellationToken: cancellationToken);
 
 			if (responseJson is null)
 			{
@@ -55,8 +54,13 @@ public sealed class AuthorizationHandler : IRequestHandler<AuthorizationRequest,
 				return Error.Invalid(PaymentsResources.FailedToPay);
 			}
 
+			var authorization = new AuthorizationResponse
+			{
+				AccessToken = responseJson.access_token
+			};
+			
 			_logger.LogDebug("Transaction with app id: {id} completed", responseJson.app_id);
-			return responseJson;
+			return authorization;
 		}
 		catch (Exception e)
 		{
