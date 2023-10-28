@@ -1,0 +1,99 @@
+.find-page {
+  display: block;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60vw;
+  overflow: hidden;
+}
+
+.find-filters {
+  display: flex;
+  height: 70px;
+  padding: 15px 15px 15px 15px;
+  background-color: var(--color-dark);
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
+  border-radius: 10px;
+  color: var(--color-gold);
+  font-size: var(--font-l);
+  margin-bottom: 15px;
+}
+
+.find-select {
+  font-size: var(--font-m);
+  padding-left: 5px;
+  margin-left: 15px;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
+  border-radius: 10px;
+  height: 37.33px;
+  width: 50%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+@media (max-width: 767px) {
+  .find-page {
+    width: 90vw;
+  }
+
+  .find-select {
+    width: 15vw;
+  }
+
+  .find-term {
+    width: 40vw;
+  }
+}
+
+@media (min-width: 768px) {
+  .find-page {
+    width: 700px;
+  }
+
+  .find-select {
+    width: 120px;
+  }
+
+  .find-term {
+    width: 350px;
+  }
+}
+
+@media (min-width: 992px) {
+  .find-page {
+    width: 800px;
+  }
+
+  .find-select {
+    width: 150px;
+  }
+
+  .find-term {
+    width: 400px;
+  }
+}
+
+.find-term {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.find-select:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.find-select:focus-visible {
+  outline: none;
+}
+
+.find-items {
+  float: right;
+  margin-left: auto;
+}
+
+select:disabled {
+  opacity: 0.7 !important;
+}

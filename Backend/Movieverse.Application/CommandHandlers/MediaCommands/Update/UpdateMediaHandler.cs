@@ -39,7 +39,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		_logger.LogDebug("Updating media with id {Id}", request.Id);
 		
 		// Search for media
-		var findResult = await _mediaRepository.FindAsync(request.Id, cancellationToken).ConfigureAwait(false);
+		var findResult = await _mediaRepository.FindAsync(request.Id, cancellationToken);
 		if (!findResult.IsSuccessful)
 		{
 			return findResult.Error;
@@ -237,7 +237,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		}
 		
 		// Database operations
-		var updateResult = await _mediaRepository.UpdateAsync(media, cancellationToken).ConfigureAwait(false);
+		var updateResult = await _mediaRepository.UpdateAsync(media, cancellationToken);
 		if (updateResult.IsUnsuccessful)
 		{
 			return updateResult.Error;
@@ -249,7 +249,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 			return Error.Invalid(MediaResources.CouldNotUpdateMedia);
 		}
 		
-		await _outputCacheStore.EvictByTagAsync(request.Id.ToString(), cancellationToken).ConfigureAwait(false);
+		await _outputCacheStore.EvictByTagAsync(request.Id.ToString(), cancellationToken);
 		return _mapper.Map<MediaDto>(media);
 	}
 }

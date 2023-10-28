@@ -9,6 +9,7 @@ using Movieverse.Contracts.Commands.Platform;
 using Movieverse.Contracts.DataTransferObjects.Platform;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.DomainEvents;
+using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.CommandHandlers.PlatformCommands.Update;
 
@@ -34,7 +35,7 @@ public sealed class UpdatePlatformHandler : IRequestHandler<UpdatePlatformComman
 	{
 		_logger.LogDebug("Updating platform {id}...", request.Id);
 		
-		var findResult = await _platformRepository.FindAsync(request.Id, cancellationToken).ConfigureAwait(false);
+		var findResult = await _platformRepository.FindAsync(request.Id, cancellationToken);
 		if (!findResult.IsSuccessful)
 		{
 			return findResult.Error;
@@ -46,10 +47,10 @@ public sealed class UpdatePlatformHandler : IRequestHandler<UpdatePlatformComman
 		if (request.Price is not null) platform.Price = request.Price.Value;
 		if (request.Image is not null)
 		{
-			platform.AddDomainEvent(new ImageChanged(platform.LogoId, request.Image));
+			platform.AddDomainEvent(new ImageChanged(platform.LogoId ?? ContentId.Create(), request.Image));
 		}
 		
-		var updateResult = await _platformRepository.UpdateAsync(platform, cancellationToken).ConfigureAwait(false);
+		var updateResult = await _platformRepository.UpdateAsync(platform, cancellationToken);
 		if (!updateResult.IsSuccessful)
 		{
 			return updateResult.Error;
@@ -61,7 +62,7 @@ public sealed class UpdatePlatformHandler : IRequestHandler<UpdatePlatformComman
 			return Error.Invalid(PlatformResources.CannotUpdatePlatform);
 		}
 		
-		await _outputCacheStore.EvictByTagAsync(request.Id.ToString(), cancellationToken).ConfigureAwait(false);
+		await _outputCacheStore.EvictByTagAsync(request.Id.ToString(), cancellationToken);
 		
 		_logger.LogDebug("Platform {id} updated successfully.", request.Id);
 		return _mapper.Map<PlatformDto>(platform);

@@ -87,6 +87,24 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid chart category.
+        /// </summary>
+        public static string InvalidChartCategory {
+            get {
+                return ResourceManager.GetString("InvalidChartCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid chart type.
+        /// </summary>
+        public static string InvalidChartType {
+            get {
+                return ResourceManager.GetString("InvalidChartType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid media type.
         /// </summary>
         public static string InvalidMediaType {
@@ -123,7 +141,7 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Media with title already exists.
+        ///   Looks up a localized string similar to Media with this title already exists.
         /// </summary>
         public static string MediaWithTitleAlreadyExists {
             get {

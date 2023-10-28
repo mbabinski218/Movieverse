@@ -41,7 +41,8 @@ public sealed class TokenProvider : ITokenProvider
 			signingCredentials: signingCredentials
 		);
 
-		return new JwtSecurityTokenHandler().WriteToken(token);
+		var tokenHandler = new JwtSecurityTokenHandler();
+		return tokenHandler.WriteToken(token);
 	}
 
 	public string GenerateRefreshToken()

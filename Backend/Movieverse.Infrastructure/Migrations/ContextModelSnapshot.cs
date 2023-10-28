@@ -121,8 +121,8 @@ namespace Movieverse.Infrastructure.Migrations
 
                     b.Property<string>("Path")
                         .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("character varying(36)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Title")
                         .HasMaxLength(200)
@@ -218,6 +218,9 @@ namespace Movieverse.Infrastructure.Migrations
                     b.Property<string>("FunFacts")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
+
+                    b.Property<Guid?>("PictureId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -977,7 +980,7 @@ namespace Movieverse.Infrastructure.Migrations
 
                             NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
-                            b1.Property<bool>("IsInWatchlist")
+                            b1.Property<bool>("IsOnWatchlist")
                                 .HasColumnType("boolean");
 
                             b1.Property<Guid>("MediaId")
@@ -1001,10 +1004,35 @@ namespace Movieverse.Infrastructure.Migrations
                             b1.Navigation("User");
                         });
 
+                    b.OwnsOne("Movieverse.Domain.ValueObjects.Subscription", "Subscription", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<bool>("FreeTrial")
+                                .HasColumnType("boolean");
+
+                            b1.Property<string>("Id")
+                                .HasColumnType("text");
+
+                            b1.Property<DateTimeOffset?>("Since")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
                     b.Navigation("Information")
                         .IsRequired();
 
                     b.Navigation("MediaInfos");
+
+                    b.Navigation("Subscription")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Movieverse.Domain.Entities.Statistics", b =>
@@ -1055,11 +1083,11 @@ namespace Movieverse.Infrastructure.Migrations
                                     b2.Property<int>("CriticReviews")
                                         .HasColumnType("integer");
 
-                                    b2.Property<int>("InWatchlistCount")
+                                    b2.Property<int>("OnWatchlistCount")
                                         .HasColumnType("integer");
 
-                                    b2.Property<short>("Rating")
-                                        .HasColumnType("smallint");
+                                    b2.Property<decimal>("Rating")
+                                        .HasColumnType("numeric");
 
                                     b2.Property<int>("UserReviews")
                                         .HasColumnType("integer");
@@ -1159,13 +1187,14 @@ namespace Movieverse.Infrastructure.Migrations
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<int>("InWatchlistCount")
+                            b1.Property<int>("OnWatchlistCount")
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<short>("Rating")
+                            b1.Property<decimal>("Rating")
                                 .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("smallint");
+                                .HasPrecision(3, 1)
+                                .HasColumnType("numeric(3,1)");
 
                             b1.Property<int>("UserReviews")
                                 .ValueGeneratedOnUpdateSometimes()
@@ -1198,13 +1227,14 @@ namespace Movieverse.Infrastructure.Migrations
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<int>("InWatchlistCount")
+                            b1.Property<int>("OnWatchlistCount")
                                 .ValueGeneratedOnUpdateSometimes()
                                 .HasColumnType("integer");
 
-                            b1.Property<short>("Rating")
+                            b1.Property<decimal>("Rating")
                                 .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("smallint");
+                                .HasPrecision(3, 1)
+                                .HasColumnType("numeric(3,1)");
 
                             b1.Property<int>("UserReviews")
                                 .ValueGeneratedOnUpdateSometimes()
@@ -1284,11 +1314,12 @@ namespace Movieverse.Infrastructure.Migrations
                                             b3.Property<int>("CriticReviews")
                                                 .HasColumnType("integer");
 
-                                            b3.Property<int>("InWatchlistCount")
+                                            b3.Property<int>("OnWatchlistCount")
                                                 .HasColumnType("integer");
 
-                                            b3.Property<short>("Rating")
-                                                .HasColumnType("smallint");
+                                            b3.Property<decimal>("Rating")
+                                                .HasPrecision(3, 1)
+                                                .HasColumnType("numeric(3,1)");
 
                                             b3.Property<int>("UserReviews")
                                                 .HasColumnType("integer");

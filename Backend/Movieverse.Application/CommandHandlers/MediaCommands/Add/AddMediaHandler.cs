@@ -11,7 +11,7 @@ using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.CommandHandlers.MediaCommands.Add;
 
-public sealed class AddMediaHandler : IRequestHandler<AddMediaCommand, Result>
+public sealed class AddMediaHandler : IRequestHandler<AddMediaCommand, Result<string>>
 {
 	private readonly ILogger<AddMediaHandler> _logger;
 	private readonly IMediaRepository _mediaRepository;
@@ -27,7 +27,7 @@ public sealed class AddMediaHandler : IRequestHandler<AddMediaCommand, Result>
 		_outputCacheStore = outputCacheStore;
 	}
 
-	public async Task<Result> Handle(AddMediaCommand request, CancellationToken cancellationToken)
+	public async Task<Result<string>> Handle(AddMediaCommand request, CancellationToken cancellationToken)
 	{
 		if (await _mediaRepository.TitleExistsAsync(request.Title, cancellationToken).ConfigureAwait(false))
 		{
@@ -41,11 +41,11 @@ public sealed class AddMediaHandler : IRequestHandler<AddMediaCommand, Result>
 		{
 			case nameof(Movie):
 				var movie = Movie.Create(mediaId, request.Title);
-				addResult = await _mediaRepository.AddMovieAsync(movie, cancellationToken).ConfigureAwait(false);
+				addResult = await _mediaRepository.AddMovieAsync(movie, cancellationToken);
 				break;
 			case nameof(Series):
 				var series = Series.Create(mediaId, request.Title);
-				addResult = await _mediaRepository.AddSeriesAsync(series, cancellationToken).ConfigureAwait(false);
+				addResult = await _mediaRepository.AddSeriesAsync(series, cancellationToken);
 				break; 
 			default:
 				addResult = Error.Invalid(MediaResources.InvalidMediaType);
@@ -62,7 +62,8 @@ public sealed class AddMediaHandler : IRequestHandler<AddMediaCommand, Result>
 			return Error.Invalid(MediaResources.CouldNotAddMedia);
 		}
 		
-		await _outputCacheStore.EvictByTagAsync(mediaId.ToString(), cancellationToken).ConfigureAwait(false);
-		return Result.Ok();
+		var key = mediaId.ToString();
+		await _outputCacheStore.EvictByTagAsync(key, cancellationToken);
+		return key;
 	}
 }

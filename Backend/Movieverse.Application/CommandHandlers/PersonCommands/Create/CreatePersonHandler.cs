@@ -48,7 +48,7 @@ public sealed class CreatePersonHandler : IRequestHandler<CreatePersonCommand, R
 		{
 			case null when request.ForUser:
 			{
-				var informationResult = await _userRepository.GetInformationAsync(userId.Value, cancellationToken).ConfigureAwait(false);
+				var informationResult = await _userRepository.GetInformationAsync(userId.Value, cancellationToken);
 				if (informationResult.IsUnsuccessful)
 				{
 					return informationResult.Error;
@@ -87,7 +87,7 @@ public sealed class CreatePersonHandler : IRequestHandler<CreatePersonCommand, R
 			}
 		}
 		
-		var addResult = await _personRepository.AddAsync(person, cancellationToken).ConfigureAwait(false);
+		var addResult = await _personRepository.AddAsync(person, cancellationToken);
 		if (addResult.IsUnsuccessful)
 		{
 			return addResult.Error;
@@ -98,7 +98,7 @@ public sealed class CreatePersonHandler : IRequestHandler<CreatePersonCommand, R
 			return Error.Invalid(PersonResources.CouldNotCreatePerson);
 		}
 		
-		await _outputCacheStore.EvictByTagAsync(personId.ToString(), cancellationToken).ConfigureAwait(false);
+		await _outputCacheStore.EvictByTagAsync(personId.ToString(), cancellationToken);
 		return Result.Ok();
 	}
 }

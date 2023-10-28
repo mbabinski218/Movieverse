@@ -13,126 +13,126 @@ public sealed class HttpService : IHttpService
 	{
 		_httpContextAccessor = httpContextAccessor;
 	}
-
-	private bool _uriWasSet;
-	private Uri? _uri;
+	
 	public Uri? Uri
 	{
 		get
 		{
-			if (_uriWasSet)
+			try
 			{
-				return _uri;
+				var url = _httpContextAccessor.HttpContext?.Request.GetDisplayUrl();
+				return url is null ? null : new Uri(url);
 			}
-			
-			var url = _httpContextAccessor.HttpContext?.Request.GetDisplayUrl();
-			_uri = url is null ? null : new Uri(url);
-			
-			_uriWasSet = true;
-			return _uri;
+			catch
+			{
+				return null;
+			}
 		}
 	}
-
-	private bool _idHeaderWasSet;
-	private Guid? _idHeader;
+	
 	public Guid? IdHeader
 	{
 		get
 		{
-			if (_idHeaderWasSet)
+			try
 			{
-				return _idHeader;
+				var idRouteValue = _httpContextAccessor.HttpContext?.Request.RouteValues["Id"];
+				return idRouteValue is not string id ? null : Guid.Parse(id);
 			}
-
-			var idRouteValue = _httpContextAccessor.HttpContext?.Request.RouteValues["Id"];
-			_idHeader = idRouteValue is not string id ? null : Guid.Parse(id);
-
-			_idHeaderWasSet = true;
-			return _idHeader;
+			catch
+			{
+				return null;
+			}
 		}
 	}
 
-	private bool _accessTokenWasSet;
-	private string? _accessToken;
 	public string? AccessToken
 	{
 		get
 		{
-			if (_accessTokenWasSet)
+			try
 			{
-				return _accessToken;
+				return _httpContextAccessor.HttpContext?.Request.Headers["Authorization"]
+					.FirstOrDefault()
+					?.Split(" ")
+					.LastOrDefault();
 			}
-			
-			_accessToken = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"]
-				.FirstOrDefault()
-				?.Split(" ")
-				.LastOrDefault();
-			
-			_accessTokenWasSet = true;
-			return _accessToken;
+			catch
+			{
+				return null;
+			}
 		}
 	}
 	
-	private bool _userIdWasSet;
-	private Guid? _userId;
 	public Guid? UserId
 	{
 		get
 		{
-			if (_userIdWasSet)
+			try
 			{
-				return _userId;
-			}
-			
-			var token = AccessToken;
+				var token = AccessToken;
 
-			if (token is null)
+				if (token is null)
+				{
+					return null;
+				}
+		
+				var handler = new JwtSecurityTokenHandler();
+		
+				var decodedToken = handler.CanReadToken(token) ? handler.ReadJwtToken(token) : null;
+			
+				var id = decodedToken?.Claims.FirstOrDefault(c => c.Type == ClaimNames.id)?.Value;
+				return id is null ? null : Guid.Parse(id);
+			}
+			catch
 			{
-				_userId = null;
 				return null;
 			}
-		
-			var handler = new JwtSecurityTokenHandler();
-		
-			var decodedToken = handler.CanReadToken(token) ? handler.ReadJwtToken(token) : null;
-			
-			var id = decodedToken?.Claims.FirstOrDefault(c => c.Type == ClaimNames.id)?.Value;
-			_userId = id is null ? null : Guid.Parse(id);
-			
-			_userIdWasSet = true;
-			return _userId;
 		}
 	}
 
-	private bool _roleWasSet;
-	private UserRole? _role;
-	public UserRole? Role
+	public UserRole[]? Role
 	{
 		get
 		{
-			if (_roleWasSet)
+			try
 			{
-				return _role;
+				var token = AccessToken;
+
+				if (token is null)
+				{
+					return null;
+				}
+		
+				var handler = new JwtSecurityTokenHandler();
+		
+				var decodedToken = handler.CanReadToken(token) ? handler.ReadJwtToken(token) : null;
+
+				var roles = decodedToken?.Claims
+					.Where(c => c.Type == ClaimNames.role)
+					.Select(c => c.Value)
+					.ToList();
+			
+				if (roles is null)
+				{
+					return null;
+				}
+			
+				var userRoles = new List<UserRole>();
+				foreach (var role in roles)
+				{
+					if (Enum.TryParse<UserRole>(role, out var userRole))
+					{
+						userRoles.Add(userRole);
+					}
+				}
+			
+				return userRoles.ToArray();
 			}
-
-			var token = AccessToken;
-
-			if (token is null)
+			catch
 			{
-				_role = null;
 				return null;
 			}
-		
-			var handler = new JwtSecurityTokenHandler();
-		
-			var decodedToken = handler.CanReadToken(token) ? handler.ReadJwtToken(token) : null;
-			
-			var role = decodedToken?.Claims.FirstOrDefault(c => c.Type == ClaimNames.role)?.Value;
-			var parsedSuccessfully = UserRoleExtensions.TryParse(role, out var userRole);
-			_role = parsedSuccessfully ? userRole : null;
-			
-			_roleWasSet = true;
-			return _role;
 		}
 	}
 }

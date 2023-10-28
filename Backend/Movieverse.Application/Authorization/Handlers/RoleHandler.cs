@@ -21,7 +21,7 @@ public sealed class RoleHandler : AuthorizationHandler<RoleRequirement>
 			return Task.CompletedTask;
 		}
 		
-		if (userRole == requirement.Role)
+		if (userRole.Contains(requirement.Role))
 		{
 			context.Succeed(requirement);
 		}

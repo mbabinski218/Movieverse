@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common;
 using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
@@ -25,6 +26,15 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
 			.HasConversion(
 				x => x.Value,
 				x => PersonId.Create(x));
+		
+		var converter = new ValueConverter<ContentId?, Guid?>
+		(
+			x => x == null ? null : x.Value,
+			x => x == null ? null : ContentId.Create(x.Value)
+		);
+		
+		builder.Property(p => p.PictureId)
+			.HasConversion(converter);
 		
 		builder.Property(p => p.FunFacts)
 			.HasMaxLength(Constants.descriptionLength);

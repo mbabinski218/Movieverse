@@ -9,13 +9,13 @@ import "./SearchBar.css";
 
 interface SearchBarProps {
   searchBarOpen: boolean;
-  onClick: () => void;
-  searchRef: React.MutableRefObject<null>;
+  onSelect: () => void;
+  searchRef?: React.MutableRefObject<null>;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onClick, searchRef}) => {
+export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onSelect, searchRef}) => {
   const [input, setInput] = useState<string>("");
-  const [searchResult, setSearchResult] = useState<PaginatedList<SearchMediaDto>>(PaginatedListWrapper.empty<SearchMediaDto>());
+  const [searchResult, setSearchResult] = useState<PaginatedList<SearchMediaDto>>(PaginatedListWrapper.empty<SearchMediaDto>);
 
   const debouncedInput = useDebounce(input);
 
@@ -26,7 +26,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onClick, sea
           setSearchResult(res);
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     }
     else {
@@ -36,10 +36,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onClick, sea
 
   return (
     <div className="search" id="search" ref={searchRef}> 
-      <div className="searchBar">
-        <input placeholder="Search" onClick={onClick} onChange={(e => setInput(e.target.value))} />
-        <a href="/find">
-          <img src={SearchIcon} className="search-icon" />
+      <div className="search-bar">
+        <input placeholder="Search" onSelect={onSelect} onChange={(e => setInput(e.target.value))} />
+        <a className="search-center" href={input ? `/find?term=${input}` : "/find"}>
+          <img src={SearchIcon} alt="search" className="search-icon" />
         </a>          
       </div>
       <div className={searchBarOpen ? "list-open" : "list-close"} >

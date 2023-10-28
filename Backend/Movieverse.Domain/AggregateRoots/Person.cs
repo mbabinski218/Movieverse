@@ -14,6 +14,7 @@ public sealed class Person : AggregateRoot<PersonId, Guid>
 	public LifeHistory LifeHistory { get; set; } = null!;
 	public string? Biography { get; set; }
 	public string? FunFacts { get; set; }
+	public ContentId? PictureId { get; set; }
 	public IReadOnlyList<ContentId> ContentIds => _contentIds.AsReadOnly();
 	public IReadOnlyList<MediaId> MediaIds => _mediaIds.AsReadOnly();
 		

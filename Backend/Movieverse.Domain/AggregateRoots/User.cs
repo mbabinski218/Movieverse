@@ -14,6 +14,7 @@ public class User : IdentityAggregateRoot
 	public ContentId? AvatarId { get; set; } = null!;
 	public IReadOnlyList<MediaInfo> MediaInfos => _mediaInfos.AsReadOnly();
 	public PersonId? PersonId { get; set; }
+	public Subscription Subscription { get; set; } = null!;
 
 	// Constructors
 	protected User(Guid id, string email, string userName, string? firstName, string? lastName, short age)
@@ -26,6 +27,10 @@ public class User : IdentityAggregateRoot
 			FirstName = firstName,
 			LastName = lastName,
 			Age = age
+		};
+		Subscription = new Subscription
+		{
+			FreeTrial = true
 		};
 	}
 	

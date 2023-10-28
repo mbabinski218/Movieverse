@@ -23,7 +23,7 @@ public static class Helper
 
 		foreach (var userRole in await userManager.GetRolesAsync(user).ConfigureAwait(false))
 		{
-			var role = await roleManager.FindByNameAsync(userRole).ConfigureAwait(false);
+			var role = await roleManager.FindByNameAsync(userRole);
 
 			if (role is null)
 			{
@@ -31,7 +31,7 @@ public static class Helper
 				return Error.Invalid(UserResources.CloudNotSignIn);
 			}
 			
-			var claims = await roleManager.GetClaimsAsync(role).ConfigureAwait(false);
+			var claims = await roleManager.GetClaimsAsync(role);
 			authClaims.AddRange(claims);
 		}
 

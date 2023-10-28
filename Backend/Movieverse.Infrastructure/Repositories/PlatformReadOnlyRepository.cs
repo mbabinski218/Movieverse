@@ -1,5 +1,4 @@
-﻿using Mapster;
-using MapsterMapper;
+﻿using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Common.Extensions;
@@ -28,12 +27,12 @@ public sealed class PlatformReadOnlyRepository : IPlatformReadOnlyRepository
 
 	public async Task<Result<PlatformDto>> FindAsync(PlatformId id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting platform with id {id}...", id.ToString());
+		_logger.LogDebug("Database - Getting platform with id {id}...", id.ToString());
 		
 		var platform = await _dbContext.Platforms
 			.AsNoTracking()
-			.FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
-			.ConfigureAwait(false);
+			.Include(p => p.LogoId)
+			.SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
 		
 		return platform is null ? Error.NotFound(PlatformResources.PlatformDoesNotExist) : new PlatformDto
 		{
@@ -46,17 +45,16 @@ public sealed class PlatformReadOnlyRepository : IPlatformReadOnlyRepository
 
 	public async Task<Result<IEnumerable<Platform>>> GetAllAsync(CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting all platforms...");
+		_logger.LogDebug("Database - Getting all platforms...");
 
 		return await _dbContext.Platforms
 			.AsNoTracking()
-			.ToListAsync(cancellationToken)
-			.ConfigureAwait(false);
+			.ToListAsync(cancellationToken);
 	}
 
 	public async Task<Result<IEnumerable<MediaId>>> GetAllMediaIdsAsync(PlatformId id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting all media ids for platform with id {id}...", id.ToString());
+		_logger.LogDebug("Database - Getting all media ids for platform with id {id}...", id.ToString());
 		
 		return await _dbContext.Platforms
 			.AsNoTracking()

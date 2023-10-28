@@ -1,0 +1,11 @@
+.link-button {
+  cursor: pointer;
+  color: var(--color-white);
+  display: block;
+  text-align: center;
+  font-size: var(--font-xs);
+}
+
+.link-button:hover {
+  text-decoration: underline;
+}

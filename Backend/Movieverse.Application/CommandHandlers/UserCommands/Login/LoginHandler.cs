@@ -32,26 +32,26 @@ public sealed class LoginHandler : IRequestHandler<LoginCommand, Result<TokensDt
 		switch (grantType)
 		{
 			case GrantType.Password:
-				var user = await _userRepository.FindByEmailAsync(request.Email!, cancellationToken).ConfigureAwait(false);
+				var user = await _userRepository.FindByEmailAsync(request.Email!, cancellationToken);
 				if (user.IsUnsuccessful)
 				{
 					return user.Error;
 				}
-				return await _userRepository.LoginAsync(user.Value, request.Password!, cancellationToken).ConfigureAwait(false);
+				return await _userRepository.LoginAsync(user.Value, request.Password!, cancellationToken);
 			
 			case GrantType.RefreshToken:
-				user = await _userRepository.FindByRefreshTokenAsync(request.RefreshToken!, cancellationToken).ConfigureAwait(false);
+				user = await _userRepository.FindByRefreshTokenAsync(request.RefreshToken!, cancellationToken);
 				if (user.IsUnsuccessful)
 				{
 					return user.Error;
 				}
-				return await _userRepository.LoginWithRefreshTokenAsync(user.Value, request.RefreshToken!, cancellationToken).ConfigureAwait(false);
+				return await _userRepository.LoginWithRefreshTokenAsync(user.Value, request.RefreshToken!, cancellationToken);
 			
 			case GrantType.Google:
-				return await _userRepository.LoginWithGoogleAsync(request.IdToken!, cancellationToken).ConfigureAwait(false);
+				return await _userRepository.LoginWithGoogleAsync(request.IdToken!, cancellationToken);
 			
 			case GrantType.Facebook:
-				return await _userRepository.LoginWithFacebookAsync(request.IdToken!, cancellationToken).ConfigureAwait(false);
+				return await _userRepository.LoginWithFacebookAsync(request.IdToken!, cancellationToken);
 			
 			default:
 				return Error.Invalid(UserResources.InvalidGrantType);

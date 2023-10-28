@@ -10,11 +10,11 @@ namespace Movieverse.Application.QueryHandlers.Media;
 
 public sealed class GetLatestMediaHandler : IRequestHandler<GetLatestMediaQuery, Result<IEnumerable<FilteredMediaDto>>>
 {
-	private readonly ILogger<GetUpcomingMediaHandler> _logger;
+	private readonly ILogger<GetLatestMediaHandler> _logger;
 	private readonly IMediaReadOnlyRepository _mediaRepository;
 	private readonly IPlatformReadOnlyRepository _platformRepository;
 
-	public GetLatestMediaHandler(ILogger<GetUpcomingMediaHandler> logger, IMediaReadOnlyRepository mediaRepository, IPlatformReadOnlyRepository platformRepository)
+	public GetLatestMediaHandler(ILogger<GetLatestMediaHandler> logger, IMediaReadOnlyRepository mediaRepository, IPlatformReadOnlyRepository platformRepository)
 	{
 		_logger = logger;
 		_mediaRepository = mediaRepository;
@@ -26,13 +26,13 @@ public sealed class GetLatestMediaHandler : IRequestHandler<GetLatestMediaQuery,
 		_logger.LogDebug("Getting latest media...");
 
 		return request.PlatformId is null
-			? await GetAllLatestMediaAsync(request.PageNumber, request.PageSize).ConfigureAwait(false) 
-			: await GetLatestMediaByPlaceAsync(request.PlatformId, request.PageNumber, request.PageSize).ConfigureAwait(false);
+			? await GetAllLatestMediaAsync(request.PageNumber, request.PageSize)
+			: await GetLatestMediaByPlaceAsync(request.PlatformId, request.PageNumber, request.PageSize);
 	}
 	
 	private async Task<Result<IEnumerable<FilteredMediaDto>>> GetAllLatestMediaAsync(short? pageNumber, short? pageSize)
 	{
-		var platforms = await _platformRepository.GetAllAsync().ConfigureAwait(false);
+		var platforms = await _platformRepository.GetAllAsync();
 		if (platforms.IsUnsuccessful)
 		{
 			return platforms.Error;
@@ -42,7 +42,7 @@ public sealed class GetLatestMediaHandler : IRequestHandler<GetLatestMediaQuery,
 		
 		foreach (var platform in platforms.Value)
 		{
-			var latestMediaResult = await _mediaRepository.GetLatestMediaAsync(platform.Id.Value, pageNumber, pageSize).ConfigureAwait(false);
+			var latestMediaResult = await _mediaRepository.GetLatestMediaAsync(platform.Id.Value, pageNumber, pageSize);
 			if (latestMediaResult.IsUnsuccessful)
 			{
 				return latestMediaResult.Error;
@@ -61,13 +61,13 @@ public sealed class GetLatestMediaHandler : IRequestHandler<GetLatestMediaQuery,
 	
 	private async Task<Result<IEnumerable<FilteredMediaDto>>> GetLatestMediaByPlaceAsync(PlatformId platformId, short? pageNumber, short? pageSize)
 	{
-		var platform = await _platformRepository.FindAsync(platformId).ConfigureAwait(false);
+		var platform = await _platformRepository.FindAsync(platformId);
 		if (platform.IsUnsuccessful)
 		{
 			return platform.Error;
 		}
 		
-		var latestMediaResult = await _mediaRepository.GetLatestMediaAsync(platform.Value.Id, pageNumber, pageSize).ConfigureAwait(false);
+		var latestMediaResult = await _mediaRepository.GetLatestMediaAsync(platform.Value.Id, pageNumber, pageSize);
 		if (latestMediaResult.IsUnsuccessful)
 		{
 			return latestMediaResult.Error;

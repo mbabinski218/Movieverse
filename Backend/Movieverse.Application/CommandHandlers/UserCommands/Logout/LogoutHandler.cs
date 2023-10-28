@@ -32,7 +32,7 @@ public sealed class LogoutHandler : IRequestHandler<LogoutCommand, Result>
 		
 		_logger.LogDebug("User with id {UserId} is logging out", userId.ToString());
 		
-		var userResult = await _userRepository.FindByIdAsync(userId.Value, cancellationToken).ConfigureAwait(false);
+		var userResult = await _userRepository.FindByIdAsync(userId.Value, cancellationToken);
 		return userResult.IsSuccessful 
 			? await _userRepository.LogoutAsync(userResult.Value, cancellationToken).ConfigureAwait(false)
 			: userResult.Error;

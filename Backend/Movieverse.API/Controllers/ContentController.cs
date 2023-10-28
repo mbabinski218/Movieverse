@@ -25,8 +25,6 @@ public sealed class ContentController : ApiController
 			return StatusCode(result.Error.Code, result.Error.Messages);
 		}
 		
-		return result.Value.ContentType == "video" ? 
-			Content(result.Value.Path!, "video") : 
-			File(result.Value.File!, result.Value.ContentType);
+		return result.Value.ContentType == "video" ? Ok(result.Value.Path!) : File(result.Value.File!, result.Value.ContentType);
 	}
 }

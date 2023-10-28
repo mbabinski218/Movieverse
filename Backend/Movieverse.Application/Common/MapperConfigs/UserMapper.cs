@@ -2,6 +2,7 @@
 using Movieverse.Application.Common.Extensions;
 using Movieverse.Contracts.DataTransferObjects.User;
 using Movieverse.Domain.AggregateRoots;
+using Movieverse.Domain.Entities;
 
 namespace Movieverse.Application.Common.MapperConfigs;
 
@@ -17,5 +18,9 @@ public sealed class UserMapper : IRegister
 			.Map(dest => dest.AvatarPath, src => src.AvatarId.GetValue())
 			.Map(dest => dest.EmailConfirmed, src => src.EmailConfirmed)
 			.Map(dest => dest.PersonId, src => src.PersonId.GetValue());
+
+		config.NewConfig<MediaInfo, WatchlistStatusDto>()
+			.Map(dest => dest.MediaId, src => src.MediaId.GetValue())
+			.Map(dest => dest.IsOnWatchlist, src => src.IsOnWatchlist);
 	}
 }

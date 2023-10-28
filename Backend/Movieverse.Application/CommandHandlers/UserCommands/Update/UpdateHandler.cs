@@ -20,31 +20,53 @@ public sealed class UpdateHandler : IRequestHandler<UpdateCommand, Result<UserDt
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
 	private readonly IOutputCacheStore _outputCacheStore;
+	private readonly IHttpService _httpService;
 
 	public UpdateHandler(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper, IOutputCacheStore outputCacheStore, 
-		ILogger<UpdateHandler> logger)
+		ILogger<UpdateHandler> logger, IHttpService httpService)
 	{
 		_userRepository = userRepository;
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
 		_outputCacheStore = outputCacheStore;
 		_logger = logger;
+		_httpService = httpService;
 	}
 
 	public async Task<Result<UserDto>> Handle(UpdateCommand request, CancellationToken cancellationToken)
 	{
-		_logger.LogDebug("Updating user {id}...", request.Id);
+		var id = _httpService.UserId;
+		if (id is null)
+		{
+			return Error.NotFound(UserResources.UserDoesNotExist);
+		}
 		
-		var findResult = await _userRepository.FindByIdAsync(request.Id, cancellationToken).ConfigureAwait(false);
+		_logger.LogDebug("Updating user with id: {id}...", id);
+		
+		var findResult = await _userRepository.FindByIdAsync(id.Value, cancellationToken);
 		if (!findResult.IsSuccessful)
 		{
 			return findResult.Error;
 		}
 		
 		var user = findResult.Value;
-		
-		if (request.UserName is not null) user.UserName = request.UserName;
-		if (request.Email is not null) user.Email = request.Email;
+
+		if (request.UserName is not null)
+		{
+			var result = await _userRepository.ChangeUsernameAsync(user, request.UserName, cancellationToken);
+			if (result.IsUnsuccessful)
+			{
+				return result.Error;
+			}
+		}
+		if (request.Email is not null)
+		{
+			var result = await _userRepository.ChangeEmailAsync(user, request.Email, cancellationToken);
+			if (result.IsUnsuccessful)
+			{
+				return result.Error;
+			}
+		}
 		if (request.Information is not null)
 		{
 			if (request.Information.FirstName is not null) user.Information.FirstName = request.Information.FirstName;
@@ -66,7 +88,7 @@ public sealed class UpdateHandler : IRequestHandler<UpdateCommand, Result<UserDt
 			}
 		}
 		
-		var updateResult = await _userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+		var updateResult = await _userRepository.UpdateAsync(user, cancellationToken);
 		if (!updateResult.IsSuccessful)
 		{
 			return updateResult.Error;
@@ -74,13 +96,13 @@ public sealed class UpdateHandler : IRequestHandler<UpdateCommand, Result<UserDt
 
 		if (!await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false))
 		{
-			_logger.LogDebug("User {id} could not be updated.", request.Id);
+			_logger.LogDebug("User {id} could not be updated.", id);
 			return Error.Invalid(UserResources.UserUpdateFailed);
 		}
 		
-		await _outputCacheStore.EvictByTagAsync(request.Id.ToString(), cancellationToken).ConfigureAwait(false);
+		await _outputCacheStore.EvictByTagAsync(id.Value.ToString(), cancellationToken);
 		
-		_logger.LogDebug("User {id} updated successfully.", request.Id);
+		_logger.LogDebug("User {id} updated successfully.", id);
         return _mapper.Map<UserDto>(user);
 	}
 }

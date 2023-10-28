@@ -26,7 +26,7 @@ public sealed class GetPersonHandler : IRequestHandler<GetPersonQuery, Result<Pe
 	{
 		_logger.LogDebug("Getting person with id {Id}", request.Id);
 
-		var person = await _personRepository.FindAsync(request.Id, cancellationToken).ConfigureAwait(false);
+		var person = await _personRepository.FindAsync(request.Id, cancellationToken);
 		if (person.IsUnsuccessful)
 		{
 			return person.Error;

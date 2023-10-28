@@ -1,0 +1,11 @@
+.checkbox-main {
+  display: block;
+  color: var(--color-dark)
+}
+
+.checkbox-input {
+  width: 15px;
+  margin-left: 10px;
+  margin-right: 5px;
+  background-color: var(--color-gold)
+}

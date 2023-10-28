@@ -20,4 +20,16 @@ export class PaginatedListWrapper {
 				hasNextPage: false
 			};
 		}
+
+		static mapTo<T, U>(paginatedList: PaginatedList<T>, mapFunction: (item: T) => U): PaginatedList<U> {
+			return {
+				items: paginatedList.items.map(mapFunction),
+				pageNumber: paginatedList.pageNumber,
+				totalPages: paginatedList.totalPages,
+				totalCount: paginatedList.totalCount,
+				totalItems: paginatedList.totalItems,
+				hasPreviousPage: paginatedList.hasPreviousPage,
+				hasNextPage: paginatedList.hasNextPage
+			};
+		}
 }

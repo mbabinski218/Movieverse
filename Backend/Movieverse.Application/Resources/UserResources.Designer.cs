@@ -96,6 +96,15 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email or username already taken.
+        /// </summary>
+        public static string EmailOrUserNameAlreadyExist {
+            get {
+                return ResourceManager.GetString("EmailOrUserNameAlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter age.
         /// </summary>
         public static string EnterAge {
@@ -150,11 +159,11 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to add role.
+        ///   Looks up a localized string similar to Failed to add roles.
         /// </summary>
-        public static string FailedToAddRole {
+        public static string FailedToAddRoles {
             get {
-                return ResourceManager.GetString("FailedToAddRole", resourceCulture);
+                return ResourceManager.GetString("FailedToAddRoles", resourceCulture);
             }
         }
         
@@ -164,6 +173,33 @@ namespace Movieverse.Application.Resources {
         public static string FailedToAuthenticateViaGoogle {
             get {
                 return ResourceManager.GetString("FailedToAuthenticateViaGoogle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to change email.
+        /// </summary>
+        public static string FailedToChangeEmail {
+            get {
+                return ResourceManager.GetString("FailedToChangeEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to change username.
+        /// </summary>
+        public static string FailedToChangeUsername {
+            get {
+                return ResourceManager.GetString("FailedToChangeUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to login.
+        /// </summary>
+        public static string FailedToLogin {
+            get {
+                return ResourceManager.GetString("FailedToLogin", resourceCulture);
             }
         }
         
@@ -182,6 +218,15 @@ namespace Movieverse.Application.Resources {
         public static string FailedToRegisterUser {
             get {
                 return ResourceManager.GetString("FailedToRegisterUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fatal error.
+        /// </summary>
+        public static string FatalError {
+            get {
+                return ResourceManager.GetString("FatalError", resourceCulture);
             }
         }
         

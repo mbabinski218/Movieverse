@@ -1,8 +1,9 @@
 .search {
     position: relative;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
 }
 
-.searchBar {
+.search-bar {
     grid-area: search;
     background-color: var(--color-white);
     width: auto;
@@ -14,7 +15,7 @@
     padding-right: 10px;
 }
 
-.searchBar:focus-within {
+.search-bar:focus-within {
     outline-color: var(--color-gold);
     outline-width: 2px;
     outline-style: solid;
@@ -35,6 +36,7 @@
     display: flex;
     align-items: center;
     margin-top: 7px;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
 }
 
 @media (max-width: 768px) {
@@ -47,4 +49,8 @@
 .list-close {
     display: none;
     overflow: hidden;
+}
+
+.search-center {
+    height: 28px;
 }

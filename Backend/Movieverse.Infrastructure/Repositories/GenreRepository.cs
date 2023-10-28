@@ -26,31 +26,29 @@ public sealed class GenreRepository : IGenreRepository
 
 	public async Task<Result<Genre>> FindAsync(GenreId id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Finding genre with id {Id} from database", id);
+		_logger.LogDebug("Database - Finding genre with id {Id} from database", id);
 		
 		var genre = await _dbContext.Genres
-			.FirstOrDefaultAsync(g => g.Id == id, cancellationToken)
-			.ConfigureAwait(false);
+			.SingleOrDefaultAsync(g => g.Id == id, cancellationToken);
 		
 		return genre is null ? Error.NotFound(GenreResources.GenreNotFound) : genre;
 	}
 	
 	public async Task<Result> AddAsync(Genre genre, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Adding genre with id {Id} to database", genre.Id.ToString());
+		_logger.LogDebug("Database - Adding genre with id {Id} to database", genre.Id.ToString());
 		
-		await _dbContext.Genres.AddAsync(genre, cancellationToken).ConfigureAwait(false);
+		await _dbContext.Genres.AddAsync(genre, cancellationToken);
 		return Result.Ok();
 	}
 	
 	public async Task<Result<IPaginatedList<GenreDto>>> GetAllAsync(short? pageNumber = null, short? pageSize = null, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting all genres from database");
+		_logger.LogDebug("Database - Getting all genres from database");
 		
 		return await _dbContext.Genres
 			.AsNoTracking()
 			.ProjectToType<GenreDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			.ConfigureAwait(false);
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
 	}
 }

@@ -1,5 +1,4 @@
-﻿using MapsterMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Contracts.DataTransferObjects.Platform;
@@ -22,7 +21,7 @@ public sealed class GetPlatformHandler : IRequestHandler<GetPlatformQuery, Resul
 	{
 		_logger.LogDebug("Getting platform {id}...", request.Id);
 		
-		var platform = await _platformRepository.FindAsync(request.Id, cancellationToken).ConfigureAwait(false);
+		var platform = await _platformRepository.FindAsync(request.Id, cancellationToken);
 		return platform.IsSuccessful ? platform.Value : platform.Error;
 	}
 }

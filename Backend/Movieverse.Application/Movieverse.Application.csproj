@@ -4,7 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.0.1</Version>
+        <Version>0.0.2</Version>
         <Title>Movieverse.Application</Title>
         <Authors>Movieverse</Authors>
     </PropertyGroup>
@@ -58,6 +58,10 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>PersonResources.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="Resources\PaymentsResources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>PaymentsResources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -90,6 +94,11 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>PersonResources.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\PaymentsResources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>PaymentsResources.resx</DependentUpon>
       </Compile>
     </ItemGroup>
     

@@ -1,0 +1,44 @@
+.mle-element {
+  display: grid;
+  grid-template-areas: 
+    "image title"                          
+    "image year"                          
+    "image description";
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: 0.1fr 0.1fr 0.5fr;
+  text-decoration: none;
+  color: var(--color-white);
+}
+
+.mle-element:hover {
+  color: var(--color-gold);
+  cursor: pointer;
+}
+
+.mle-title {
+  grid-area: title;
+  font-weight: bold;
+  padding-left: 10px;
+}
+
+.mle-year {
+  grid-area: year;
+  padding-left: 10px;
+}
+
+.mle-description {
+  grid-area: description;
+  padding-top: 10px;
+  padding-left: 10px;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.mle-image {
+  grid-area: image;
+  height: 150px;
+  width: 101px;
+}

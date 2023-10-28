@@ -25,46 +25,43 @@ public sealed class MediaRepository : IMediaRepository
 
 	public async Task<Result<Media>> FindAsync(MediaId id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Finding media with id {id}...", id.ToString());
+		_logger.LogDebug("Database - Finding media with id {id}...", id.ToString());
 		
 		var media = await _dbContext.Medias
-			.FirstOrDefaultAsync(m => m.Id == id, cancellationToken)
-			.ConfigureAwait(false);
+			.SingleOrDefaultAsync(m => m.Id == id, cancellationToken);
 		
 		return media is null ? Error.NotFound("Not found") : media;
 	}
 
 	public async Task<Result<List<Media>>> GetAllAsync(CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting all media");
+		_logger.LogDebug("Database - Getting all media");
 
 		return await _dbContext.Medias
 			.Include(x => x.AdvancedStatistics)
 			.ThenInclude(x => x.Popularity)
-			.ToListAsync(cancellationToken)
-			.ConfigureAwait(false);
+			.ToListAsync(cancellationToken);
 	}
 	
 	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMediaAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting upcoming medias...");
+		_logger.LogDebug("Database - Getting upcoming media...");
 		
-		var medias = await _dbContext.Medias
+		var media = await _dbContext.Medias
 			.AsNoTracking()
 			.Where(m => m.Details.ReleaseDate > DateTime.UtcNow)
 			.Where(m => platformId == null || m.PlatformIds.Any(p => p.Value == platformId.Value))
 			.OrderBy(m => m.Details.ReleaseDate)
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()
-			.ToListAsync(cancellationToken)
-			.ConfigureAwait(false);
+			.ToListAsync(cancellationToken);
 		
-		return medias;
+		return media;
 	}
 
 	public async Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMoviesAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting upcoming movies...");
+		_logger.LogDebug("Database - Getting upcoming movies...");
 
 		var movies = await _dbContext.Movies
 			.Where(m => m.Details.ReleaseDate > DateTime.UtcNow)
@@ -73,30 +70,29 @@ public sealed class MediaRepository : IMediaRepository
 			.OrderBy(m => m.Details.ReleaseDate)
 			.Take(count)
 			.ProjectToType<MediaDemoDto>()
-			.ToListAsync(cancellationToken)
-			.ConfigureAwait(false);
+			.ToListAsync(cancellationToken);
 
 		return movies;
 	}
 
 	public async Task<bool> ExistsAsync(MediaId id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Checking if media with id {id} exists...", id.ToString());
+		_logger.LogDebug("Database - Checking if media with id {id} exists...", id.ToString());
 		
-		var media = await FindAsync(id, cancellationToken).ConfigureAwait(false);
+		var media = await FindAsync(id, cancellationToken);
 		return media.IsSuccessful;
 	}
 
 	public async Task<bool> TitleExistsAsync(string title, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Checking if media with title {title} exists...", title);
+		_logger.LogDebug("Database - Checking if media with title {title} exists...", title);
 		
-		return await _dbContext.Medias.AnyAsync(m => m.Title == title, cancellationToken: cancellationToken).ConfigureAwait(false);
+		return await _dbContext.Medias.AnyAsync(m => m.Title == title, cancellationToken: cancellationToken);
 	}
 
 	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindMoviesByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting movies with ids {ids}...", string.Join(", ", ids.Select(id => id.ToString())));
+		_logger.LogDebug("Database - Getting movies with ids {ids}...", string.Join(", ", ids.Select(id => id.ToString())));
 		
 		var idsList = ids.Select(id => id.Value).ToList();
 		
@@ -104,13 +100,12 @@ public sealed class MediaRepository : IMediaRepository
 			.Where(m => idsList.Contains(m.Id))
 			.AsNoTracking()
 			.ProjectToType<MediaInfoDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			.ConfigureAwait(false);
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
 	}
 
 	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindSeriesByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting series with ids {ids}...", string.Join(", ", ids.Select(id => id.ToString())));
+		_logger.LogDebug("Database - Getting series with ids {ids}...", string.Join(", ", ids.Select(id => id.ToString())));
 		
 		var idsList = ids.Select(id => id.Value).ToList();
 		
@@ -118,39 +113,38 @@ public sealed class MediaRepository : IMediaRepository
 			.Where(s => idsList.Contains(s.Id))
 			.AsNoTracking()
 			.ProjectToType<MediaInfoDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken)
-			.ConfigureAwait(false);
+			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
 	}
 
 	public async Task<Result> AddMovieAsync(Movie media, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Adding media with id {id}...", media.Id.ToString());
+		_logger.LogDebug("Database - Adding media with id {id}...", media.Id.ToString());
 		
-		await _dbContext.Movies.AddAsync(media, cancellationToken).ConfigureAwait(false);
+		await _dbContext.Movies.AddAsync(media, cancellationToken);
 		return Result.Ok();
 	}
 	
 	public async Task<Result> AddSeriesAsync(Series media, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Adding media with id {id}...", media.Id.ToString());
+		_logger.LogDebug("Database - Adding media with id {id}...", media.Id.ToString());
 		
-		await _dbContext.Series.AddAsync(media, cancellationToken).ConfigureAwait(false);
+		await _dbContext.Series.AddAsync(media, cancellationToken);
 		return Result.Ok();
 	}
 
 	public async Task<Result> UpdateAsync(Media media, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Updating media with id {id}...", media.Id.ToString());
+		_logger.LogDebug("Database - Updating media with id {id}...", media.Id.ToString());
 
 		_dbContext.Medias.Update(media);
 		return await Task.FromResult(Result.Ok());
 	}
 
-	public async Task<Result> UpdateRangeAsync(List<Media> medias, CancellationToken cancellationToken = default)
+	public async Task<Result> UpdateRangeAsync(List<Media> media, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Updating {count} medias...", medias.Count.ToString());
+		_logger.LogDebug("Database - Updating {count} media...", media.Count.ToString());
 		
-		_dbContext.Medias.UpdateRange(medias);
+		_dbContext.Medias.UpdateRange(media);
 		return await Task.FromResult(Result.Ok());
 	}
 }

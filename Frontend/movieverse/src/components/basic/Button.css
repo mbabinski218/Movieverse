@@ -1,0 +1,22 @@
+.button {
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
+  background-color: var(--color-white) !important;
+  border-radius: 10px !important;
+  width: 100%;
+}
+
+.button:hover {
+  opacity: 0.7;
+}
+
+.button:focus-visible {
+  outline: var(--color-white) 2px solid !important;
+}
+
+.button + .button {
+  margin-left: 15px;
+}
+
+.primary-color {
+  background-color: var(--color-gold) !important;
+}

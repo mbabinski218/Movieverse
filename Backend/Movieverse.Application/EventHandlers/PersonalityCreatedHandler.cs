@@ -21,7 +21,7 @@ public sealed class PersonalityCreatedHandler : INotificationHandler<Personality
 	{
 		_logger.LogDebug("PersonalityCreatedHandler.Handle called");
 		
-		var addResult = await _userRepository.AddPersonalityAsync(notification.UserId, notification.PersonId, cancellationToken).ConfigureAwait(false);
+		var addResult = await _userRepository.AddPersonalityAsync(notification.UserId, notification.PersonId, cancellationToken);
 		ResultException.ThrowIfUnsuccessful(addResult);
 		
 		_logger.LogDebug("Personality created for user with id {UserId}", notification.UserId);

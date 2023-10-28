@@ -42,4 +42,7 @@
     <data name="PersonDoesNotExist" xml:space="preserve">
         <value>Person does not exist</value>
     </data>
+    <data name="InvalidChartCategory" xml:space="preserve">
+        <value>Invalid chart category</value>
+    </data>
 </root>

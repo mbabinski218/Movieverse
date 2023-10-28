@@ -1,0 +1,62 @@
+.media-window {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 12;
+}
+
+.media-add-title {
+  color: var(--color-white);
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+.media-add-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  margin-top: 5px;
+  margin-right: 10px;
+  scale: 1.5;
+}
+
+.media-inputs {
+  margin-bottom: 30px;
+}
+
+.media-select {
+  padding-left: 5px;
+  width: 100%;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
+  border-radius: 10px;
+  height: 32px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.media-select:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.media-select:focus-visible {
+  outline: none;
+}
+
+.media-button {
+  margin-bottom: 15px;
+  color: var(--color-dark)
+}
+
+.media-add-menu {
+  background-color: var(--color-dark);
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
+  padding: 15px 15px 15px 15px;
+  border-radius: 10px;
+  width: 350px;
+  height: 200px;
+  margin-bottom: 15px;
+}

@@ -37,7 +37,7 @@ public sealed class AddMediaToPlatformHandler : IRequestHandler<AddMediaToPlatfo
 			return Error.NotFound(MediaResources.MediaDoesNotExist);
 		}
 		
-		var platform = await _platformRepository.FindAsync(request.Id, cancellationToken).ConfigureAwait(false);
+		var platform = await _platformRepository.FindAsync(request.Id, cancellationToken);
 		if (platform.IsUnsuccessful)
 		{
 			return platform.Error;
@@ -46,7 +46,7 @@ public sealed class AddMediaToPlatformHandler : IRequestHandler<AddMediaToPlatfo
 		platform.Value.AddMedia(request.MediaId);
 		platform.Value.AddDomainEvent(new MediaToPlatformAdded(request.Id, request.MediaId));
 		
-		var updateResult = await _platformRepository.UpdateAsync(platform.Value, cancellationToken).ConfigureAwait(false);
+		var updateResult = await _platformRepository.UpdateAsync(platform.Value, cancellationToken);
 		if (updateResult.IsUnsuccessful)
 		{
 			return updateResult.Error;
@@ -58,7 +58,7 @@ public sealed class AddMediaToPlatformHandler : IRequestHandler<AddMediaToPlatfo
 			return Error.Invalid(PlatformResources.CouldNotAddMediaToPlatform);
 		}
 		
-		await _outputCacheStore.EvictByTagAsync(request.Id.ToString(), cancellationToken).ConfigureAwait(false);
+		await _outputCacheStore.EvictByTagAsync(request.Id.ToString(), cancellationToken);
 		return Result.Ok();
 	}
 }

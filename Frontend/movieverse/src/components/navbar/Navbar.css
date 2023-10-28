@@ -44,6 +44,10 @@ input:focus {
     display: block;
 }
 
+.menu:hover {
+    opacity: 0.7;
+}
+
 .chart {
     width: 16px;
     margin-right: 10px;
@@ -69,6 +73,8 @@ input:focus {
 
 .user {
     grid-area: user;
+    text-overflow: ellipsis;
+    overflow-x: clip;
 }
 
 .element-link {
@@ -76,6 +82,11 @@ input:focus {
     white-space: nowrap;
     position: relative;
     left: 30%;
+}
+
+.element-link:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 a.element-link.nav-link {
@@ -87,11 +98,11 @@ a.element-link.nav-link:hover {
     text-decoration: underline;
 }
 
-.button {
+.navbar-button {
     position: relative;
 }
 
-.button::after {
+.navbar-button::after {
     position: absolute;
     content: "";
     width: inherit;
@@ -105,7 +116,7 @@ a.element-link.nav-link:hover {
     border-radius: 10px;
 }
 
-.button:hover::after {
+.navbar-button:hover::after {
     transform: scaleX(1);
     transform-origin: left;
 }
@@ -118,7 +129,7 @@ a.element-link.nav-link:hover {
     width: 100%;
     overflow: hidden;
     z-index: 8;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
 }
 
 .menu-close {
@@ -127,8 +138,8 @@ a.element-link.nav-link:hover {
 }
 
 .selected {
-    animation: slide-in 0.4s forwards;
-    -webkit-animation: slide-in 0.4s forwards;
+    animation: slide-in 0.3s forwards;
+    -webkit-animation: slide-in 0.3s forwards;
 }
 
 @keyframes slide-in {
@@ -157,8 +168,8 @@ a.element-link.nav-link:hover {
     color: var(--color-white);
     text-align: center;
     white-space: nowrap;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .content {
@@ -168,7 +179,7 @@ a.element-link.nav-link:hover {
     grid-template-areas: "logo search pro watchlist user menu";
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .content {
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-areas: 
@@ -176,37 +187,57 @@ a.element-link.nav-link:hover {
         "pro watchlist user";
     }
 
-    .element{
+    .element {
         padding-left: 0rem;
         padding-right: 0rem;
+    }
+
+    .user {
+        max-width: 18vh;
     }
 }
 
 @media (min-width: 768px) {
-    .element{
+    .element {
         padding-left: 0rem;
         padding-right: 0rem;
+    }
+
+    .user {
+        max-width: 15vh;
     }
 }
 
 @media (min-width: 992px) {
-    .element{
+    .element {
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+
+    .user {
+        max-width: 20vh;
     }
 }
 
 @media (min-width: 1200px) {
-    .element{
+    .element {
         padding-left: 1.5rem;
         padding-right: 1.5rem;
+    }
+
+    .user {
+        max-width: 25vh;
     }
 }
 
 @media (min-width: 1400px) {
-    .element{
+    .element {
         padding-left: 2rem;
         padding-right: 2rem;
+    }
+
+    .user {
+        max-width: 30vh;
     }
 }
 

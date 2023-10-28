@@ -6,8 +6,10 @@ using Movieverse.API.Common;
 using Movieverse.API.Common.Extensions;
 using Movieverse.Application.Authorization;
 using Movieverse.Contracts.Commands.User;
+using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Contracts.DataTransferObjects.User;
 using Movieverse.Contracts.Queries.User;
+using Movieverse.Domain.Common;
 
 namespace Movieverse.API.Controllers;
 
@@ -59,19 +61,53 @@ public sealed class UserController : ApiController
 	
 	
 	[PolicyAuthorize(Policies.personalData)]
-	[OutputCache]
-	[HttpGet("{Id:guid}")]
-	public async Task<ActionResult<UserDto>> Get([FromRoute] GetUserByIdQuery query, CancellationToken cancellationToken) => 
-		await mediator.Send(query, cancellationToken).Then(
+	// [OutputCache(PolicyName = CachePolicies.byUserId)]
+	[OutputCache(NoStore = true)]
+	[HttpGet]
+	public async Task<ActionResult<UserDto>> Get(CancellationToken cancellationToken) => 
+		await mediator.Send(new GetUserByIdQuery(), cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
 	
 	[PolicyAuthorize(Policies.atLeastUser)]
 	[PolicyAuthorize(Policies.personalData)]
 	[OutputCache(NoStore = true)]
-	[HttpPut("{Id:guid}")]
+	[HttpPut]
 	public async Task<ActionResult<UserDto>> Update([FromForm] UpdateCommand command, CancellationToken cancellationToken) =>
 		await mediator.Send(command, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[PolicyAuthorize(Policies.administrator)]
+	[OutputCache(NoStore = true)]
+	[HttpPut("roles")]
+	public async Task<ActionResult> UpdateRoles([FromBody] UpdateRolesCommand command, CancellationToken cancellationToken) =>
+		await mediator.Send(command, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[PolicyAuthorize(Policies.atLeastUser)]
+	[OutputCache(NoStore = true)]
+	[HttpPut("watchlist/{MediaId:guid}")]
+	public async Task<ActionResult> UpdateWatchlist([FromRoute] UpdateWatchlistCommand command, CancellationToken cancellationToken) =>
+		await mediator.Send(command, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[PolicyAuthorize(Policies.atLeastUser)]
+	[OutputCache(NoStore = true)]
+	[HttpPost("watchlist")]
+	public async Task<ActionResult<IEnumerable<WatchlistStatusDto>>> GetWatchlistStatuses([FromBody] GetWatchlistStatusesQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[PolicyAuthorize(Policies.personalData)]
+	// [OutputCache(PolicyName = CachePolicies.byUserId)]
+	[OutputCache(NoStore = true)]
+	[HttpGet("watchlist")]
+	public async Task<ActionResult<IPaginatedList<SearchMediaDto>>> GetWatchlist([FromQuery] GetWatchlistQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
 } 

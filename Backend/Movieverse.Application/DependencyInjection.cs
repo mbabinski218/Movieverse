@@ -15,6 +15,7 @@ using Movieverse.Application.Authorization;
 using Movieverse.Application.Authorization.Handlers;
 using Movieverse.Application.Authorization.Requirements;
 using Movieverse.Application.Behaviors;
+using Movieverse.Application.Caching;
 using Movieverse.Application.Caching.Extensions;
 using Movieverse.Application.Caching.Policies;
 using Movieverse.Application.Common.Extensions;
@@ -57,6 +58,7 @@ public static class DependencyInjection
 	{
 		services.BindSettings<StatisticsSettings>(configuration);
 		services.BindSettings<CloudStoreSettings>(configuration);
+		services.BindSettings<PaymentsSettings>(configuration);
 		
 		return services;
 	}
@@ -80,6 +82,13 @@ public static class DependencyInjection
 			{
 				builder.AddPolicy<DefaultOutputCachePolicy>();
 				builder.AddPolicy<ByIdOutputCachePolicy>();
+				builder.Expire(TimeSpan.Parse(cacheSettings.ExpirationTime));
+			}, true);
+
+			options.AddPolicy(CachePolicies.byUserId, builder =>
+			{
+				builder.AddPolicy<DefaultOutputCachePolicy>();
+				builder.AddPolicy<ByUserIdCachePolicy>();
 				builder.Expire(TimeSpan.Parse(cacheSettings.ExpirationTime));
 			}, true);
 		});

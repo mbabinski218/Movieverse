@@ -21,20 +21,19 @@ public sealed class PersonRepository : IPersonRepository
 	
 	public async Task<Result<Person>> FindAsync(PersonId id, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Getting person with id {id}...", id.ToString());
+		_logger.LogDebug("Database - Getting person with id {id}...", id.ToString());
 		
 		var person = await _dbContext.Persons
-			.FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
-			.ConfigureAwait(false);
+			.SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
 		
 		return person is null ? Error.NotFound(PersonResources.PersonDoesNotExist) : person;
 	}
 	
 	public async Task<Result> AddAsync(Person person, CancellationToken cancellationToken)
 	{
-		_logger.LogDebug("Adding person with id {id}...", person.Id.ToString());
+		_logger.LogDebug("Database - Adding person with id {id}...", person.Id.ToString());
 		
-		await _dbContext.Persons.AddAsync(person, cancellationToken).ConfigureAwait(false);
+		await _dbContext.Persons.AddAsync(person, cancellationToken);
 		return Result.Ok();
 	}
 }

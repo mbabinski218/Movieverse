@@ -16,7 +16,11 @@ public sealed class SeriesConfiguration : IEntityTypeConfiguration<Series>
 	
 	private static void ConfigureSeasonsTable(EntityTypeBuilder<Series> builder)
 	{
-		builder.OwnsOne(m => m.BasicStatistics);
+		builder.OwnsOne(m => m.BasicStatistics, basicStatisticsBuilder =>
+		{
+			basicStatisticsBuilder.Property(bs => bs.Rating)
+				.HasPrecision(Constants.ratingPrecision, Constants.ratingScale);
+		});
 		
 		builder.OwnsOne(m => m.Details);
 		
@@ -33,7 +37,11 @@ public sealed class SeriesConfiguration : IEntityTypeConfiguration<Series>
 				episodesBuilder.Property(e => e.Title)
 					.HasMaxLength(Constants.titleLength);
 
-				episodesBuilder.OwnsOne(e => e.BasicStatistics);
+				episodesBuilder.OwnsOne(e => e.BasicStatistics, basicStatisticsBuilder =>
+				{
+					basicStatisticsBuilder.Property(bs => bs.Rating)
+						.HasPrecision(Constants.ratingPrecision, Constants.ratingScale);
+				});	
 
 				episodesBuilder.OwnsOne(e => e.Details);
 				
