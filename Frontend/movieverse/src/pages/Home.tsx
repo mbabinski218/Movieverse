@@ -1,18 +1,13 @@
 import { MediaHorizontalList } from "../components/horizontalList/MediaHorizontalList";
-import { FilteredMediaDto } from "../core/dtos/media/filteredMediaDto";
-import { useEffect, useState } from "react";
-import { Api } from "../Api";
+import { useLatestMedia } from "../hooks/useLatestMedia";
+import { useEffect } from "react";
 import "./Home.css";
 
 export const Home: React.FC = () => {
-	const [filteredMedia, setFilteredMedia] = useState<FilteredMediaDto[]>([]);
+	const [filteredMedia, setFilteredMedia] = useLatestMedia(null, 1, 10);
 
 	useEffect(() => {
-		document.title = "Movieverse"
-		
-		Api.getLatestMedia(null, 1, 10)
-			.then((media) => setFilteredMedia(media))
-			.catch((err) => console.error(err));
+		document.title = "Movieverse";
 	}, []);
 
 	return (
