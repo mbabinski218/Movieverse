@@ -342,6 +342,22 @@ public sealed class UserRepository : IUserRepository
 		var result = await _userManager.AddToRolesAsync(user, roles);
 		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRoles);
 	}
+	
+	public async Task<Result> AddRoleAsync(User user, string role, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Add role for user with id: {id}", user.Id);
+		
+		var result = await _userManager.AddToRoleAsync(user, role);
+		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRoles);
+	}
+	
+	public async Task<Result> RemoveRoleAsync(User user, string role, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Remove role for user with id: {id}", user.Id);
+		
+		var result = await _userManager.RemoveFromRoleAsync(user, role);
+		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRoles);
+	}
 
 	public async Task<Result> ChangeUsernameAsync(User user, string username, CancellationToken cancellationToken = default)
 	{

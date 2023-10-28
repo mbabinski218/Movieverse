@@ -60,6 +60,24 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel subscription error.
+        /// </summary>
+        internal static string CancelSubscriptionError {
+            get {
+                return ResourceManager.GetString("CancelSubscriptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to create subscription.
+        /// </summary>
+        internal static string FailedToCreateSubscription {
+            get {
+                return ResourceManager.GetString("FailedToCreateSubscription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to get plan.
         /// </summary>
         internal static string FailedToGetPlan {
@@ -74,6 +92,24 @@ namespace Movieverse.Application.Resources {
         internal static string FailedToPay {
             get {
                 return ResourceManager.GetString("FailedToPay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start subscription error.
+        /// </summary>
+        internal static string StartSubscriptionError {
+            get {
+                return ResourceManager.GetString("StartSubscriptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User not logged in.
+        /// </summary>
+        internal static string UserNotLoggedIn {
+            get {
+                return ResourceManager.GetString("UserNotLoggedIn", resourceCulture);
             }
         }
     }

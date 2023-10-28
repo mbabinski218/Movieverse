@@ -27,4 +27,6 @@ public interface IUserRepository
 	Task<Result> ChangeUsernameAsync(User user, string username, CancellationToken cancellationToken = default);
 	Task<Result> ChangeEmailAsync(User user, string email, CancellationToken cancellationToken = default);
 	Task<Result> UpdateRolesAsync(User user, IList<string> roles, CancellationToken cancellationToken = default);
+	Task<Result> AddRoleAsync(User user, string role, CancellationToken cancellationToken = default);
+	Task<Result> RemoveRoleAsync(User user, string role, CancellationToken cancellationToken = default);
 }

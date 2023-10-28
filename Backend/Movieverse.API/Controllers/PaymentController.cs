@@ -30,28 +30,37 @@ public sealed class PaymentController : ApiController
 		await mediator.Send(request, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
+
+	[PolicyAuthorize(Policies.atLeastUser)]
+	[OutputCache(NoStore = true)]
+	[HttpPost("paypal/subscription")]
+	public async Task<ActionResult<string>> PayPalCreateSubscription([FromQuery] CreateSubscriptionRequest request, CancellationToken cancellationToken) =>
+		await mediator.Send(request, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
 	
-	// [PolicyAuthorize(Policies.atLeastUser)]
-	// [OutputCache(NoStore = true)]
-	// [HttpPost("paypal/subscription")]
-	// public async Task<ActionResult<SubscriptionResponse>> PayPalCreateSubscription([FromQuery] SubscriptionRequest request, CancellationToken cancellationToken) =>
-	// 	await mediator.Send(request, cancellationToken).Then(
-	// 		Ok,
-	// 		err => StatusCode(err.Code, err.Messages));
-	//
-	// [PolicyAuthorize(Policies.atLeastUser)]
-	// [OutputCache(NoStore = true)]
-	// [HttpPost("paypal/subscription/{id}/active")]
-	// public async Task<ActionResult<AuthorizationResponse>> PayPalActiveSubscription([FromQuery] PlanRequest request, CancellationToken cancellationToken) =>
-	// 	await mediator.Send(request, cancellationToken).Then(
-	// 		Ok,
-	// 		err => StatusCode(err.Code, err.Messages));
-	//
-	// [PolicyAuthorize(Policies.atLeastPro)]
-	// [OutputCache(NoStore = true)]
-	// [HttpPost("paypal/subscription/{id}/cancel")]
-	// public async Task<ActionResult<AuthorizationResponse>> PayPalCancelSubscription([FromQuery] PlanRequest request, CancellationToken cancellationToken) =>
-	// 	await mediator.Send(request, cancellationToken).Then(
-	// 		Ok,
-	// 		err => StatusCode(err.Code, err.Messages));
+	[PolicyAuthorize(Policies.atLeastUser)]
+	[OutputCache(NoStore = true)]
+	[HttpPut("paypal/subscription/start")]
+	public async Task<ActionResult<AuthorizationResponse>> PayPalStartSubscription([FromQuery] StartSubscriptionRequest request, CancellationToken cancellationToken) =>
+		await mediator.Send(request, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	
+	[PolicyAuthorize(Policies.atLeastPro)]
+	[OutputCache(NoStore = true)]
+	[HttpPut("paypal/subscription/cancel")]
+	public async Task<ActionResult<AuthorizationResponse>> PayPalCancelSubscription([FromQuery] CancelSubscriptionRequest request, CancellationToken cancellationToken) =>
+		await mediator.Send(request, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[PolicyAuthorize(Policies.atLeastPro)]
+	[OutputCache(NoStore = true)]
+	[HttpGet("paypal/subscription")]
+	public async Task<ActionResult<string>> PayPalGetSubscription(CancellationToken cancellationToken) =>
+		await mediator.Send(new GetSubscriptionRequest(), cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
 }

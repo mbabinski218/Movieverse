@@ -1004,10 +1004,35 @@ namespace Movieverse.Infrastructure.Migrations
                             b1.Navigation("User");
                         });
 
+                    b.OwnsOne("Movieverse.Domain.ValueObjects.Subscription", "Subscription", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<bool>("FreeTrial")
+                                .HasColumnType("boolean");
+
+                            b1.Property<string>("Id")
+                                .HasColumnType("text");
+
+                            b1.Property<DateTimeOffset?>("Since")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
                     b.Navigation("Information")
                         .IsRequired();
 
                     b.Navigation("MediaInfos");
+
+                    b.Navigation("Subscription")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Movieverse.Domain.Entities.Statistics", b =>

@@ -12,8 +12,8 @@ import "./AddMediaMenu.css";
 import Close from "../../assets/bars-close.svg";
 
 export interface AddMediaMenuProps {
-  onClose?: () => void | undefined;
-  onSuccessfulAdd?: () => void | undefined;
+  onClose?: () => void;
+  onSuccessfulAdd?: () => void;
 }
 
 export const AddMediaMenu: React.FC<AddMediaMenuProps> = (props) => {

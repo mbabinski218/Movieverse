@@ -24,4 +24,16 @@
     <data name="FailedToGetPlan" xml:space="preserve">
         <value>Failed to get plan</value>
     </data>
+    <data name="UserNotLoggedIn" xml:space="preserve">
+        <value>User not logged in</value>
+    </data>
+    <data name="FailedToCreateSubscription" xml:space="preserve">
+        <value>Failed to create subscription</value>
+    </data>
+    <data name="StartSubscriptionError" xml:space="preserve">
+        <value>Start subscription error</value>
+    </data>
+    <data name="CancelSubscriptionError" xml:space="preserve">
+        <value>Cancel subscription error</value>
+    </data>
 </root>

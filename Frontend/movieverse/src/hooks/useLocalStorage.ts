@@ -18,9 +18,17 @@ export class LocalStorage {
     return `Bearer ${this.getAccessToken()}`;
   }
 
-  static clear(): void {
+  static clearAccessToken(): void {
     localStorage.removeItem(this.accessTokenKey);
+  }
+
+  static clearRefreshToken(): void {
     localStorage.removeItem(this.refreshTokenKey);
+  }
+
+  static clear(): void {
+    this.clearAccessToken();
+    this.clearRefreshToken();
   }
 }
 

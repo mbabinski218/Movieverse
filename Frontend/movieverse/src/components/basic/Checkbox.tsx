@@ -2,9 +2,9 @@ import "./Checkbox.css";
 
 export interface CheckboxProps {
   label: string;
-  value?: string | undefined;
-  checked?: boolean | undefined;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void | undefined;
+  value?: string;
+  checked?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({label, value, checked, onChange}) => {

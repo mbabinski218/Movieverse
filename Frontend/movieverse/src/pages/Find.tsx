@@ -16,6 +16,7 @@ interface Filters {
 }
 
 export const Find: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(true);
   const [searchParams] = useSearchParams();
   const [term] = useState<string | null>(searchParams.get("term"));
   const [filters, setFilters] = useState<Filters>({ type: "Movie", genre: null });
@@ -31,13 +32,19 @@ export const Find: React.FC = () => {
   useEffect(() => {
     if (filters.type === "Person") {
       Api.searchPersons(term, pageNumber, pageSize)
-        .then(setList)
+        .then(res => {
+          setList(res);
+          setLoading(false);
+        })
         .catch(console.error);
     } 
     else {
       const genreId = genre.find(g => g.name === filters.genre)?.id ?? null;
       Api.searchWithFiltersMedia(term, filters.type, genreId, pageNumber, pageSize)
-        .then(setList)
+        .then(res => {
+          setList(res);
+          setLoading(false);
+        })
         .catch(console.error);
     }
   }, [filters, pageNumber]);
@@ -97,7 +104,8 @@ export const Find: React.FC = () => {
       </div>
       {
         filters.type !== "Person" &&
-        <List element={MediaListElement}
+        <List loading={false}
+              element={MediaListElement}
               list={PaginatedListWrapper.mapTo<SearchMediaDto, ListItem>(list as PaginatedList<SearchMediaDto>, (item) => {
                 const date = item.releaseDate ? new Date(item.releaseDate).getFullYear().toString() : "Unknown release date";
                 return {
@@ -111,7 +119,8 @@ export const Find: React.FC = () => {
               pageSize={pageSize}
               onPageChange={onPageChange}
         /> ||      
-        <List element={PersonListElement}
+        <List loading={false}
+              element={PersonListElement}
               list={PaginatedListWrapper.mapTo<SearchPersonDto, ListItem>(list as PaginatedList<SearchPersonDto>, (item) => {
                 return {
                   id: item.id,

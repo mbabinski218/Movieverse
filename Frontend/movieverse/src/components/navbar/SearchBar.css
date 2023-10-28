@@ -50,3 +50,7 @@
     display: none;
     overflow: hidden;
 }
+
+.search-center {
+    height: 28px;
+}

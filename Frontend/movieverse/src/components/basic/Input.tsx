@@ -1,16 +1,16 @@
 import "./Input.css";
 
 interface InputProps {
-  label?: string | undefined;
-  value?: string | undefined;
-  type?: "text" | "number" | "password" | undefined;
-  accept?: string | undefined;
-  min?: number | undefined;
-  max?: number | undefined;
-  onClick?: () => void | undefined;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void | undefined;
-  onSubmit?: (e: React.KeyboardEvent<HTMLInputElement>) => void | undefined;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void | undefined;
+  label?: string;
+  value?: string;
+  type?: "text" | "number" | "password";
+  accept?: string;
+  min?: number;
+  max?: number;
+  onClick?: () => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export const Input: React.FC<InputProps> = ({label, value, type, accept, min, max, onClick, onChange, onSubmit, onKeyDown}) => {

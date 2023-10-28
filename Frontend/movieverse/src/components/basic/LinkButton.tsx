@@ -1,8 +1,8 @@
 import "./LinkButton.css"
 
 interface LinkButtonProps {
-  label?: string | undefined;
-  onClick?: () => void | undefined;
+  label?: string;
+  onClick?: () => void;
 }
 
 export const LinkButton: React.FC<LinkButtonProps> = ({label, onClick}) => {

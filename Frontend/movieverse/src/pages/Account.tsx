@@ -59,6 +59,9 @@ export const Account: React.FC = () => {
         };        
         setAccountCurrentProps(accountProps);
       })
+      .catch(() => {
+        showError("Something went wrong. Please try again.");
+      });
 
   }, []);
 

@@ -11,6 +11,7 @@ import { Api } from "../Api";
 import "./Chart.css"
 
 export const Chart: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(true);
   const params = useParams();
   const [type] = useState<string | null>(params.type ?? null)
   const [category] = useState<string | null>(params.category ?? null)
@@ -38,16 +39,19 @@ export const Chart: React.FC = () => {
           Api.getWatchlist(pageNumber, pageSize)
             .then(res => res.json())
             .then(res => res as PaginatedList<SearchMediaDto>)
-            .then(res => setList(PaginatedListWrapper.mapTo<SearchMediaDto, ListItem>(res, (item) => {
+            .then(res => {
+              setLoading(false);
+              setList(PaginatedListWrapper.mapTo<SearchMediaDto, ListItem>(res, (item) => {
               const date = item.releaseDate ? new Date(item.releaseDate).getFullYear().toString() : "Unknown release date";
-              return {
-                id: item.id,
-                label: item.title,
-                stats: date,
-                description: item.description,
-                image: item.poster
-              }
-            })))
+                return {
+                  id: item.id,
+                  label: item.title,
+                  stats: date,
+                  description: item.description,
+                  image: item.poster
+                }
+              }))
+            })
             .catch(console.error)
         })
         setFunc(() => updateWatchlistFunc);
@@ -63,24 +67,25 @@ export const Chart: React.FC = () => {
           Api.getMediaChart(type, category, pageNumber, pageSize)
             .then(res => res.json())
             .then(res => res as PaginatedList<SearchMediaDto>)
-            .then(res => setList(PaginatedListWrapper.mapTo<SearchMediaDto, ListItem>(res, (item) => {
+            .then(res => {
+              setLoading(false);  
+              setList(PaginatedListWrapper.mapTo<SearchMediaDto, ListItem>(res, (item) => {
               let date = "Unknown release date";
               if (item.releaseDate) {
                 date = fullDate ? new Date(item.releaseDate).toLocaleDateString() : new Date(item.releaseDate).getFullYear().toString();
               }
-
               return {
-                id: item.id,
-                label: item.title,
-                stats: date,
-                description: item.description,
-                image: item.poster
-              }
-            })))
+                  id: item.id,
+                  label: item.title,
+                  stats: date,
+                  description: item.description,
+                  image: item.poster
+                }
+              }))
+            })
             .catch(console.error)
         })
         setFunc(() => updateMoviesFunc);
-
         break;
 
       case "persons":
@@ -90,15 +95,18 @@ export const Chart: React.FC = () => {
           Api.getPersonsChart(category, pageNumber, pageSize)
             .then(res => res.json())
             .then(res => res as PaginatedList<SearchPersonDto>)
-            .then(res => setList(PaginatedListWrapper.mapTo<SearchPersonDto, ListItem>(res, (item) => {
-              return {
-                id: item.id,
-                label: item.fullName,
-                stats: "Age: " + item.age?.toString() ?? "Unknown",
-                description: item.biography,
-                image: item.picture
-              }
-            })))
+            .then(res => {
+              setLoading(false);
+              setList(PaginatedListWrapper.mapTo<SearchPersonDto, ListItem>(res, (item) => {
+                return {
+                  id: item.id,
+                  label: item.fullName,
+                  stats: "Age: " + item.age?.toString() ?? "Unknown",
+                  description: item.biography,
+                  image: item.picture
+                }
+              }))
+            })
             .catch(console.error)
         })
         setFunc(() => updatePersonsFunc);
@@ -112,7 +120,7 @@ export const Chart: React.FC = () => {
 
   useEffect(() => {
     if (func !== null) {
-     func(pageNumber, pageSize)    
+     func(pageNumber, pageSize);  
     }
   }, [pageNumber, pageSize, func])
 
@@ -125,7 +133,8 @@ export const Chart: React.FC = () => {
       <div className="chart-title">
         <span>{title}</span>
       </div>
-      <List element={MediaListElement}
+      <List loading={loading}
+            element={MediaListElement}
             list={list}
             pageSize={pageSize}
             onPageChange={onPageChange}

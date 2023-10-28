@@ -18,7 +18,8 @@ public sealed class PayPal : ISettings
 	public string BasicAuth { get; init; } = null!;
 	public string Url { get; init; } = null!;
 	public Endpoints Endpoints { get; init; } = null!;
-	public string PlanId { get; init; } = null!;
+	public string PaidPlanId { get; init; } = null!;
+	public string TrialPlanId { get; init; } = null!;
 }
 
 public sealed class PaymentsSettings : ISettings

@@ -11,10 +11,9 @@ import Close from "../../assets/bars-close.svg";
 import { UpdateRolesContract } from "../../core/contracts/updateRolesContract";
 import { Checkbox } from "../basic/Checkbox";
 import { UserRoles } from "../../UserRoles";
-import { StringValidator } from "../../common/stringValidator";
 
 export interface RoleEditorProps {
-  onClose?: () => void | undefined;
+  onClose?: () => void;
 }
 
 export const RoleEditor: React.FC<RoleEditorProps> = (props) => {

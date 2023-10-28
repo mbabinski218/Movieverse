@@ -10,7 +10,7 @@ import "./SearchBar.css";
 interface SearchBarProps {
   searchBarOpen: boolean;
   onSelect: () => void;
-  searchRef?: React.MutableRefObject<null> | undefined;
+  searchRef?: React.MutableRefObject<null>;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onSelect, searchRef}) => {
@@ -38,7 +38,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({searchBarOpen, onSelect, se
     <div className="search" id="search" ref={searchRef}> 
       <div className="search-bar">
         <input placeholder="Search" onSelect={onSelect} onChange={(e => setInput(e.target.value))} />
-        <a href={input ? `/find?term=${input}` : "/find"}>
+        <a className="search-center" href={input ? `/find?term=${input}` : "/find"}>
           <img src={SearchIcon} alt="search" className="search-icon" />
         </a>          
       </div>

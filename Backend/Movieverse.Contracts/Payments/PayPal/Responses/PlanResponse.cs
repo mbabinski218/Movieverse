@@ -6,4 +6,5 @@ public sealed class PlanResponse
 	public string Description { get; init; } = null!;
 	public string Price { get; init; } = null!;
 	public string Currency { get; init; } = null!;
+	public bool FreeTrial { get; init; }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -9,7 +8,6 @@ using Movieverse.Application.Resources;
 using Movieverse.Contracts.Payments.PayPal.Requests;
 using Movieverse.Contracts.Payments.PayPal.Responses;
 using Movieverse.Domain.Common.Result;
-using Newtonsoft.Json;
 
 namespace Movieverse.Application.Payments.PayPal.Handlers;
 

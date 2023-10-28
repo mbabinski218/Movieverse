@@ -3,4 +3,5 @@ export type PlanResponse = {
   description: string;
   price: string;
   currency: string;
+  freeTrial: boolean;
 }

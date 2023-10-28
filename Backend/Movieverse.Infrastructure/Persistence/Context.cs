@@ -40,6 +40,8 @@ public sealed class Context : IdentityDbContext<User, IdentityUserRole, Guid>
 		modelBuilder.Ignore<IdentityUserLogin<Guid>>();
 		
 		modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+		modelBuilder.Entity<Media>().OwnsOne(m => m.Details);
 	}
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

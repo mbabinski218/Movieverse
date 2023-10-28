@@ -70,5 +70,7 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 			informationBuilder.Property(i => i.LastName)
 				.HasMaxLength(Constants.nameLength);
 		});
+		
+		builder.OwnsOne(u => u.Subscription);
 	}
 }

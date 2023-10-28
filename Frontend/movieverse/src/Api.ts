@@ -23,7 +23,11 @@ export class Api {
 	static async fetchWithAuthorization(endpoint: string, init?: RequestInit | undefined, queryParams?: QueryParams | undefined): Promise<Response> {
 		const url: string = `${this.url}/${endpoint}${queryParams ? `?${queryParams.toString()}` : ""}`
 
-		const response = await fetch(url, init);
+		const response = await fetch(url, init)
+			.catch(error => {
+				console.log(error);
+				throw error;
+			});
 			
 		if (response.status !== StatusCodes.Unauthorized && response.status !== StatusCodes.Forbidden) {
 			return response;
@@ -75,6 +79,36 @@ export class Api {
 		init!.headers = headers;
 		
 		return await fetch(url, init);
+	}
+
+	static async refreshTokens() : Promise<void> {
+		const refreshToken = LocalStorage.getRefreshToken();
+		if (!refreshToken) {
+			return Promise.reject("No refresh token found.");
+		}
+
+		const loginContract: LoginContract = {
+			grantType: "RefreshToken",
+			refreshToken: refreshToken
+		}
+
+		const tokens = await fetch(`${this.url}/user/login`, {
+			mode: "cors",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(loginContract)
+		});
+
+		if (tokens.ok) {
+			tokens.json()
+				.then(res => res as TokensDto)
+				.then(res => {
+					localStorage.setItem(LocalStorage.accessTokenKey, JSON.stringify(res.accessToken))
+					localStorage.setItem(LocalStorage.refreshTokenKey, JSON.stringify(res.refreshToken))
+				});
+		}
 	}
 
 	static async getGenres(): Promise<GenreDto[]> {
@@ -258,7 +292,6 @@ export class Api {
 	}
 
 	static async getUserData() : Promise<Response> {
-		console.log(LocalStorage.getBearerToken());
 		return await this.fetchWithAuthorization(`user`, {
 			mode: "cors",
 			method: "GET",
@@ -422,6 +455,72 @@ export class Api {
 				"Content-Type": "application/json",
 				"Accept-Language": this.culture,
 				"Authorization": LocalStorage.getBearerToken()
+			}
+		}, queryParams);
+	}
+
+	static async paypalSubscription(paypalAccessToken: string) : Promise<Response> {
+		const queryParams = new QueryParams();
+
+		if (paypalAccessToken) {
+			queryParams.add("paypalAccessToken", paypalAccessToken);
+		}
+
+		return await this.fetchWithAuthorization(`payment/paypal/subscription`, {
+			mode: "cors",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		}, queryParams);
+	}
+
+	static async paypalStartSubscription(subscriptionId: string) : Promise<Response> {
+		const queryParams = new QueryParams();
+
+		if (subscriptionId) {
+			queryParams.add("subscriptionId", subscriptionId);
+		}
+
+		return await this.fetchWithAuthorization(`payment/paypal/subscription/start`, {
+			mode: "cors",
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		}, queryParams);
+	}
+
+	static async paypalGetSubscription() : Promise<Response> {
+		return await this.fetchWithAuthorization(`payment/paypal/subscription`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		});
+	}
+
+	static async paypalCancelSubscription(paypalAccessToken: string) : Promise<Response> {
+		const queryParams = new QueryParams();
+
+		if (paypalAccessToken) {
+			queryParams.add("paypalAccessToken", paypalAccessToken);
+		}
+
+		return await this.fetchWithAuthorization(`payment/paypal/subscription/cancel`, {
+			mode: "cors",
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken(),
 			}
 		}, queryParams);
 	}

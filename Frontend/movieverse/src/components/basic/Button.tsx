@@ -1,12 +1,12 @@
 import "./Button.css";
 
 interface ButtonProps {
-  className?: string | undefined;
-  label?: string | undefined;
-  primary?: boolean | undefined;
-  type?: "button" | "submit" | undefined;
-  disabled?: boolean | undefined;
-  onClick?: () => void | undefined;
+  className?: string;
+  label?: string;
+  primary?: boolean;
+  type?: "button" | "submit";
+  disabled?: boolean;
+  onClick?: (() => void) | (() => Promise<void>);
 }
 
 export const Button: React.FC<ButtonProps> = ({className, label, primary, type, disabled, onClick}) => {  
