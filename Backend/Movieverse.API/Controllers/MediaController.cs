@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.OutputCaching;
 using Movieverse.API.Common;
 using Movieverse.API.Common.Extensions;
 using Movieverse.Application.Authorization;
+using Movieverse.Application.Caching;
 using Movieverse.Application.Metrics;
 using Movieverse.Contracts.Commands.Media;
 using Movieverse.Contracts.Queries.Media;
@@ -43,9 +44,9 @@ public sealed class MediaController : ApiController
 			err => StatusCode(err.Code, err.Messages));
 	
 	[AllowAnonymous]
-	[OutputCache(NoStore = true)]
+	[OutputCache(PolicyName = CachePolicies.byQuery)]
 	[HttpGet("latest")]
-	public async Task<ActionResult> GetUpcoming([FromQuery] GetLatestMediaQuery query, CancellationToken cancellationToken) =>
+	public async Task<ActionResult> GetLatest([FromQuery] GetLatestMediaQuery query, CancellationToken cancellationToken) =>
 		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
