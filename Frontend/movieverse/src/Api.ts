@@ -514,14 +514,37 @@ export class Api {
 			queryParams.add("paypalAccessToken", paypalAccessToken);
 		}
 
-		return await this.fetchWithAuthorization(`payment/paypal/subscription/cancel`, {
+		return await this.fetchWithAuthorization(`media/paypal/subscription/cancel`, {
 			mode: "cors",
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
 				"Accept-Language": this.culture,
-				"Authorization": LocalStorage.getBearerToken(),
+				"Authorization": LocalStorage.getBearerToken()
 			}
 		}, queryParams);
 	}
+
+	static async getMedia(id: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${id}`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getMediaInfo(mediaId: string) : Promise<Response> {
+		return await this.fetchWithAuthorization(`user/${mediaId}`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		});
+	};
 }

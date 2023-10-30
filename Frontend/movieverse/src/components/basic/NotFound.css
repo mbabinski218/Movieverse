@@ -1,0 +1,17 @@
+.not-found {
+  display: block;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 350px;
+  overflow: hidden;
+  color: var(--color-gold);
+  text-align: center;
+  font-size: var(--font-xl);
+}
+
+@media (min-width: 767px) {
+  .not-found {
+      width: 400px;
+  }
+}

@@ -12,4 +12,5 @@ public interface IUserReadOnlyRepository
 	Task<Result<IEnumerable<MediaId>>> GetWatchlistAsync(Guid userId, CancellationToken cancellationToken = default);
 	Task<Result<SubscriptionResponse>> GetSubscriptionAsync(Guid userId, CancellationToken cancellationToken = default);
 	Task<bool> IsFreeTrialAvailableAsync(Guid userId, CancellationToken cancellationToken = default);
+	Task<Result<MediaInfoDto>> GetMediaInfoAsync(Guid userId, MediaId mediaId, CancellationToken cancellationToken = default);
 }

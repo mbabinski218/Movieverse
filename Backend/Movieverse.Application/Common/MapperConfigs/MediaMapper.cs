@@ -40,8 +40,8 @@ public sealed class MediaMapper : IRegister
 			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue())
 			.Map(dest => dest.PlatformIds, src => src.PlatformIds.Select(id => id.Value))
 			.Map(dest => dest.ContentIds, src => src.ContentIds.Select(id => id.Value))
-			.Map(dest => dest.GenreIds, src => src.GenreIds.Select(id => id.Value))
-			.Map(dest => dest.LatestReview, src => src.Reviews.OrderByDescending(r => r.Date).FirstOrDefault());
+			.Map(dest => dest.GenreIds, src => src.GenreIds.Select(id => id.Value));
+			//.Map(dest => dest.LatestReview, src => src.Reviews.OrderByDescending(r => r.Date).FirstOrDefault());
 
 		config.NewConfig<Movie, MovieDto>()
 			.Map(dest => dest.SequelId, src => src.SequelId.GetValue())
@@ -50,16 +50,16 @@ public sealed class MediaMapper : IRegister
 			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue())
 			.Map(dest => dest.PlatformIds, src => src.PlatformIds.Select(id => id.Value))
 			.Map(dest => dest.ContentIds, src => src.ContentIds.Select(id => id.Value))
-			.Map(dest => dest.GenreIds, src => src.GenreIds.Select(id => id.Value))
-			.Map(dest => dest.LatestReview, src => src.Reviews.OrderByDescending(r => r.Date).FirstOrDefault());
+			.Map(dest => dest.GenreIds, src => src.GenreIds.Select(id => id.Value));
+		//.Map(dest => dest.LatestReview, src => src.Reviews.OrderByDescending(r => r.Date).FirstOrDefault());
 
 		config.NewConfig<Series, SeriesDto>()
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
 			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue())
 			.Map(dest => dest.PlatformIds, src => src.PlatformIds.Select(id => id.Value))
 			.Map(dest => dest.ContentIds, src => src.ContentIds.Select(id => id.Value))
-			.Map(dest => dest.GenreIds, src => src.GenreIds.Select(id => id.Value))
-			.Map(dest => dest.LatestReview, src => src.Reviews.OrderByDescending(r => r.Date).FirstOrDefault());
+			.Map(dest => dest.GenreIds, src => src.GenreIds.Select(id => id.Value));
+		//.Map(dest => dest.LatestReview, src => src.Reviews.OrderByDescending(r => r.Date).FirstOrDefault());
 		
 		config.NewConfig<Review, ReviewDto>()
 			.Map(dest => dest.UserId, src => src.UserId);
@@ -71,8 +71,8 @@ public sealed class MediaMapper : IRegister
 			.Map(dest => dest.PersonId, src => src.PersonId.Value)
 			.Map(dest => dest.Role, src => src.Role.ToString());
 		
-		config.NewConfig<Episode, EpisodeDto>()
-			.Map(dest => dest.ContentIds, src => src.ContentIds.Select(id => id.Value));
+		// config.NewConfig<Episode, EpisodeDto>()
+		// 	.Map(dest => dest.ContentIds, src => src.ContentIds.Select(id => id.Value));
 
 		config.NewConfig<Media, SearchMediaDto>()
 			.Map(dest => dest.Id, src => src.Id.GetValue())

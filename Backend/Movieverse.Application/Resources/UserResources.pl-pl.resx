@@ -98,4 +98,7 @@
     <data name="FailedToChangeEmail" xml:space="preserve">
         <value>Błąd podczas zmianyadresu email</value>
     </data>
+    <data name="NoData" xml:space="preserve">
+        <value>Brak danych</value>
+    </data>
 </root>

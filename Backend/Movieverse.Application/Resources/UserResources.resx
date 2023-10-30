@@ -105,4 +105,7 @@
     <data name="FailedToChangeEmail" xml:space="preserve">
         <value>Failed to change email</value>
     </data>
+    <data name="NoData" xml:space="preserve">
+        <value>No data</value>
+    </data>
 </root>
