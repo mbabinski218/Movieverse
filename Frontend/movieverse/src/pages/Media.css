@@ -1,0 +1,223 @@
+.media-page {
+  display: grid;
+  margin: 20px auto 20px auto;
+  width: 1000px;
+  grid-template-areas: 
+  "title title stats stats"
+  "poster trailer trailer clickable"
+  "desc desc utils utils"
+  "details details utils utils"
+  "specs specs . ."
+  "staf staf . ."
+  "pro pro . .";
+  grid-template-columns: 242px 530px 100px 1fr;
+  grid-template-rows: 50px 360px min-content min-content min-content min-content;
+  column-gap: 10px;
+  row-gap: 10px;
+}
+
+.media-page-video {
+  border-radius: 10px;
+}
+
+.media-title {
+  grid-area: title;
+  color: var(--color-gold);
+  font-size: var(--font-xl);
+  font-weight: bold;
+  padding-left: 5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+}
+
+.media-stats {
+  display: flex;
+  grid-area: stats;
+  margin-left: auto;
+  margin-right: 5px;
+}
+
+.media-clickable {
+  grid-area: clickable;
+  background-color: var(--color-dark);
+  border-radius: 10px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
+}
+
+.media-poster {
+  grid-area: poster;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
+}
+
+.media-trailer {
+  grid-area: trailer;
+  background-color: var(--color-dark);
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
+}
+
+.media-no-trailer {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10%;
+}
+
+.media-utils {
+  grid-area: utils;
+}
+
+.media-description {
+  grid-area: desc;
+  color: var(--color-white);
+  padding: 0px 5px 5px 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 10px;
+}
+
+.media-details {
+  grid-area: details;
+  color: var(--color-white);
+  margin-bottom: 10px;
+}
+
+.media-specs {
+  grid-area: specs;
+  color: var(--color-white);
+  margin-bottom: 10px;
+}
+
+.media-staf {
+  grid-area: staf;
+  color: var(--color-white);
+  margin-bottom: 10px;
+}
+
+.media-pro {
+  grid-area: pro;
+  color: var(--color-white);
+  margin-bottom: 10px;
+}
+
+.media-icon-horizontal + .media-icon-horizontal {
+  padding-left: 20px;
+}
+
+.media-icon-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-icon-vertical + .media-icon-vertical {
+  padding-top: 30px;
+}
+
+.media-series {
+  display: block;
+  cursor: default;
+  background-color: var(--color-dark);
+  color: var(--color-white);
+  border-radius: 10px;
+  padding: 5px 5px 5px 5px;
+}
+
+.media-break {
+    border-width: 1px;
+    border-radius: 10px;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+@media (min-width: 1050px) {
+  .button + .button {
+    margin-left: 0px;
+    margin-top: 10px;
+  }
+
+  .media-series + .button {
+    margin-top: 10px;
+  }
+
+  .media-series-info {
+    display: block
+  }
+}
+
+@media (max-width: 1050px) {
+  .media-page {
+      width: 640px;
+      grid-template-areas: 
+      "title title title stats"
+      "trailer trailer trailer trailer"
+      "poster clickable desc desc"
+      "utils utils utils utils"
+      "details details details details"
+      "specs specs specs specs"
+      "staf staf staf staf"
+      "pro pro pro pro";
+      grid-template-columns: 242px 98px 1fr 220px;
+      grid-template-rows: 50px 360px 360px min-content min-content min-content min-content;
+  }
+
+  .media-series {
+    width: 150%;
+  }
+
+  .media-series-data + .media-series-data {
+    margin-left: 15px;
+  }
+
+  .media-series-info {
+    display:flex
+  }
+
+  .media-series + .button {
+    margin-left: 10px;
+  }
+
+  .button + .button {
+    margin-left: 10px;
+  }
+
+  .media-utils {
+    display: flex;
+  }
+}
+
+@media (max-width: 680px) {
+  .media-page {
+    width: 90vw;
+    grid-template-areas: 
+    "title stats stats"
+    "trailer trailer trailer"
+    "poster clickable ."
+    "utils utils utils"
+    "desc desc desc"
+    "details details details"
+    "specs specs specs"
+    "staf staf staf"
+    "pro pro pro";
+    grid-template-columns: 242px 98px 1fr;
+    grid-template-rows: 50px 360px 360px min-content min-content min-content min-content;
+  }
+
+  .media-page-video {
+    width: 90vw;
+  }
+
+  .media-trailer {
+    width: 90vw;
+  }
+}

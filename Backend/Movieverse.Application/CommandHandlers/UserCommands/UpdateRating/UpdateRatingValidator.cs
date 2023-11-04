@@ -9,6 +9,6 @@ public sealed class UpdateRatingValidator : AbstractValidator<UpdateRatingComman
 	public UpdateRatingValidator()
 	{
 		RuleFor(u => u.Rating)
-			.InclusiveBetween((ushort)1, (ushort)10).WithMessage("Rating must be between 1 and 10");
+			.InclusiveBetween((ushort)0, (ushort)10).WithMessage("Rating must be between 0 and 10");
 	}
 }

@@ -1,0 +1,68 @@
+.icon-comp-img {
+  display: inline-grid;
+  grid-template-areas: 
+    "label label"
+    "img text";
+  grid-template-columns: 0.9fr 1fr;
+  grid-template-rows: min-content 25px;
+  text-align: center;
+  place-items: center;
+  cursor: default;
+}
+
+.icon-comp {
+  display: inline-grid;
+  grid-template-areas: 
+    "label"
+    "text";
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content 25px;
+  cursor: default;
+}
+
+.icon-comp-only-img {
+  display: inline-grid;
+  grid-template-areas: 
+    "label"
+    "img";
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content 25px;
+  text-align: center;
+  place-items: center;
+  cursor: default;
+}
+
+.icon-label {
+  grid-area: label;
+  color: var(--color-white);
+  font-size: var(--font-m);
+  text-align: center;
+}
+
+.icon-img {
+  grid-area: img;
+  margin-left: auto;
+  padding-right: 3px;
+}
+
+.icon-center-img {
+  grid-area: img;
+}
+
+.icon-text {
+  grid-area: text;
+  color: var(--color-white);
+  font-size: var(--font-ms);
+  text-align: center;
+  font-weight: bold;
+  margin-right: auto;
+  padding-left: 3px;
+}
+
+.icon-clickable {
+  cursor: pointer;
+}
+
+.icon-clickable:hover {
+  opacity: 0.7;
+}

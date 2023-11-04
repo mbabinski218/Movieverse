@@ -39,7 +39,6 @@ public sealed class MediaMapper : IRegister
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
 			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue())
 			.Map(dest => dest.PlatformIds, src => src.PlatformIds.Select(id => id.Value))
-			.Map(dest => dest.ContentIds, src => src.ContentIds.Select(id => id.Value))
 			.Map(dest => dest.GenreIds, src => src.GenreIds.Select(id => id.Value));
 			//.Map(dest => dest.LatestReview, src => src.Reviews.OrderByDescending(r => r.Date).FirstOrDefault());
 
@@ -49,7 +48,6 @@ public sealed class MediaMapper : IRegister
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
 			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue())
 			.Map(dest => dest.PlatformIds, src => src.PlatformIds.Select(id => id.Value))
-			.Map(dest => dest.ContentIds, src => src.ContentIds.Select(id => id.Value))
 			.Map(dest => dest.GenreIds, src => src.GenreIds.Select(id => id.Value));
 		//.Map(dest => dest.LatestReview, src => src.Reviews.OrderByDescending(r => r.Date).FirstOrDefault());
 
@@ -57,7 +55,6 @@ public sealed class MediaMapper : IRegister
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
 			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue())
 			.Map(dest => dest.PlatformIds, src => src.PlatformIds.Select(id => id.Value))
-			.Map(dest => dest.ContentIds, src => src.ContentIds.Select(id => id.Value))
 			.Map(dest => dest.GenreIds, src => src.GenreIds.Select(id => id.Value));
 		//.Map(dest => dest.LatestReview, src => src.Reviews.OrderByDescending(r => r.Date).FirstOrDefault());
 		

@@ -15,6 +15,7 @@ import { SearchPersonDto } from "./core/dtos/person/searchPersonDto";
 import { GenreDto } from "./core/dtos/genre/genreDto";
 import { AddMediaContract } from "./core/contracts/addMediaContract";
 import { UpdateRolesContract } from "./core/contracts/updateRolesContract";
+import { GetContentPaths } from "./core/contracts/getContentPaths";
 
 export class Api {
 	static readonly url: string = "https://localhost:44375/api";
@@ -245,6 +246,18 @@ export class Api {
 
 	static async updateWatchlistStatus(mediaId: string): Promise<Response> {
 		return await this.fetchWithAuthorization(`user/watchlist/${mediaId}`, {
+			mode: "cors",
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		})
+	}
+
+	static async updateRating(mediaId: string, rating: number): Promise<Response> {
+		return await this.fetchWithAuthorization(`user/rating/${mediaId}/${rating}`, {
 			mode: "cors",
 			method: "PUT",
 			headers: {
@@ -514,7 +527,7 @@ export class Api {
 			queryParams.add("paypalAccessToken", paypalAccessToken);
 		}
 
-		return await this.fetchWithAuthorization(`media/paypal/subscription/cancel`, {
+		return await this.fetchWithAuthorization(`payment/paypal/subscription/cancel`, {
 			mode: "cors",
 			method: "PUT",
 			headers: {
@@ -544,6 +557,17 @@ export class Api {
 				"Content-Type": "application/json",
 				"Accept-Language": this.culture,
 				"Authorization": LocalStorage.getBearerToken()
+			}
+		});
+	};
+
+	static async getContentPaths(mediaId: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${mediaId}/content`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
 			}
 		});
 	};

@@ -8,6 +8,8 @@ using Movieverse.Application.Authorization;
 using Movieverse.Application.Caching;
 using Movieverse.Application.Metrics;
 using Movieverse.Contracts.Commands.Media;
+using Movieverse.Contracts.DataTransferObjects.Content;
+using Movieverse.Contracts.Queries.Content;
 using Movieverse.Contracts.Queries.Media;
 
 namespace Movieverse.API.Controllers;
@@ -71,6 +73,14 @@ public sealed class MediaController : ApiController
 	[OutputCache(NoStore = true)]
 	[HttpGet("chart")]
 	public async Task<ActionResult> Chart([FromQuery] MediaChartQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
+	[OutputCache]
+	[HttpGet("{Id:guid}/content")]
+	public async Task<ActionResult<IEnumerable<ContentInfoDto>>> GetContent([FromRoute] GetContentPath query, CancellationToken cancellationToken) =>
 		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));

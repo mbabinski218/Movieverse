@@ -29,6 +29,5 @@ public interface IMediaReadOnlyRepository
 	Task<Result<IPaginatedList<SearchMediaDto>>> FindRecommendedMoviesAsync(short? pageNumber, short? pageSize, CancellationToken cancellationToken = default);
 	Task<Result<IPaginatedList<SearchMediaDto>>> FindRecommendedSeriesAsync(short? pageNumber, short? pageSize, CancellationToken cancellationToken = default);
 	
-	
-	
+	Task<Result<IEnumerable<ContentId>>> GetContentAsync(MediaId id, CancellationToken cancellationToken = default);
 }

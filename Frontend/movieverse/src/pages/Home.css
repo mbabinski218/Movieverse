@@ -14,3 +14,9 @@
     font-weight: bold;
     color: var(--color-white);
 }
+
+.page-loading {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+}

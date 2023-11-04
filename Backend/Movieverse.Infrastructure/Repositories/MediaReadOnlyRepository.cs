@@ -135,6 +135,18 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		throw new NotImplementedException();
 	}
 
+	public async Task<Result<IEnumerable<ContentId>>> GetContentAsync(MediaId id, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Getting content for media id: ", id);
+
+		var contentIds = await _dbContext.Medias
+			.AsNoTracking()
+			.Where(m => m.Id == id)
+			.SelectMany(m => m.ContentIds)
+			.ToListAsync(cancellationToken);
+
+		return contentIds;
+	}
 
 	public async Task<Result<IPaginatedList<SearchMediaDto>>> FindMediaByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 	{

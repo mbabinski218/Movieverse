@@ -13,7 +13,6 @@ export interface MediaDto {
   posterId: string | null,
   trailerId: string | null,
   platformIds: string[],
-  contentIds: string[],
   genreIds: string[],
   staff: StaffDto[]
 };

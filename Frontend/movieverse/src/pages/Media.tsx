@@ -1,32 +1,298 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useMedia } from "../hooks/useMedia";
-import { useUserMediaInfo } from "../hooks/useUserMediaInfo";
-import { LinkButton } from "../components/basic/LinkButton";
-import "./Media.css";
-import { useCallback, useEffect } from "react";
+import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { NotFound } from "../components/basic/NotFound";
+import { useUserMediaInfo } from "../hooks/useUserMediaInfo";
+import { MediaInfoDto } from "../core/dtos/user/mediaInfoDto";
+import { useMedia } from "../hooks/useMedia";
+import { Loading } from "../components/basic/Loading";
+import { Icon } from "../components/basic/Icon";
+import { RateMediaPopup } from "../components/media/RateMediaPopup";
+import { ContentViewer } from "../components/content/ContentViewer";
+import { MovieDto, SeriesDto } from "../core/dtos/media/mediaDto";
+import { Button } from "../components/basic/Button";
+import { Section } from "../components/basic/Section";
+import { Text } from "../components/basic/Text";
+import { useUserRoles } from "../hooks/useUserRoles";
+import { CloudStore } from "../CloudStore";
+import { Api } from "../Api";
+import "./Media.css";
+import Blank from "../assets/blank.png";
+import NoVideo from "../assets/no-video.svg";
+import YouTube from "react-youtube";
+import Star from "../assets/star.svg";
+import Position from "../assets/position.svg";
+import Plus from "../assets/plus.svg";
+import CheckGold from "../assets/check-gold.svg";
+import StarEmpty from "../assets/star-empty.svg";
+import Images from "../assets/images.svg";
 
 export const Media: React.FC = () => {
   const params = useParams();
+  const [loading, setLoading] = useState<boolean>(true);
   const [media, setMedia] = useMedia(params.id ?? "");
   const [userMediaInfo, setUserMediaInfo] = useUserMediaInfo(params.id ?? "");
+  const [imgSrc, setImgSrc] = useState<string>(Blank);
+  const [videoId, setVideoId] = useState<string | null>(null);
+  const [isRatingPopupOpen, setIsRatingPopupOpen] = useState<boolean>(false);
+  const [isContentPopupOpen, setIsContentPopupOpen] = useState<boolean>(false);
+  const [userRoles, setUserRoles] = useUserRoles();
   const navigate = useNavigate();
 
+  // On media change
   useEffect(() => {
     if (media) {
       document.title = `${media.title} - Movieverse`;
+
+      media.posterId ? setImgSrc(CloudStore.getImageUrl(media.posterId as string)) : setImgSrc(Blank);
+      if (media.trailerId) {
+        Api.getVideoPath(media.trailerId).then(url => {
+          const video = url.split("v=")[1];
+          setVideoId(video);
+        });
+      }
+
+      setLoading(false);
     }
     else {
-      document.title = "Not found - Movieverse";
+      if (!loading) {
+        document.title = "Not found - Movieverse";
+      }
     }
   }, [media]);
 
+  // Error handling
+  const onImgError = useCallback((e: SyntheticEvent<HTMLImageElement, Event>): void => {
+		const img = e.target as HTMLImageElement;
+		img.src = NoVideo;
+	}, []);
+
+  // Calculate popularity
+  const calculatePopularity = useCallback((): string => {
+    const position = media?.currentPosition ?? 0;    
+    return position === 0 ? "-" : position.toString();
+  }, [media?.currentPosition]);
+
+
+  // Handlers
+  const watchlistHandler = useCallback(() => {
+    Api.updateWatchlistStatus(params.id as string)
+    .then((res) => {
+      if (res.ok) {
+        const mediaInfo: MediaInfoDto = {
+          isOnWatchlist: !userMediaInfo?.isOnWatchlist ?? true,
+          rating: userMediaInfo?.rating ?? 0
+        };
+        setUserMediaInfo(mediaInfo);
+      }				
+    });
+  }, [userMediaInfo]);
+
+  const ratingPopupHandler = useCallback(() => {
+    setIsRatingPopupOpen(!isRatingPopupOpen);
+  }, [isRatingPopupOpen]);
+
+  const ratingHandler = useCallback((event: SyntheticEvent<Element, Event>, value: number | null) => {
+    Api.updateRating(params.id as string, value ?? 0)
+      .then((res) => {
+        if (res.ok) {
+          const mediaInfo: MediaInfoDto = {
+            isOnWatchlist: userMediaInfo?.isOnWatchlist ?? false,
+            rating: value ?? 0
+          };
+          setUserMediaInfo(mediaInfo);
+        }				
+      });
+  }, [userMediaInfo]);
+
+  const contentHandler = useCallback(() => {
+    setIsContentPopupOpen(!isContentPopupOpen);
+  }, [isContentPopupOpen]);
+
+  const seriesExplorerHandler = useCallback(() => {
+
+  }, []);
+
+  // Render utils
+  const isMovie = useCallback((media: MovieDto | SeriesDto | null): media is MovieDto => {
+    return media !== null && "sequelId" in media && "prequelId" in media ;
+  }, []);
+
+  const isSeries = useCallback((media: MovieDto | SeriesDto | null): media is SeriesDto => {
+    return media !== null && "seasonCount" in media && "episodeCount" in media;
+  }, []);
+
+  const renderUtils = useCallback((): JSX.Element => {
+    if(isMovie(media)) {
+      return (
+        <>
+          {
+            media.sequelId &&
+            <Button label={`Sequel > ${media.sequelTitle}`}
+                    color="dark"
+                    redirect={`/media/${media.sequelId}`}
+            />
+          }
+          {            
+            media.prequelId &&
+            <Button label={`Prequel < ${media.prequelTitle}`}
+                    color="dark"
+                    redirect={`/media/${media.prequelId}`}
+            />
+          }
+        </>
+      );
+    }
+
+    if(isSeries(media)) {
+      return (
+        <>
+          <div className="media-series">
+            {
+              media.seriesEnded &&
+              <>
+                <div className="media-series-end">{`Series ended: ${media.seriesEnded.substring(0, 10)}`}</div>
+                <hr className="media-break" />
+              </>
+            }
+            <div className="media-series-info">
+              <div className="media-series-data">{`Seasons: ${media.seasonCount}`}</div>
+              <div className="media-series-data">{`Episodes: ${media.episodeCount}`}</div>
+            </div>
+          </div>
+          <Button label="View episodes"
+                  color="dark"
+                  onClick={seriesExplorerHandler}
+          />
+        </>
+      )
+    }    
+    return <></>;
+  }, [media]);
+
+  // Render
   return (
     <>      
       {
+        loading ? <Loading /> :
         !media ? <NotFound /> : 
-        <div>
-          
+        <div className="media-page">
+          <span className="media-title">{media.title}</span>
+          <div className="media-stats">
+            <Icon className="media-icon-horizontal"
+                  label="RATING"
+                  src={Star}
+                  text={media.basicStatistics.rating.toString()}
+            />
+            <Icon className="media-icon-horizontal"
+                  label="POPULARITY"      
+                  src={Position}            
+                  text={calculatePopularity()}
+            />
+          </div>          
+          <div className="media-clickable">
+            <Icon className="media-icon-vertical"
+                  label="WATCHLIST"      
+                  src={userMediaInfo?.isOnWatchlist ? CheckGold : Plus}  
+                  onClick={watchlistHandler}          
+            />
+            <Icon className="media-icon-vertical"
+                  label="YOUR RATING"      
+                  src={userMediaInfo?.rating ? Star : StarEmpty}            
+                  text={userMediaInfo?.rating ? userMediaInfo.rating.toString() : ""}
+                  onClick={ratingPopupHandler}
+            />
+            <Icon className="media-icon-vertical"
+                  label="MORE CONTENT"      
+                  src={Images}
+                  onClick={contentHandler}           
+            />
+          </div>
+          <img className="media-poster"
+               src={imgSrc}
+               onError={onImgError}
+               alt={media.title}
+          />
+          <div className="media-trailer">
+            {
+              videoId ? 
+              <YouTube videoId={videoId}
+                       iframeClassName="media-page-video"
+              /> :
+              <img className="media-no-trailer"
+                   src={NoVideo}
+                   onError={onImgError}
+                   alt="No trailer available" 
+              />
+            }
+          </div>
+          <div className="media-description">            
+            <Section title="Storyline">
+              <span>{media.details.storyline}</span>
+            </Section>
+          </div>
+          <div className="media-utils">
+            {renderUtils()}
+          </div>
+          <div className="media-details">
+            <Section title="Details">
+              <Text label={`Runtime`} text={media.details.runtime ? `${media.details.runtime} min` : "unknown"} />
+              <hr className="media-break" />
+              <Text label={`Certificate`} text={`${media.details.certificate ?? "unknown"}`} />
+              <hr className="media-break" />
+              <Text label={`Release date`} text={`${media.details.releaseDate?.substring(0, 10) ?? "unknown"}`} />
+              <hr className="media-break" />
+              <Text label={`Tagline`} text={`${media.details.tagline ?? "unknown"}`} />
+              <hr className="media-break" />
+              <Text label={`Country of origin`} text={`${media.details.countryOfOrigin ?? "unknown"}`} />
+              <hr className="media-break" />
+              <Text label={`Language`} text={`${media.details.language ?? "unknown"}`} />
+              <hr className="media-break" />
+              <Text label={`Filming locations`} text={`${media.details.filmingLocations ?? "unknown"}`} />        
+            </Section>
+          </div>
+          <div className="media-specs">
+            <Section title="Technical specs">
+              <Text label={`Aspect ratio`} text={`${media.technicalSpecs.aspectRatio ?? "unknown"}`} />
+              <hr className="media-break" />
+              <Text label={`Camera`} text={`${media.technicalSpecs.camera ?? "unknown"}`} />
+              <hr className="media-break" />
+              <Text label={`Color`} text={`${media.technicalSpecs.color ?? "unknown"}`} />
+              <hr className="media-break" />
+              <Text label={`Sound mix`} text={`${media.technicalSpecs.soundMix ?? "unknown"}`} />
+              <hr className="media-break" />
+              <Text label={`Negative format`} text={`${media.technicalSpecs.negativeFormat ?? "unknown"}`} />
+              <hr className="media-break" />
+            </Section>
+          </div>
+          <div className="media-staf">
+            <Section title="Staff">
+
+            </Section>
+          </div>
+          <div className="media-pro">
+            {
+              userRoles?.includes("Pro") &&
+              <Section title="Statistics (Pro)">
+
+              </Section>
+            }
+          </div>
+          <>
+            {
+              isRatingPopupOpen && 
+              <RateMediaPopup mediaId={params.id as string}
+                              rating={userMediaInfo?.rating}
+                              onClose={ratingPopupHandler}
+                              onRatingChange={ratingHandler}
+              />
+            }
+            {
+              isContentPopupOpen && 
+              <ContentViewer mediaId={params.id as string} 
+                             onClose={contentHandler}
+              />
+            }
+          </>
         </div>   
       } 
     </>
