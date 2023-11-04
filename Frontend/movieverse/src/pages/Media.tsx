@@ -13,6 +13,7 @@ import { Button } from "../components/basic/Button";
 import { Section } from "../components/basic/Section";
 import { Text } from "../components/basic/Text";
 import { useUserRoles } from "../hooks/useUserRoles";
+import { UserRoles } from "../UserRoles";
 import { CloudStore } from "../CloudStore";
 import { Api } from "../Api";
 import "./Media.css";
@@ -271,7 +272,7 @@ export const Media: React.FC = () => {
           </div>
           <div className="media-pro">
             {
-              userRoles?.includes("Pro") &&
+              userRoles?.includes(UserRoles.Pro) || userRoles?.includes(UserRoles.Administrator) &&
               <Section title="Statistics (Pro)">
 
               </Section>
