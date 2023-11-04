@@ -1,0 +1,11 @@
+.text {
+  display: flex;
+}
+
+.text-label {
+  font-weight: bold;
+}
+
+.text-label + .text-text {
+  margin-left: 10px;
+}

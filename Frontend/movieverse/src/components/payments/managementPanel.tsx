@@ -7,7 +7,6 @@ import { Error } from "../../components/basic/Error";
 import { Button } from "../../components/basic/Button";
 import { Api } from "../../Api";
 import "./managementPanel.css";
-import { LocalStorage } from "../../hooks/useLocalStorage";
 
 export const ManagementPanel: React.FC = () => {
   const [subscription, setSubscription] = useState<SubscriptionResponse | null>(null);
@@ -21,7 +20,6 @@ export const ManagementPanel: React.FC = () => {
           return res.json()
         }
         else {
-          showError("Error while loading the subscription. Please try again later.");
           return;
         }
       })
@@ -66,22 +64,28 @@ export const ManagementPanel: React.FC = () => {
       <div className="mp-title">
         <span>Subscription panel</span>
       </div>
-      <div className="mp-menu">
-        {
-          subscription &&
-          <>
-            <div className="up-menu-info">
-              <span className="up-menu-info-bold">Available functions:</span><br/>
-              <span className="up-menu-info-m">Access to advanced statistics such as BoxOffice</span><br/>
-              <span className="up-menu-info-m">Adding new movies and series</span><br/><br/>
-              <span className="up-menu-info-gold up-menu-info-m">Next billing: {(new Date(subscription.nextBillingTime ?? new Date())).toLocaleDateString()}</span>
-            </div>
-              <Button label="Cancel subscription"
-                      onClick={cancleSubscriptionHandler}
-              />
-          </>
-        }
-      </div>
+      {
+        subscription ?
+        <div className="mp-menu">
+          {
+            subscription &&
+            <>
+              <div className="up-menu-info">
+                <span className="up-menu-info-bold">Available functions:</span><br/>
+                <span className="up-menu-info-m">Access to advanced statistics such as BoxOffice</span><br/>
+                <span className="up-menu-info-m">Adding new movies and series</span><br/><br/>
+                <span className="up-menu-info-gold up-menu-info-m">Next billing: {(new Date(subscription.nextBillingTime ?? new Date())).toLocaleDateString()}</span>
+              </div>
+                <Button label="Cancel subscription"
+                        onClick={cancleSubscriptionHandler}
+                />
+            </>
+          }
+        </div> :
+        <div className="mp-menu up-menu-info">          
+          <span>Pro subscription granted for life by the administrator.</span>
+        </div>
+      }
       <div className="media-error">
           {
             stateProps.error &&

@@ -38,8 +38,8 @@ export const Pro: React.FC = () => {
         !loading &&
         <>
           {
-            userRole.includes(UserRoles.Pro) &&
-            <ManagementPanel /> ||
+            userRole.includes(UserRoles.Pro) || userRole.includes(UserRoles.Administrator) ?
+            <ManagementPanel /> :
             <UpgradePanel />
           }
         </>

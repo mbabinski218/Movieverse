@@ -1,0 +1,16 @@
+.section-bar {
+  display: flex;
+}
+
+.section-title {
+  color: var(--color-white);
+  font-size: var(--font-l);
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
+.section-img {
+  scale: 2.5;
+  margin-right: 5px;
+}
