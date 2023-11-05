@@ -5,6 +5,7 @@ import { ContentDto } from "../../core/dtos/content/contentDto";
 import { Button } from "../basic/Button";
 import { Loading } from "../basic/Loading";
 import { CloudStore } from "../../CloudStore";
+import { Player } from "../../common/playe";
 import YouTube from "react-youtube";
 import "./ContentViewer.css";
 import Close from "../../assets/bars-close.svg";
@@ -78,15 +79,16 @@ export const ContentViewer: React.FC<ContentProps> = ({mediaId, onClose}) => {
               <div className="content-viewer">
                 <span className="content-viewer-index">{`${currentIndex + 1}/${content!.length}`}</span>
                 <img className="content-viewer-close" 
-                    src={Close} 
-                    alt="close" 
-                    onClick={onClose} 
+                     src={Close} 
+                     alt="close" 
+                     onClick={onClose} 
                 />
                 {
                   currentContent?.contentType === "video" ?
                   <div>
                     <YouTube videoId={currentContent?.path.split("v=")[1]}
-                            iframeClassName="content-viewer-player"
+                             iframeClassName="content-viewer-player"
+                             opts={Player.opts}
                     />
                   </div> :
                   <div>
@@ -110,9 +112,9 @@ export const ContentViewer: React.FC<ContentProps> = ({mediaId, onClose}) => {
             </> :
             <div className="content-empty">
               <img className="content-viewer-close" 
-                src={Close} 
-                alt="close" 
-                onClick={onClose} 
+                   src={Close} 
+                   alt="close" 
+                   onClick={onClose} 
               />
               <span style={{margin: "10px"}}>No content</span>
             </div>
