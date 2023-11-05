@@ -8,6 +8,7 @@
   "desc desc utils utils"
   "details details utils utils"
   "specs specs . ."
+  "genre genre . ."
   "staf staf . ."
   "pro pro . .";
   grid-template-columns: 242px 530px 100px 1fr;
@@ -73,6 +74,13 @@
 
 .media-utils {
   grid-area: utils;
+  display: grid;
+  grid-template-areas: 
+  "utils-stats"
+  "utils-platforms";
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content min-content;
+  row-gap: 10px;
 }
 
 .media-description {
@@ -92,6 +100,12 @@
 
 .media-specs {
   grid-area: specs;
+  color: var(--color-white);
+  margin-bottom: 10px;
+}
+
+.media-genre {
+  grid-area: genre;
   color: var(--color-white);
   margin-bottom: 10px;
 }
@@ -165,6 +179,7 @@
       "utils utils utils utils"
       "details details details details"
       "specs specs specs specs"
+      "genre genre genre genre"
       "staf staf staf staf"
       "pro pro pro pro";
       grid-template-columns: 242px 98px 1fr 220px;
@@ -192,6 +207,10 @@
   }
 
   .media-utils {
+    display: grid;
+  }
+
+  .media-utils-stats {
     display: flex;
   }
 }
@@ -207,6 +226,7 @@
     "desc desc desc"
     "details details details"
     "specs specs specs"
+    "genre genre genre"
     "staf staf staf"
     "pro pro pro";
     grid-template-columns: 242px 98px 1fr;
@@ -220,4 +240,12 @@
   .media-trailer {
     width: 90vw;
   }
+}
+
+.media-utils-stats {
+  grid-area: utils-stats;
+}
+
+.media-utils-platforms {
+  grid-area: utils-platforms;
 }

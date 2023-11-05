@@ -8,7 +8,7 @@ using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Application.QueryHandlers.Media;
 
-public sealed class GetContentPathHandler : IRequestHandler<GetContentPath, Result<IEnumerable<ContentInfoDto>>>
+public sealed class GetContentPathHandler : IRequestHandler<GetContentPathQuery, Result<IEnumerable<ContentInfoDto>>>
 {
 	private readonly ILogger<GetContentPathHandler> _logger;
 	private readonly IMediaReadOnlyRepository _mediaRepository;
@@ -21,7 +21,7 @@ public sealed class GetContentPathHandler : IRequestHandler<GetContentPath, Resu
 		_contentRepository = contentRepository;
 	}
 
-	public async Task<Result<IEnumerable<ContentInfoDto>>> Handle(GetContentPath request, CancellationToken cancellationToken)
+	public async Task<Result<IEnumerable<ContentInfoDto>>> Handle(GetContentPathQuery request, CancellationToken cancellationToken)
 	{
 		_logger.LogDebug("Getting content for media id: ", request.Id);
 

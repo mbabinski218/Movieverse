@@ -1,5 +1,6 @@
 .section-bar {
   display: flex;
+  cursor: default;
 }
 
 .section-title {

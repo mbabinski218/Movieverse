@@ -15,7 +15,6 @@ import { SearchPersonDto } from "./core/dtos/person/searchPersonDto";
 import { GenreDto } from "./core/dtos/genre/genreDto";
 import { AddMediaContract } from "./core/contracts/addMediaContract";
 import { UpdateRolesContract } from "./core/contracts/updateRolesContract";
-import { GetContentPaths } from "./core/contracts/getContentPaths";
 
 export class Api {
 	static readonly url: string = "https://localhost:44375/api";
@@ -563,6 +562,50 @@ export class Api {
 
 	static async getContentPaths(mediaId: string) : Promise<Response> {
 		return await fetch(`${this.url}/media/${mediaId}/content`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getPlatform(mediaId: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${mediaId}/platform`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getGenre(mediaId: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${mediaId}/genre`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getStaff(mediaId: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${mediaId}/staff`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getStatistics(mediaId: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${mediaId}/statistics`, {
 			mode: "cors",
 			method: "GET",
 			headers: {

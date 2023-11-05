@@ -34,29 +34,20 @@ public sealed class MediaMapper : IRegister
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
 			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue())
 			.Map(dest => dest.Rating, src => src.BasicStatistics.Rating);
-		
+
 		config.NewConfig<Media, MediaDto>()
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
-			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue())
-			.Map(dest => dest.PlatformIds, src => src.PlatformIds.Select(id => id.Value))
-			.Map(dest => dest.GenreIds, src => src.GenreIds.Select(id => id.Value));
-			//.Map(dest => dest.LatestReview, src => src.Reviews.OrderByDescending(r => r.Date).FirstOrDefault());
+			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue());
 
 		config.NewConfig<Movie, MovieDto>()
 			.Map(dest => dest.SequelId, src => src.SequelId.GetValue())
 			.Map(dest => dest.PrequelId, src => src.PrequelId.GetValue())
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
-			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue())
-			.Map(dest => dest.PlatformIds, src => src.PlatformIds.Select(id => id.Value))
-			.Map(dest => dest.GenreIds, src => src.GenreIds.Select(id => id.Value));
-		//.Map(dest => dest.LatestReview, src => src.Reviews.OrderByDescending(r => r.Date).FirstOrDefault());
+			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue());
 
 		config.NewConfig<Series, SeriesDto>()
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
-			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue())
-			.Map(dest => dest.PlatformIds, src => src.PlatformIds.Select(id => id.Value))
-			.Map(dest => dest.GenreIds, src => src.GenreIds.Select(id => id.Value));
-		//.Map(dest => dest.LatestReview, src => src.Reviews.OrderByDescending(r => r.Date).FirstOrDefault());
+			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue());
 		
 		config.NewConfig<Review, ReviewDto>()
 			.Map(dest => dest.UserId, src => src.UserId);

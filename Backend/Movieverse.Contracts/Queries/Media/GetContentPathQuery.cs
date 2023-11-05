@@ -4,6 +4,6 @@ using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Contracts.Queries.Media;
 
-public sealed record GetContentPath(
+public sealed record GetContentPathQuery(
 	Guid Id
 	) : IRequest<Result<IEnumerable<ContentInfoDto>>>;

@@ -60,6 +60,19 @@ public sealed class PersonReadOnlyRepository : IPersonReadOnlyRepository
 		return persons;
 	}
 
+	public async Task<Result<IEnumerable<PersonInfoDto>>> GetPersonsAsync(IEnumerable<PersonId> ids, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Getting persons...");
+
+		var persons = await _dbContext.Persons
+			.AsNoTracking()
+			.Where(p => ids.Contains(p.Id))
+			.ProjectToType<PersonInfoDto>()
+			.ToListAsync(cancellationToken);
+
+		return persons;
+	}
+
 	public async Task<Result> AddAsync(Person person, CancellationToken cancellationToken)
 	{
 		_logger.LogDebug("Database - Adding person with id {id}...", person.Id.ToString());

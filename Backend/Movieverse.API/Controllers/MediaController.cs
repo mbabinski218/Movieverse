@@ -9,6 +9,9 @@ using Movieverse.Application.Caching;
 using Movieverse.Application.Metrics;
 using Movieverse.Contracts.Commands.Media;
 using Movieverse.Contracts.DataTransferObjects.Content;
+using Movieverse.Contracts.DataTransferObjects.Genre;
+using Movieverse.Contracts.DataTransferObjects.Media;
+using Movieverse.Contracts.DataTransferObjects.Platform;
 using Movieverse.Contracts.Queries.Content;
 using Movieverse.Contracts.Queries.Media;
 
@@ -80,7 +83,39 @@ public sealed class MediaController : ApiController
 	[AllowAnonymous]
 	[OutputCache]
 	[HttpGet("{Id:guid}/content")]
-	public async Task<ActionResult<IEnumerable<ContentInfoDto>>> GetContent([FromRoute] GetContentPath query, CancellationToken cancellationToken) =>
+	public async Task<ActionResult<IEnumerable<ContentInfoDto>>> GetContent([FromRoute] GetContentPathQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
+	[OutputCache]
+	[HttpGet("{Id:guid}/platform")]
+	public async Task<ActionResult<IEnumerable<PlatformInfoDto>>> GetPlatform([FromRoute] GetPlatformQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
+	[OutputCache]
+	[HttpGet("{Id:guid}/genre")]
+	public async Task<ActionResult<IEnumerable<GenreInfoDto>>> GetGenre([FromRoute] GetGenreQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
+	[OutputCache]
+	[HttpGet("{Id:guid}/staff")]
+	public async Task<ActionResult<IEnumerable<GenreInfoDto>>> GetStaff([FromRoute] GetStaffQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
+	[OutputCache(NoStore = true)]
+	[HttpGet("{Id:guid}/statistics")]
+	public async Task<ActionResult<StatisticsDto>> GetStatistics([FromRoute] GetStatisticsQuery query, CancellationToken cancellationToken) =>
 		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));

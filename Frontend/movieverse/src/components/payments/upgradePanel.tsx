@@ -3,12 +3,12 @@ import { PayPalScriptProvider, PayPalButtons, ReactPayPalScriptOptions } from "@
 import { CreateSubscriptionActions, OnApproveData, OnApproveActions, OnCancelledActions } from "@paypal/paypal-js/types/components/buttons";
 import { StateProps, emptyState } from "../../common/stateProps";
 import { useNavigate } from "react-router-dom";
-import { Success } from "../../components/basic/Success";
-import { Error } from "../../components/basic/Error";
+import { Success } from "../basic/Success";
+import { Error } from "../basic/Error";
 import { Api } from "../../Api";
 import { PlanResponse } from "../../core/dtos/payment/PlanResponse";
 import { environment } from "../../common/environment";
-import "./upgradePanel.css"
+import "./UpgradePanel.css"
 
 export const UpgradePanel: React.FC = () => {
   const [plan, setPlan] = useState<PlanResponse | null>(null);

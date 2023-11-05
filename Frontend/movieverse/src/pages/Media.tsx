@@ -1,4 +1,5 @@
-import { useNavigate, useParams } from "react-router-dom";
+import React, { Suspense } from "react";
+import { useParams } from "react-router-dom";
 import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { NotFound } from "../components/basic/NotFound";
 import { useUserMediaInfo } from "../hooks/useUserMediaInfo";
@@ -13,6 +14,8 @@ import { Button } from "../components/basic/Button";
 import { Section } from "../components/basic/Section";
 import { Text } from "../components/basic/Text";
 import { useUserRoles } from "../hooks/useUserRoles";
+import { Platforms } from "../components/platform/Platforms";
+import { Player } from "../common/playe";
 import { UserRoles } from "../UserRoles";
 import { CloudStore } from "../CloudStore";
 import { Api } from "../Api";
@@ -27,18 +30,24 @@ import CheckGold from "../assets/check-gold.svg";
 import StarEmpty from "../assets/star-empty.svg";
 import Images from "../assets/images.svg";
 
+// Dynamic imports
+const LazyGenres = React.lazy(() => import("../components/genre/Genres"));
+const LazyStaff = React.lazy(() => import("../components/staff/Staff"));
+const LazyStatistics = React.lazy(() => import("../components/media/Statistics"));
+
+
+// Media page
 export const Media: React.FC = () => {
   const params = useParams();
   const [loading, setLoading] = useState<boolean>(true);
-  const [media, setMedia] = useMedia(params.id ?? "");
+  const [media] = useMedia(params.id ?? "");
   const [userMediaInfo, setUserMediaInfo] = useUserMediaInfo(params.id ?? "");
   const [imgSrc, setImgSrc] = useState<string>(Blank);
   const [videoId, setVideoId] = useState<string | null>(null);
   const [isRatingPopupOpen, setIsRatingPopupOpen] = useState<boolean>(false);
   const [isContentPopupOpen, setIsContentPopupOpen] = useState<boolean>(false);
-  const [userRoles, setUserRoles] = useUserRoles();
-  const navigate = useNavigate();
-
+  const [userRoles] = useUserRoles();
+  
   // On media change
   useEffect(() => {
     if (media) {
@@ -126,20 +135,25 @@ export const Media: React.FC = () => {
     if(isMovie(media)) {
       return (
         <>
-          {
-            media.sequelId &&
-            <Button label={`Sequel > ${media.sequelTitle}`}
-                    color="dark"
-                    redirect={`/media/${media.sequelId}`}
-            />
-          }
-          {            
-            media.prequelId &&
-            <Button label={`Prequel < ${media.prequelTitle}`}
-                    color="dark"
-                    redirect={`/media/${media.prequelId}`}
-            />
-          }
+          <div className="media-utils-stats">
+            {
+              media.sequelId &&
+              <Button label={`Sequel > ${media.sequelTitle}`}
+                      color="dark"
+                      redirect={`/media/${media.sequelId}`}
+              />
+            }
+            {            
+              media.prequelId &&
+              <Button label={`Prequel < ${media.prequelTitle}`}
+                      color="dark"
+                      redirect={`/media/${media.prequelId}`}
+              />
+            }            
+          </div>
+          <Platforms className="media-utils-platforms"
+                     mediaId={params.id as string}
+          />
         </>
       );
     }
@@ -147,22 +161,35 @@ export const Media: React.FC = () => {
     if(isSeries(media)) {
       return (
         <>
-          <div className="media-series">
-            {
-              media.seriesEnded &&
-              <>
-                <div className="media-series-end">{`Series ended: ${media.seriesEnded.substring(0, 10)}`}</div>
-                <hr className="media-break" />
-              </>
-            }
-            <div className="media-series-info">
-              <div className="media-series-data">{`Seasons: ${media.seasonCount}`}</div>
-              <div className="media-series-data">{`Episodes: ${media.episodeCount}`}</div>
+          <div className="media-utils-stats">
+            <div className="media-series">
+              {
+                media.seriesEnded &&
+                <>
+                  <Text label="Series ended" 
+                        text={`${media.seriesEnded.substring(0, 10)}`} 
+                  />
+                  <hr className="media-break" />
+                </>
+              }
+              <div className="media-series-info">
+                <Text className="media-series-data" 
+                      label="Seasons" 
+                      text={`${media.seasonCount}`} 
+                />
+                <Text className="media-series-data"
+                      label="Episodes" 
+                      text={`${media.episodeCount}`} 
+                />
+              </div>
             </div>
+            <Button label="View episodes"
+                    color="dark"
+                    onClick={seriesExplorerHandler}
+            />
           </div>
-          <Button label="View episodes"
-                  color="dark"
-                  onClick={seriesExplorerHandler}
+          <Platforms className="media-platforms"
+                     mediaId={params.id as string}
           />
         </>
       )
@@ -218,6 +245,7 @@ export const Media: React.FC = () => {
               videoId ? 
               <YouTube videoId={videoId}
                        iframeClassName="media-page-video"
+                       opts={Player.opts}
               /> :
               <img className="media-no-trailer"
                    src={NoVideo}
@@ -228,7 +256,7 @@ export const Media: React.FC = () => {
           </div>
           <div className="media-description">            
             <Section title="Storyline">
-              <span>{media.details.storyline}</span>
+              <span>{media.details.storyline ?? "No data."}</span>
             </Section>
           </div>
           <div className="media-utils">
@@ -265,16 +293,27 @@ export const Media: React.FC = () => {
               <hr className="media-break" />
             </Section>
           </div>
+          <div className="media-genre">
+            <Section title="Genres">
+              <Suspense fallback={<Loading />}>
+                <LazyGenres mediaId={params.id as string}/>
+              </Suspense>
+            </Section>
+          </div>
           <div className="media-staf">
             <Section title="Staff">
-
+              <Suspense fallback={<Loading />}>
+                <LazyStaff mediaId={params.id as string}/>
+              </Suspense>
             </Section>
           </div>
           <div className="media-pro">
             {
-              userRoles?.includes(UserRoles.Pro) || userRoles?.includes(UserRoles.Administrator) &&
+              (userRoles?.includes(UserRoles.Pro) || userRoles?.includes(UserRoles.Administrator)) &&
               <Section title="Statistics (Pro)">
-
+                <Suspense fallback={<Loading />}>
+                  <LazyStatistics mediaId={params.id as string}/>
+                </Suspense>
               </Section>
             }
           </div>

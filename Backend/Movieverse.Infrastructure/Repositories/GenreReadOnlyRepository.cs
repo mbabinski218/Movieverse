@@ -43,4 +43,17 @@ public sealed class GenreReadOnlyRepository : IGenreReadOnlyRepository
 			.ProjectToType<GenreDto>()
 			.ToListAsync(cancellationToken);
 	}
+
+	public async Task<Result<IEnumerable<GenreInfoDto>>> GetGenresInfoAsync(IEnumerable<GenreId> ids, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Getting genre info for genres with ids from database");
+		
+		var genres = await _dbContext.Genres
+			.AsNoTracking()
+			.Where(g => ids.Contains(g.Id))
+			.ProjectToType<GenreInfoDto>()
+			.ToListAsync(cancellationToken);
+
+		return genres;
+	}
 }

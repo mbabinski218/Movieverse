@@ -1,4 +1,5 @@
-﻿using MapsterMapper;
+﻿using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Common.Extensions;
@@ -61,5 +62,18 @@ public sealed class PlatformReadOnlyRepository : IPlatformReadOnlyRepository
 			.Where(p => p.Id == id.Value)
 			.SelectMany(p => p.MediaIds)
 			.ToListAsync(cancellationToken);
+	}
+
+	public async Task<Result<IEnumerable<PlatformInfoDto>>> GetPlatformsInfoAsync(IEnumerable<PlatformId> ids, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Getting platforms...");
+		
+		var platforms = await _dbContext.Platforms
+			.AsNoTracking()
+			.Where(p => ids.Contains(p.Id))
+			.ProjectToType<PlatformInfoDto>()
+			.ToListAsync(cancellationToken);
+
+		return platforms;
 	}
 }

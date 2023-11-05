@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { AccessToken, LocalStorage } from "../hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
-import { ManagementPanel } from "../components/payments/managementPanel";
+import { ManagementPanel } from "../components/payments/ManagementPanel";
 import { UserRoles } from "../UserRoles";
-import { UpgradePanel } from "../components/payments/upgradePanel";
+import { UpgradePanel } from "../components/payments/UpgradePanel";
 import jwtDecode from "jwt-decode";
 import "./Pro.css"
 

@@ -2,13 +2,15 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SubscriptionResponse } from "../../core/dtos/payment/SubscriptionResponse";
 import { StateProps, emptyState } from "../../common/stateProps";
-import { Success } from "../../components/basic/Success";
-import { Error } from "../../components/basic/Error";
-import { Button } from "../../components/basic/Button";
+import { Success } from "../basic/Success";
+import { Error } from "../basic/Error";
+import { Button } from "../basic/Button";
 import { Api } from "../../Api";
-import "./managementPanel.css";
+import "./ManagementPanel.css";
+import { Loading } from "../basic/Loading";
 
 export const ManagementPanel: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(true);
   const [subscription, setSubscription] = useState<SubscriptionResponse | null>(null);
   const [stateProps, setStateProps] = useState<StateProps>(emptyState);
   const navigate = useNavigate();
@@ -24,7 +26,10 @@ export const ManagementPanel: React.FC = () => {
         }
       })
       .then(res => res as SubscriptionResponse)
-      .then(setSubscription)
+      .then(res => {
+        setSubscription(res);
+        setLoading(false);
+      })
     .catch(() => showError("Error while loading the subscription. Please try again later."))    
   }, []);
 
@@ -65,26 +70,34 @@ export const ManagementPanel: React.FC = () => {
         <span>Subscription panel</span>
       </div>
       {
-        subscription ?
-        <div className="mp-menu">
+        loading ? 
+        <div className="up-menu-loading">
+          <Loading />
+        </div>:
+        <>
           {
-            subscription &&
-            <>
-              <div className="up-menu-info">
-                <span className="up-menu-info-bold">Available functions:</span><br/>
-                <span className="up-menu-info-m">Access to advanced statistics such as BoxOffice</span><br/>
-                <span className="up-menu-info-m">Adding new movies and series</span><br/><br/>
-                <span className="up-menu-info-gold up-menu-info-m">Next billing: {(new Date(subscription.nextBillingTime ?? new Date())).toLocaleDateString()}</span>
-              </div>
-                <Button label="Cancel subscription"
-                        onClick={cancleSubscriptionHandler}
-                />
-            </>
+            subscription ?
+            <div className="mp-menu">
+              {
+                subscription &&
+                <>
+                  <div className="up-menu-info">
+                    <span className="up-menu-info-bold">Available functions:</span><br/>
+                    <span className="up-menu-info-m">Access to advanced statistics such as BoxOffice</span><br/>
+                    <span className="up-menu-info-m">Adding new movies and series</span><br/><br/>
+                    <span className="up-menu-info-gold up-menu-info-m">Next billing: {(new Date(subscription.nextBillingTime ?? new Date())).toLocaleDateString()}</span>
+                  </div>
+                    <Button label="Cancel subscription"
+                            onClick={cancleSubscriptionHandler}
+                    />
+                </>
+              }
+            </div> :
+            <div className="mp-menu up-menu-info">          
+              <span>Pro subscription granted for life by the administrator.</span>
+            </div>            
           }
-        </div> :
-        <div className="mp-menu up-menu-info">          
-          <span>Pro subscription granted for life by the administrator.</span>
-        </div>
+        </>
       }
       <div className="media-error">
           {
