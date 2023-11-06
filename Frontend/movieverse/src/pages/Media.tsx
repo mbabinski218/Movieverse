@@ -15,7 +15,7 @@ import { Section } from "../components/basic/Section";
 import { Text } from "../components/basic/Text";
 import { useUserRoles } from "../hooks/useUserRoles";
 import { Platforms } from "../components/platform/Platforms";
-import { Player } from "../common/playe";
+import { Player } from "../common/player";
 import { UserRoles } from "../UserRoles";
 import { CloudStore } from "../CloudStore";
 import { Api } from "../Api";
@@ -118,10 +118,6 @@ export const Media: React.FC = () => {
     setIsContentPopupOpen(!isContentPopupOpen);
   }, [isContentPopupOpen]);
 
-  const seriesExplorerHandler = useCallback(() => {
-
-  }, []);
-
   // Render utils
   const isMovie = useCallback((media: MovieDto | SeriesDto | null): media is MovieDto => {
     return media !== null && "sequelId" in media && "prequelId" in media ;
@@ -185,7 +181,7 @@ export const Media: React.FC = () => {
             </div>
             <Button label="View episodes"
                     color="dark"
-                    onClick={seriesExplorerHandler}
+                    redirect={`/media/${params.id}/episodes`}
             />
           </div>
           <Platforms className="media-platforms"
@@ -309,12 +305,10 @@ export const Media: React.FC = () => {
           </div>
           <div className="media-pro">
             {
-              (userRoles?.includes(UserRoles.Pro) || userRoles?.includes(UserRoles.Administrator)) &&
-              <Section title="Statistics (Pro)">
-                <Suspense fallback={<Loading />}>
-                  <LazyStatistics mediaId={params.id as string}/>
-                </Suspense>
-              </Section>
+              (userRoles?.includes(UserRoles.Pro) || userRoles?.includes(UserRoles.Administrator)) &&              
+              <Suspense fallback={<Loading />}>
+                <LazyStatistics mediaId={params.id as string}/>
+              </Suspense>
             }
           </div>
           <>

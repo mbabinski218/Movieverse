@@ -33,7 +33,7 @@ public sealed class GetPersonHandler : IRequestHandler<GetPersonQuery, Result<Pe
 		}
 		
 		var personDto = _mapper.Map<PersonDto>(person.Value);
-		personDto.PictureIds = person.Value.ContentIds.Select(p => p.Value).ToList();
+		personDto.ContentIds = person.Value.ContentIds.Select(p => p.Value).ToList();
 
 		return personDto;
 	}

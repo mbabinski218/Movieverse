@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Movieverse.API.Common;
-using Movieverse.API.Common.Extensions;
-using Movieverse.Contracts.DataTransferObjects.Content;
 using Movieverse.Contracts.Queries.Content;
 
 namespace Movieverse.API.Controllers;

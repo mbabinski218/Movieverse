@@ -1,6 +1,5 @@
 import { BasicStatisticsDto } from "./basicStatisticsDto"
 import { DetailsDto } from "./detailsDto"
-import { SeasonDto } from "./seasonDto"
 import { StaffDto } from "./staffDto"
 import { TechnicalSpecsDto } from "./technicalSpecsDto"
 
@@ -25,7 +24,6 @@ export interface MovieDto extends MediaDto {
 };
 
 export interface SeriesDto extends MediaDto {
-  seasons: SeasonDto[]
   seasonCount: number,
   episodeCount: number,
   seriesEnded: string | null

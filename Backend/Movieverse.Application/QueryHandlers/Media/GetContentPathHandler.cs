@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Contracts.DataTransferObjects.Content;
-using Movieverse.Contracts.Queries.Content;
 using Movieverse.Contracts.Queries.Media;
 using Movieverse.Domain.Common.Result;
 

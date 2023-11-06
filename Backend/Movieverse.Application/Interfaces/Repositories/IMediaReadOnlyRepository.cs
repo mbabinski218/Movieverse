@@ -35,4 +35,6 @@ public interface IMediaReadOnlyRepository
 	Task<Result<IEnumerable<GenreId>>> GetGenreIdsAsync(MediaId id, CancellationToken cancellationToken = default);
 	Task<Result<IEnumerable<Staff>>> GetStaffAsync(MediaId id, CancellationToken cancellationToken = default);
 	Task<Result<StatisticsDto>> GetStatisticsAsync(MediaId id, CancellationToken cancellationToken = default);
+	Task<Result<SeasonInfoDto>> GetSeasonsAsync(MediaId id, CancellationToken cancellationToken = default);
+	Task<Result<IEnumerable<MediaSectionDto>>> GetMediaSectionAsync(IEnumerable<MediaId> ids, CancellationToken cancellationToken = default);
 }

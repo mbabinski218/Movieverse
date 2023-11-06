@@ -204,6 +204,46 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			Error.NotFound(MediaResources.MediaDoesNotExist);
 	}
 
+	public async Task<Result<SeasonInfoDto>> GetSeasonsAsync(MediaId id, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Getting seasons for media id: ", id.ToString());
+		
+		var info = await _dbContext.Series
+			.AsNoTracking()
+			.Where(s => s.Id == id)
+			.ProjectToType<SeasonInfoDto>()
+			.SingleOrDefaultAsync(cancellationToken);
+
+		if (info is null)
+		{
+			return Error.NotFound(MediaResources.MediaIsNotSeries);
+		}
+			
+		info.Seasons.ForEach(e =>
+		{
+			e.Episodes = e.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
+		});
+
+		info.Seasons = info.Seasons.OrderBy(x => x.SeasonNumber).ToList();
+
+		return info;
+	}
+
+	public async Task<Result<IEnumerable<MediaSectionDto>>> GetMediaSectionAsync(IEnumerable<MediaId> ids, CancellationToken cancellationToken = default)
+	{
+		var idsList = ids.Select(id => id.Value).ToList();
+		
+		_logger.LogDebug("Database - Getting media section for media ids: ", string.Join(", ", idsList.Select(id => id.ToString())));
+		
+		var media = await _dbContext.Medias
+			.AsNoTracking()
+			.Where(m => idsList.Contains(m.Id))
+			.ProjectToType<MediaSectionDto>()
+			.ToListAsync(cancellationToken);
+		
+		return media.OrderByDescending(m => m.Rating).ToList();
+	}
+
 	public async Task<Result<IPaginatedList<SearchMediaDto>>> FindMediaByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Database - Getting media with ids {ids}...", string.Join(", ", ids.Select(id => id.ToString())));
@@ -211,6 +251,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		var idsList = ids.Select(id => id.Value).ToList();
 		
 		return await _dbContext.Medias
+			.AsNoTracking()
 			.Where(m => idsList.Contains(m.Id))
 			.OrderByDescending(x => x.Details.ReleaseDate)
 			.ProjectToType<SearchMediaDto>()
@@ -224,6 +265,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		var idsList = ids.Select(id => id.Value).ToList();
 		
 		return await _dbContext.Movies
+			.AsNoTracking()
 			.Where(m => idsList.Contains(m.Id))
 			.ProjectToType<MediaInfoDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);

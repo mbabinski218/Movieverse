@@ -5,7 +5,7 @@ import { ContentDto } from "../../core/dtos/content/contentDto";
 import { Button } from "../basic/Button";
 import { Loading } from "../basic/Loading";
 import { CloudStore } from "../../CloudStore";
-import { Player } from "../../common/playe";
+import { Player } from "../../common/player";
 import YouTube from "react-youtube";
 import "./ContentViewer.css";
 import Close from "../../assets/bars-close.svg";

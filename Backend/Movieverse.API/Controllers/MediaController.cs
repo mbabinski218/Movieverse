@@ -12,7 +12,6 @@ using Movieverse.Contracts.DataTransferObjects.Content;
 using Movieverse.Contracts.DataTransferObjects.Genre;
 using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Contracts.DataTransferObjects.Platform;
-using Movieverse.Contracts.Queries.Content;
 using Movieverse.Contracts.Queries.Media;
 
 namespace Movieverse.API.Controllers;
@@ -116,6 +115,14 @@ public sealed class MediaController : ApiController
 	[OutputCache(NoStore = true)]
 	[HttpGet("{Id:guid}/statistics")]
 	public async Task<ActionResult<StatisticsDto>> GetStatistics([FromRoute] GetStatisticsQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
+	[OutputCache]
+	[HttpGet("{Id:guid}/seasons")]
+	public async Task<ActionResult<StatisticsDto>> GetSeasons([FromRoute] GetSeasonsQuery query, CancellationToken cancellationToken) =>
 		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));

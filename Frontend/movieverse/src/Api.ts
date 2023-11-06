@@ -614,4 +614,37 @@ export class Api {
 			}
 		});
 	};
+
+	static async getSeasons(mediaId: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${mediaId}/seasons`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getPerson(personId: string) : Promise<Response> {
+		return await fetch(`${this.url}/person/${personId}`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getPersonMedia(personId: string) : Promise<Response> {
+		return await fetch(`${this.url}/person/${personId}/media`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
 }

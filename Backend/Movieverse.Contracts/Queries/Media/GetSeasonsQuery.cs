@@ -4,6 +4,6 @@ using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Contracts.Queries.Media;
 
-public sealed record GetStaffQuery(
+public record GetSeasonsQuery(
 	Guid Id
-	) : IRequest<Result<IEnumerable<StaffDto>>>;
+	) : IRequest<Result<SeasonInfoDto>>;

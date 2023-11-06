@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.User;
 
 namespace Movieverse.Application.CommandHandlers.UserCommands.UpdateRating;
