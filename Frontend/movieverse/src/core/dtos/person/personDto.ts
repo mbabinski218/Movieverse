@@ -6,7 +6,7 @@ export type PersonDto = {
   biography?: string;
   funFacts?: string;
   pictureId?: string;
-  contentsIds: string[];
+  contentIds: string[];
 }
 
 export type LifeHistoryDto = {

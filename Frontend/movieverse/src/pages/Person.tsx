@@ -6,6 +6,7 @@ import { NotFound } from "../components/basic/NotFound";
 import { CloudStore } from "../CloudStore";
 import { Section } from "../components/basic/Section";
 import { Text } from "../components/basic/Text";
+import { Button } from "../components/basic/Button";
 import "./Person.css";
 import Blank from "../assets/blank.png";
 
@@ -17,6 +18,7 @@ export const Person: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [person] = usePerson(params.id ?? "");
   const [imgSrc, setImgSrc] = useState<string>("");
+  const [moreContent, setMoreContent] = useState<boolean>(false);
 
   // On person change
   useEffect(() => {
@@ -47,6 +49,11 @@ export const Person: React.FC = () => {
       return "Person";
     }
   }, [person]);
+
+  // Toggle more content
+  const toggleMoreContent = useCallback(() => {
+    setMoreContent(!moreContent);
+  }, [moreContent]);
 
   return (
     <>      
@@ -88,7 +95,32 @@ export const Person: React.FC = () => {
           </div>
           <div className="person-pic">
             <Section title="Pictures">
-
+              <div className="person-content">
+              {
+                person.contentIds.length > 0 ?
+                <>
+                  {
+                    person.contentIds.map((id, index) => {
+                      if (index < (moreContent ? person.contentIds.length : 4)) {
+                        return (
+                          <img className="person-img"
+                              key={index}
+                              src={CloudStore.getImageUrl(id)}
+                              alt={getFullName()}
+                          />
+                        )
+                      }
+                    }) 
+                  }                  
+                  <Button className="person-more-btn"
+                          label={moreContent ? "Show less" : "Show more"}
+                          color="dark"
+                          onClick={toggleMoreContent}
+                  />                  
+                </> :
+                <span className="person-name">No data</span>
+              }
+              </div>
             </Section>
           </div>
           <div className="person-media">
