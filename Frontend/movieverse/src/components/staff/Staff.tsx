@@ -20,12 +20,12 @@ const Staff: React.FC<StaffProps> = ({mediaId, className}) => {
              key={index}
              href={person.personId ? `/person/${person.personId}` : ""}
           >
-          <img className={person.pictureId ? "staff-img" : "staff-no-img"}
-               src={person.pictureId ? CloudStore.getImageUrl(person.pictureId) : Blank}
-               alt={person.firstName}
-          />
-          <span className="staff-name">{`${person.firstName} ${person.lastName}`}</span>
-          <span className="staff-role">{person.role}</span>
+            <img className={person.pictureId ? "staff-img" : "staff-no-img"}
+                 src={person.pictureId ? CloudStore.getImageUrl(person.pictureId) : Blank}
+                 alt={person.firstName}
+            />
+            <span className="staff-name">{`${person.firstName} ${person.lastName}`}</span>
+            <span className="staff-role">{person.role}</span>
           </a>
         )) :
         <span className="staff-name">No data</span>

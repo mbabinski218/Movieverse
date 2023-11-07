@@ -41,7 +41,8 @@
   padding: 0px 5px 5px 5px;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: var(--color-dark);
 }
 
 .person-funfacts {
@@ -50,7 +51,8 @@
   padding: 0px 5px 5px 5px;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: var(--color-dark);
 }
 
 .person-life {
@@ -63,6 +65,28 @@
   grid-area: pic;
   color: var(--color-white);
   margin-bottom: 10px;
+}
+
+.person-content {
+  display: flex;
+  flex-flow: wrap;
+  column-gap: 10px;
+  row-gap: 10px;
+}
+
+.person-img {
+  width: 188px;
+  height: 300px;
+  border-radius: 10px;
+  padding: 3px 3px 3px 3px;
+  object-fit: cover;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
+  animation: fadein 0.8s, move-down 0.3s;
+}
+
+.person-more-btn {
+  padding: 3px 3px 3px 3px;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.13), 0px 1px 1px 0px rgba(0, 0, 0, 0.11);
 }
 
 .person-media {
@@ -85,6 +109,16 @@
       grid-template-columns: 242px 98px 1fr 220px;
       grid-template-rows: 50px 175px 175px min-content min-content min-content min-content;
   }
+
+  .person-img {
+    width: 152px;
+    height: 243px;
+  }
+
+  .person-funfacts {
+    background-color: transparent;
+    margin-bottom: 10px;
+  }
 }
 
 @media (max-width: 680px) {
@@ -101,6 +135,20 @@
     grid-template-columns: 242px 98px 1fr;
     grid-template-rows: 50px 360px min-content min-content min-content min-content min-content;
   }
+
+  .person-img {
+    width: 20.9vw;
+    height: 33.4vw;
+  }
+
+  .person-more-btn {
+    width: 89vw;
+  }
+
+  .person-description {
+    background-color: transparent;
+    margin-bottom: 10px;
+  }
 }
 
 .person-break {
@@ -109,4 +157,24 @@
   width: 100%;
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.person-name {
+  font-weight: bold;
+  max-height: 70px;
+  overflow: hidden;
+}
+
+@keyframes fadein {
+  from { opacity: 0}
+  to   { opacity: 1}
+}
+
+@keyframes move-down {
+  from {
+    transform: translateY(-32px);
+  }
+  to {
+    transform: translateY(0);
+  }
 }

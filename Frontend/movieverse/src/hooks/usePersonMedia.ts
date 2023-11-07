@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { Api } from "../Api";
 import { MediaSectionDto } from "../core/dtos/media/mediaSectionDto";
 
-export const usePerson = (personId: string) => {
+export const usePersonMedia = (personId: string) => {
   const [personMedia, setPersonMedia] = useState<MediaSectionDto[] | null>(null);
 
   useEffect(() => {
     try {
-      Api.getPlatform(personId)
+      Api.getPersonMedia(personId)
         .then(res => {
           if (res.ok) {
             return res.json();

@@ -76,6 +76,7 @@ public sealed class MediaMapper : IRegister
 			.Map(dest => dest.Id, src => src.Id.GetValue())
 			.Map(dest => dest.Title, src => src.Title)
 			.Map(dest => dest.Rating, src => src.BasicStatistics.Rating)
+			.Map(dest => dest.Year, src => GetStartYear(src.Details.ReleaseDate))
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue());
 	}
 	
