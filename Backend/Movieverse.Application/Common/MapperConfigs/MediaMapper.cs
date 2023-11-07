@@ -48,9 +48,6 @@ public sealed class MediaMapper : IRegister
 		config.NewConfig<Series, SeriesDto>()
 			.Map(dest => dest.PosterId, src => src.PosterId.GetValue())
 			.Map(dest => dest.TrailerId, src => src.TrailerId.GetValue());
-		
-		config.NewConfig<Review, ReviewDto>()
-			.Map(dest => dest.UserId, src => src.UserId);
 
 		config.NewConfig<Staff, PostStaffDto>()
 			.Map(dest => dest.PersonId, src => src.PersonId.Value);

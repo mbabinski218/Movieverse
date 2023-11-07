@@ -8,12 +8,10 @@ public class Statistics : Entity<int>
 {
 	// Map to table
 	private readonly List<Popularity> _popularity = new();
-	private readonly List<StatisticsAward> _statisticsAwards = new();
 	
 	public virtual Media Media { get; private set; } = null!;
 	public BoxOffice BoxOffice { get; set; } = null!;
 	public IReadOnlyList<Popularity> Popularity => _popularity.AsReadOnly();
-	public IReadOnlyList<StatisticsAward> StatisticsAwards => _statisticsAwards.AsReadOnly();
 	
 	// Constructors
 	private Statistics(Media media)
@@ -33,11 +31,6 @@ public class Statistics : Entity<int>
 	public void AddPopularity(Popularity popularity)
 	{
 		_popularity.Add(popularity);
-	}
-	
-	public void AddStatisticsAward(StatisticsAward statisticsAward)
-	{
-		_statisticsAwards.Add(statisticsAward);
 	}
 	
 	// EF Core
