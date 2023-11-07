@@ -27,18 +27,16 @@ public sealed class UserRepository : IUserRepository
 	private readonly RoleManager<IdentityUserRole> _roleManager;
 	private readonly ITokenProvider _tokenProvider;
 	private readonly GoogleAuthentication _googleAuthentication;
-	private readonly FacebookAuthentication _facebookAuthentication;
 
 	public UserRepository(ILogger<UserRepository> logger, Context dbContext, UserManager<User> userManager, 
 		RoleManager<IdentityUserRole> roleManager, ITokenProvider tokenProvider, 
-		GoogleAuthentication googleAuthentication, FacebookAuthentication facebookAuthentication)
+		GoogleAuthentication googleAuthentication)
 	{
 		_dbContext = dbContext;
 		_userManager = userManager;
 		_roleManager = roleManager;
 		_tokenProvider = tokenProvider;
 		_googleAuthentication = googleAuthentication;
-		_facebookAuthentication = facebookAuthentication;
 		_logger = logger;
 	}
 

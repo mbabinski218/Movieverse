@@ -7,7 +7,6 @@ public sealed class AuthenticationSettings : ISettings
 	public string Key => "Authentication";
 	public Token Token { get; set; } = null!;
 	public Google Google { get; set; } = null!;
-	public Facebook Facebook { get; set; } = null!;
 }
 
 public sealed class Token
@@ -22,10 +21,4 @@ public sealed class Google
 {
 	public string ClientId { get; set; } = null!;
 	public string ClientSecret { get; set; } = null!;
-}
-
-public sealed class Facebook
-{
-	public string AppId { get; set; } = null!;
-	public string AppSecret { get; set; } = null!;
 }
