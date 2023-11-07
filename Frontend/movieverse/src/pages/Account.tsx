@@ -9,31 +9,12 @@ import { Input, InputFile } from "../components/basic/Input";
 import { Button } from "../components/basic/Button";
 import { UserDto } from "../core/dtos/user/userDto";
 import { Api } from "../Api";
+import { useUserData, AccountProps, emptyAccountProps } from "../hooks/useUserData";
 import "./Account.css";
 
-// Interfaces
-interface AccountProps {
-  email: string;
-  username: string;
-  age: string;
-  firstName: string;
-  lastName: string;
-  avatar: File | null;
-}
-
-// Empty props
-const emptyAccountProps: AccountProps = {
-  email: "",
-  username: "",
-  age: "",
-  firstName: "",
-  lastName: "",
-  avatar: null
-};
-
 export const Account: React.FC = () => {
+  const [accountCurrentProps, setAccountCurrentProps] = useUserData();
   const [accountProps, setAccountProps] = useState<AccountProps>(emptyAccountProps);
-  const [accountCurrentProps, setAccountCurrentProps] = useState<AccountProps>(emptyAccountProps);
   const [stateProps, setStateProps] = useState<StateProps>(emptyState);
   const navigate = useNavigate();
 
@@ -42,27 +23,7 @@ export const Account: React.FC = () => {
       navigate("/user", { replace: true });
     }
 
-    document.title = "Account - Movieverse"
-
-    // Get user data
-    Api.getUserData()
-      .then(res => res.json())
-      .then(data => data as UserDto)
-      .then(user => {
-        const accountProps: AccountProps = {
-          email: user.email,
-          username: user.userName,
-          age: user.information.age,
-          firstName: user.information.firstName ?? "",
-          lastName: user.information.lastName ?? "",
-          avatar: new File([], "")
-        };        
-        setAccountCurrentProps(accountProps);
-      })
-      .catch(() => {
-        showError("Something went wrong. Please try again.");
-      });
-
+    document.title = "Account - Movieverse";
   }, []);
 
   // Show error message

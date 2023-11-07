@@ -2,11 +2,10 @@ import { Container, Nav, Navbar as NavbarBs, Row, Col } from "react-bootstrap";
 import { useOutsideClickAlerter } from "../../hooks/useOutsideClickAlerter";
 import { SearchBar } from "./SearchBar";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AccessToken, LocalStorage } from "../../hooks/useLocalStorage";
 import { AddMediaMenu } from "../media/AddMediaMenu";
 import { RoleEditor } from "../user/RoleEditor";
+import { useUserToken } from "../../hooks/useUserToken";
 import { UserRoles } from "../../UserRoles";
-import jwtDecode from "jwt-decode";
 import Logo from "../../assets/logo.svg";
 import Chart from "../../assets/chart.svg";
 import Check from "../../assets/check.svg";
@@ -21,7 +20,13 @@ export const Navbar: React.FC = () => {
   const [addMediaMenuOpen, setAddMediaMenuOpen] = useState<boolean>(false);
   const [roleEditorOpen, setRoleEditorOpen] = useState<boolean>(false);
   const [user, setUser] = useState<string | null>(null);
-  const [userRole, setUserRole] = useState<string[] | null>(null);
+  const [userToken] = useUserToken();
+
+  useEffect(() => {
+    if (userToken) {
+      setUser(userToken.displayName);
+    }
+  }, [userToken]);
 
   const outsideSearchBarClick = useCallback(() => {
     setSearchBarOpen(false);
@@ -53,24 +58,6 @@ export const Navbar: React.FC = () => {
 
   const closeRoleEditor = useCallback(() => {
     setRoleEditorOpen(false);
-  }, []);
-
-  useEffect(() => { 
-    const accessToken = LocalStorage.getAccessToken();
-
-    if (!accessToken) {
-      setUser(null);
-      return;
-    }
-
-    try {
-      const decodedToken = jwtDecode(accessToken) as AccessToken;
-      setUser(decodedToken.displayName);
-      setUserRole(decodedToken.role);
-    }
-    catch {
-      setUser(null);
-    }
   }, []);
 
   return (
@@ -130,22 +117,33 @@ export const Navbar: React.FC = () => {
               <Nav.Link href="/chart/persons/bornToday" className="element-link">Born today</Nav.Link>
             </Col>
             {
-              userRole?.includes(UserRoles.Administrator) &&
+              userToken?.role.includes(UserRoles.Administrator) &&
               <Col>
                 <div className="category">
                   <span>Utility panel</span>
                 </div>
                 <span onClick={openAddMediaMenu} className="element-link">Add new media</span>
                 <br />
+                <span onClick={openAddMediaMenu} className="element-link">Add new person</span>
+                <br />
                 <span onClick={openRoleEditor} className="element-link">Role editor</span>
               </Col> ||
-              (userRole?.includes(UserRoles.Critic) || userRole?.includes(UserRoles.Pro)) &&
+              userToken?.role.includes(UserRoles.Critic) &&
               <Col>
-              <div className="category">
-                <span>Utility panel</span>
-              </div>
-              <span onClick={openAddMediaMenu} className="element-link">Add new media</span>
-            </Col>
+                <div className="category">
+                  <span>Utility panel</span>
+                </div>
+                <span onClick={openAddMediaMenu} className="element-link">Add new media</span>
+                <br />
+                <span onClick={openAddMediaMenu} className="element-link">Add new person</span>
+              </Col> ||
+              userToken?.role.includes(UserRoles.Pro) &&
+              <Col>
+                <div className="category">
+                  <span>Utility panel</span>
+                </div>
+                <span onClick={openAddMediaMenu} className="element-link">Create your own site</span>
+              </Col>
             }
           </Row>
         </Container>

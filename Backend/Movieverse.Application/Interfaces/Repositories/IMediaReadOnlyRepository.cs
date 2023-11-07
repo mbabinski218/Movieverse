@@ -1,6 +1,7 @@
 ﻿using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Domain.Common;
 using Movieverse.Domain.Common.Result;
+using Movieverse.Domain.Entities;
 using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.Interfaces.Repositories;
@@ -29,6 +30,11 @@ public interface IMediaReadOnlyRepository
 	Task<Result<IPaginatedList<SearchMediaDto>>> FindRecommendedMoviesAsync(short? pageNumber, short? pageSize, CancellationToken cancellationToken = default);
 	Task<Result<IPaginatedList<SearchMediaDto>>> FindRecommendedSeriesAsync(short? pageNumber, short? pageSize, CancellationToken cancellationToken = default);
 	
-	
-	
+	Task<Result<IEnumerable<ContentId>>> GetContentAsync(MediaId id, CancellationToken cancellationToken = default);
+	Task<Result<IEnumerable<PlatformId>>> GetPlatformIdsAsync(MediaId id, CancellationToken cancellationToken = default);
+	Task<Result<IEnumerable<GenreId>>> GetGenreIdsAsync(MediaId id, CancellationToken cancellationToken = default);
+	Task<Result<IEnumerable<Staff>>> GetStaffAsync(MediaId id, CancellationToken cancellationToken = default);
+	Task<Result<StatisticsDto>> GetStatisticsAsync(MediaId id, CancellationToken cancellationToken = default);
+	Task<Result<SeasonInfoDto>> GetSeasonsAsync(MediaId id, CancellationToken cancellationToken = default);
+	Task<Result<IEnumerable<MediaSectionDto>>> GetMediaSectionAsync(IEnumerable<MediaId> ids, CancellationToken cancellationToken = default);
 }

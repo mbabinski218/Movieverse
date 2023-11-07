@@ -104,16 +104,10 @@ public static class DependencyInjection
 			{
 				options.ClientId = authenticationSettings.Google.ClientId;
 				options.ClientSecret = authenticationSettings.Google.ClientSecret;
-			})
-			.AddFacebook(options =>
-			{
-				options.AppId = authenticationSettings.Facebook.AppId;
-				options.AppSecret = authenticationSettings.Facebook.AppSecret;
 			});
 
 		services.AddSingleton<ITokenProvider, TokenProvider>();
 		services.AddScoped<GoogleAuthentication>();
-		services.AddScoped<FacebookAuthentication>();
 		
 		return services;
 	}

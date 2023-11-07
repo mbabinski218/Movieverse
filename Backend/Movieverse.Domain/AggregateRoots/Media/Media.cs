@@ -11,7 +11,6 @@ public class Media : AggregateRoot<MediaId, Guid>
 	private readonly List<PlatformId> _platformIds = new();
 	private readonly List<ContentId> _contentIds = new();
 	private readonly List<GenreId> _genreIds = new();
-	private readonly List<Review> _reviews = new();
 	private readonly List<Staff> _staff = new();
 
 	public string Title { get; set; } = null!;
@@ -25,7 +24,6 @@ public class Media : AggregateRoot<MediaId, Guid>
 	public IReadOnlyList<PlatformId> PlatformIds => _platformIds.AsReadOnly();
 	public IReadOnlyList<ContentId> ContentIds => _contentIds.AsReadOnly();
 	public IReadOnlyList<GenreId> GenreIds => _genreIds.AsReadOnly();
-	public IReadOnlyList<Review> Reviews => _reviews.AsReadOnly();
 	public IReadOnlyList<Staff> Staff => _staff.AsReadOnly();
 	
 	// Constructors
@@ -55,11 +53,6 @@ public class Media : AggregateRoot<MediaId, Guid>
 	public void AddGenre(GenreId genreId)
 	{
 		_genreIds.Add(genreId);
-	}
-	
-	public void AddReview(Review review)
-	{
-		_reviews.Add(review);
 	}
 	
 	public void AddStaff(Staff staff)

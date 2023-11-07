@@ -255,6 +255,18 @@ export class Api {
 		})
 	}
 
+	static async updateRating(mediaId: string, rating: number): Promise<Response> {
+		return await this.fetchWithAuthorization(`user/rating/${mediaId}/${rating}`, {
+			mode: "cors",
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		})
+	}
+
 	static async register(registerContract: RegisterContract): Promise<Response> {
 		return await fetch(`${this.url}/user/register`, {
 			mode: "cors",
@@ -520,8 +532,119 @@ export class Api {
 			headers: {
 				"Content-Type": "application/json",
 				"Accept-Language": this.culture,
-				"Authorization": LocalStorage.getBearerToken(),
+				"Authorization": LocalStorage.getBearerToken()
 			}
 		}, queryParams);
 	}
+
+	static async getMedia(id: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${id}`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getMediaInfo(mediaId: string) : Promise<Response> {
+		return await this.fetchWithAuthorization(`user/${mediaId}`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		});
+	};
+
+	static async getContentPaths(mediaId: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${mediaId}/content`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getPlatform(mediaId: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${mediaId}/platform`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getGenre(mediaId: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${mediaId}/genre`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getStaff(mediaId: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${mediaId}/staff`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getStatistics(mediaId: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${mediaId}/statistics`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getSeasons(mediaId: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${mediaId}/seasons`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getPerson(personId: string) : Promise<Response> {
+		return await fetch(`${this.url}/person/${personId}`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async getPersonMedia(personId: string) : Promise<Response> {
+		return await fetch(`${this.url}/person/${personId}/media`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
 }

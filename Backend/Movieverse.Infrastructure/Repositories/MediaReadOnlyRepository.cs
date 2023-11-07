@@ -9,6 +9,7 @@ using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common;
 using Movieverse.Domain.Common.Result;
+using Movieverse.Domain.Entities;
 using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Persistence;
 
@@ -135,6 +136,113 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		throw new NotImplementedException();
 	}
 
+	public async Task<Result<IEnumerable<ContentId>>> GetContentAsync(MediaId id, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Getting content for media id: ", id.ToString());
+
+		var contentIds = await _dbContext.Medias
+			.AsNoTracking()
+			.Where(m => m.Id == id)
+			.SelectMany(m => m.ContentIds)
+			.ToListAsync(cancellationToken);
+
+		return contentIds;
+	}
+
+	public async Task<Result<IEnumerable<PlatformId>>> GetPlatformIdsAsync(MediaId id, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Getting platforms for media id: ", id.ToString());
+		
+		var platformIds = await _dbContext.Medias
+			.AsNoTracking()
+			.Where(m => m.Id == id)
+			.SelectMany(m => m.PlatformIds)
+			.ToListAsync(cancellationToken);
+
+		return platformIds;
+	}
+
+	public async Task<Result<IEnumerable<GenreId>>> GetGenreIdsAsync(MediaId id, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Getting genres for media id: ", id.ToString());
+		
+		var genreIds = await _dbContext.Medias
+			.AsNoTracking()
+			.Where(m => m.Id == id)
+			.SelectMany(m => m.GenreIds)
+			.ToListAsync(cancellationToken);
+
+		return genreIds;
+	}
+
+	public async Task<Result<IEnumerable<Staff>>> GetStaffAsync(MediaId id, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Getting staff for media id: ", id.ToString());
+		
+		var staff = await _dbContext.Medias
+			.AsNoTracking()
+			.Where(m => m.Id == id)
+			.SelectMany(m => m.Staff)
+			.ToListAsync(cancellationToken);
+
+		return staff;
+	}
+
+	public async Task<Result<StatisticsDto>> GetStatisticsAsync(MediaId id, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Getting statistics for media id: ", id.ToString());
+		
+		var statistics = await _dbContext.Medias
+			.AsNoTracking()
+			.Where(m => m.Id == id)
+			.Select(m => m.AdvancedStatistics)
+			.ProjectToType<StatisticsDto>()
+			.SingleOrDefaultAsync(cancellationToken);
+
+		return statistics is not null ? 
+			statistics : 
+			Error.NotFound(MediaResources.MediaDoesNotExist);
+	}
+
+	public async Task<Result<SeasonInfoDto>> GetSeasonsAsync(MediaId id, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Getting seasons for media id: ", id.ToString());
+		
+		var info = await _dbContext.Series
+			.AsNoTracking()
+			.Where(s => s.Id == id)
+			.ProjectToType<SeasonInfoDto>()
+			.SingleOrDefaultAsync(cancellationToken);
+
+		if (info is null)
+		{
+			return Error.NotFound(MediaResources.MediaIsNotSeries);
+		}
+			
+		info.Seasons.ForEach(e =>
+		{
+			e.Episodes = e.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
+		});
+
+		info.Seasons = info.Seasons.OrderBy(x => x.SeasonNumber).ToList();
+
+		return info;
+	}
+
+	public async Task<Result<IEnumerable<MediaSectionDto>>> GetMediaSectionAsync(IEnumerable<MediaId> ids, CancellationToken cancellationToken = default)
+	{
+		var idsList = ids.Select(id => id.Value).ToList();
+		
+		_logger.LogDebug("Database - Getting media section for media ids: ", string.Join(", ", idsList.Select(id => id.ToString())));
+		
+		var media = await _dbContext.Medias
+			.AsNoTracking()
+			.Where(m => idsList.Contains(m.Id))
+			.ProjectToType<MediaSectionDto>()
+			.ToListAsync(cancellationToken);
+		
+		return media.OrderByDescending(m => m.Rating).ToList();
+	}
 
 	public async Task<Result<IPaginatedList<SearchMediaDto>>> FindMediaByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 	{
@@ -143,6 +251,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		var idsList = ids.Select(id => id.Value).ToList();
 		
 		return await _dbContext.Medias
+			.AsNoTracking()
 			.Where(m => idsList.Contains(m.Id))
 			.OrderByDescending(x => x.Details.ReleaseDate)
 			.ProjectToType<SearchMediaDto>()
@@ -156,6 +265,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		var idsList = ids.Select(id => id.Value).ToList();
 		
 		return await _dbContext.Movies
+			.AsNoTracking()
 			.Where(m => idsList.Contains(m.Id))
 			.ProjectToType<MediaInfoDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);

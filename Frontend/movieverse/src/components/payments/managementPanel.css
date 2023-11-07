@@ -53,3 +53,8 @@
     transform: translateY(0);
   }
 }
+
+.up-menu-loading {
+  display: flex;
+  margin: 15px auto 20px auto;
+}

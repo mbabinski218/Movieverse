@@ -16,7 +16,6 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 		ConfigureMediaPlatformIdsTable(builder);
 		ConfigureMediaContentIdsTable(builder);
 		ConfigureMediaGenreIdsTable(builder);
-		ConfigureReviewsTable(builder);
 		ConfigureStaffTable(builder);
 		ConfigureAdvancedStatisticsTable(builder);
 		ConfigureValueObjects(builder);
@@ -104,25 +103,6 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 		
 		builder.Metadata.FindNavigation(nameof(Media.GenreIds))!
 			.SetPropertyAccessMode(PropertyAccessMode.Field);
-	}
-	
-	private static void ConfigureReviewsTable(EntityTypeBuilder<Media> builder)
-	{
-		builder.OwnsMany(m => m.Reviews, reviewBuilder =>
-		{
-			reviewBuilder.ToTable($"{nameof(Media.Reviews)}");
-		
-			reviewBuilder.HasKey(nameof(Review.Id));
-		
-			reviewBuilder.Property(r => r.UserName)
-				.HasMaxLength(Constants.nameLength);
-		
-			reviewBuilder.Property(r => r.Title)
-				.HasMaxLength(Constants.titleLength);
-		
-			reviewBuilder.Property(r => r.Content)
-				.HasMaxLength(Constants.reviewLength);
-		});
 	}
 	
 	private static void ConfigureStaffTable(EntityTypeBuilder<Media> builder)

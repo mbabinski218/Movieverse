@@ -110,4 +110,20 @@ public sealed class UserController : ApiController
 		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
+	
+	[PolicyAuthorize(Policies.personalData)]
+	[OutputCache(NoStore = true)]
+	[HttpPut("rating/{MediaId:guid}/{Rating:int}")]
+	public async Task<ActionResult> UpdateRating([FromRoute] UpdateRatingCommand command, CancellationToken cancellationToken) =>
+		await mediator.Send(command, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[PolicyAuthorize(Policies.personalData)]
+	[OutputCache(NoStore = true)]
+	[HttpGet("{MediaId:guid}")]
+	public async Task<ActionResult> GetMediaInfo([FromRoute] GetMediaInfoQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
 } 

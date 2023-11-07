@@ -91,6 +91,13 @@ public static class DependencyInjection
 				builder.AddPolicy<ByUserIdCachePolicy>();
 				builder.Expire(TimeSpan.Parse(cacheSettings.ExpirationTime));
 			}, true);
+			
+			options.AddPolicy(CachePolicies.byQuery, builder =>
+			{
+				builder.AddPolicy<DefaultOutputCachePolicy>();
+				builder.AddPolicy<ByQueryCachePolicy>();
+				builder.Expire(TimeSpan.Parse(cacheSettings.ExpirationTime));
+			}, true);
 		});
 
 		services.AddHealthChecks()

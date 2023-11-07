@@ -1,28 +1,39 @@
 import { MediaHorizontalList } from "../components/horizontalList/MediaHorizontalList";
-import { FilteredMediaDto } from "../core/dtos/media/filteredMediaDto";
+import { useLatestMedia } from "../hooks/useLatestMedia";
 import { useEffect, useState } from "react";
-import { Api } from "../Api";
 import "./Home.css";
+import { Loading } from "../components/basic/Loading";
 
 export const Home: React.FC = () => {
-	const [filteredMedia, setFilteredMedia] = useState<FilteredMediaDto[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [filteredMedia, setFilteredMedia] = useLatestMedia(null, 1, 10);
 
 	useEffect(() => {
-		document.title = "Movieverse"
-		
-		Api.getLatestMedia(null, 1, 10)
-			.then((media) => setFilteredMedia(media))
-			.catch((err) => console.error(err));
+		document.title = "Movieverse";
 	}, []);
+
+	useEffect(() => {
+		if (filteredMedia.length > 0) {
+			setLoading(false);
+		}
+	}, [filteredMedia]);
 
 	return (
 		<div className="page">
-			<span className="page-title">What to watch</span>
-			<div>
-				{filteredMedia.map((filteredMedia) => (
-					<MediaHorizontalList key={filteredMedia.platformId} filteredMedia={filteredMedia} />
-				))}
-			</div>
+			{
+				loading ? 
+				<div className="page-loading">
+					<Loading />
+				</div> :
+				<>
+					<span className="page-title">What to watch</span>
+					<div>
+						{filteredMedia.map((filteredMedia) => (
+							<MediaHorizontalList key={filteredMedia.platformId} filteredMedia={filteredMedia} />
+						))}
+					</div>
+				</>
+			}
 		</div>
 	);
 }

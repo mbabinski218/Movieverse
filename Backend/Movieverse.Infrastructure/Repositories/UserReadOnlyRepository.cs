@@ -114,4 +114,19 @@ public sealed class UserReadOnlyRepository : IUserReadOnlyRepository
 			.Select(x => x.Subscription.FreeTrial)
 			.SingleOrDefaultAsync(cancellationToken);
 	}
+
+	public async Task<Result<MediaInfoDto>> GetMediaInfoAsync(Guid userId, MediaId mediaId, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - get media info for user with id: {UserId} and media {MediaId}", userId, mediaId);
+
+		var mediaInfo = await _dbContext.Users
+			.AsNoTracking()
+			.Where(x => x.Id == userId)
+			.SelectMany(x => x.MediaInfos)
+			.Where(x => x.MediaId == mediaId)
+			.ProjectToType<MediaInfoDto>()
+			.SingleOrDefaultAsync(cancellationToken);
+		
+		return mediaInfo is null ? Error.NotFound(UserResources.NoData) : mediaInfo;
+	}
 }

@@ -28,7 +28,7 @@ public sealed class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, Resul
 		if (id is null)
 		{
 			_logger.LogDebug("User does not exist");
-			return Error.NotFound(UserResources.UserDoesNotExist);
+			return Error.Unauthorized(UserResources.UserDoesNotExist);
 		}
 		
 		_logger.LogDebug("Getting user {id}...", id);

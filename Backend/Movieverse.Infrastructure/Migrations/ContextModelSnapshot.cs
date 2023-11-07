@@ -362,31 +362,6 @@ namespace Movieverse.Infrastructure.Migrations
                     b.ToTable("Roles", (string)null);
                 });
 
-            modelBuilder.Entity("Movieverse.Domain.Entities.Award", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<Guid?>("ImageId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Award");
-                });
-
             modelBuilder.Entity("Movieverse.Domain.Entities.Statistics", b =>
                 {
                     b.Property<int>("Id")
@@ -404,27 +379,6 @@ namespace Movieverse.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Statistics");
-                });
-
-            modelBuilder.Entity("Movieverse.Domain.Entities.StatisticsAward", b =>
-                {
-                    b.Property<int>("StatisticsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("AwardId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Place")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("integer");
-
-                    b.HasKey("StatisticsId", "AwardId");
-
-                    b.HasIndex("AwardId");
-
-                    b.ToTable("StatisticsAward");
                 });
 
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Media.Movie", b =>
@@ -605,68 +559,6 @@ namespace Movieverse.Infrastructure.Migrations
                                 .HasForeignKey("MediaId");
                         });
 
-                    b.OwnsMany("Movieverse.Domain.Entities.Review", "Reviews", b1 =>
-                        {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
-                            b1.Property<bool>("Banned")
-                                .HasColumnType("boolean");
-
-                            b1.Property<bool>("ByCritic")
-                                .HasColumnType("boolean");
-
-                            b1.Property<string>("Content")
-                                .IsRequired()
-                                .HasMaxLength(3000)
-                                .HasColumnType("character varying(3000)");
-
-                            b1.Property<DateTimeOffset>("Date")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<bool>("Deleted")
-                                .HasColumnType("boolean");
-
-                            b1.Property<Guid>("MediaId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<bool>("Modified")
-                                .HasColumnType("boolean");
-
-                            b1.Property<short>("Rating")
-                                .HasColumnType("smallint");
-
-                            b1.Property<bool>("Spoiler")
-                                .HasColumnType("boolean");
-
-                            b1.Property<string>("Title")
-                                .IsRequired()
-                                .HasMaxLength(200)
-                                .HasColumnType("character varying(200)");
-
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("UserName")
-                                .IsRequired()
-                                .HasMaxLength(150)
-                                .HasColumnType("character varying(150)");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("MediaId");
-
-                            b1.ToTable("Reviews", (string)null);
-
-                            b1.WithOwner("Media")
-                                .HasForeignKey("MediaId");
-
-                            b1.Navigation("Media");
-                        });
-
                     b.OwnsMany("Movieverse.Domain.Entities.Staff", "Staff", b1 =>
                         {
                             b1.Property<int>("Id")
@@ -787,8 +679,6 @@ namespace Movieverse.Infrastructure.Migrations
                     b.Navigation("GenreIds");
 
                     b.Navigation("PlatformIds");
-
-                    b.Navigation("Reviews");
 
                     b.Navigation("Staff");
 
@@ -1157,25 +1047,6 @@ namespace Movieverse.Infrastructure.Migrations
                     b.Navigation("Popularity");
                 });
 
-            modelBuilder.Entity("Movieverse.Domain.Entities.StatisticsAward", b =>
-                {
-                    b.HasOne("Movieverse.Domain.Entities.Award", "Award")
-                        .WithMany("StatisticsAwards")
-                        .HasForeignKey("AwardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Movieverse.Domain.Entities.Statistics", "Statistics")
-                        .WithMany("StatisticsAwards")
-                        .HasForeignKey("StatisticsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Award");
-
-                    b.Navigation("Statistics");
-                });
-
             modelBuilder.Entity("Movieverse.Domain.AggregateRoots.Media.Movie", b =>
                 {
                     b.OwnsOne("Movieverse.Domain.ValueObjects.BasicStatistics", "BasicStatistics", b1 =>
@@ -1423,16 +1294,6 @@ namespace Movieverse.Infrastructure.Migrations
                 {
                     b.Navigation("AdvancedStatistics")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Movieverse.Domain.Entities.Award", b =>
-                {
-                    b.Navigation("StatisticsAwards");
-                });
-
-            modelBuilder.Entity("Movieverse.Domain.Entities.Statistics", b =>
-                {
-                    b.Navigation("StatisticsAwards");
                 });
 #pragma warning restore 612, 618
         }

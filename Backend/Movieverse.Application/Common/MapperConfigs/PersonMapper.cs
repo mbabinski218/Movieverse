@@ -15,5 +15,11 @@ public sealed class PersonMapper : IRegister
 			.Map(dest => dest.Age, src => src.Information.Age)
 			.Map(dest => dest.Picture, src => src.PictureId.GetValue())
 			.Map(dest => dest.Biography, src => src.Biography);
+
+		config.NewConfig<Person, PersonInfoDto>()
+			.Map(dest => dest.Id, src => src.Id.GetValue())
+			.Map(dest => dest.PictureId, src => src.PictureId.GetValue())
+			.Map(dest => dest.FirstName, src => src.Information.FirstName)
+			.Map(dest => dest.LastName, src => src.Information.LastName);
 	}
 }

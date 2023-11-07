@@ -8,5 +8,6 @@ public sealed class PersonDto
 	public LifeHistory LifeHistory { get; set; } = null!;
 	public string? Biography { get; set; }
 	public string? FunFacts { get; set; }
-	public List<Guid> PictureIds { get; set; } = new();
+	public Guid? PictureId { get; set; }
+	public List<Guid> ContentIds { get; set; } = new();
 }

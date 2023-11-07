@@ -38,7 +38,7 @@ public sealed class UpdateHandler : IRequestHandler<UpdateCommand, Result<UserDt
 		var id = _httpService.UserId;
 		if (id is null)
 		{
-			return Error.NotFound(UserResources.UserDoesNotExist);
+			return Error.Unauthorized(UserResources.UserDoesNotExist);
 		}
 		
 		_logger.LogDebug("Updating user with id: {id}...", id);
