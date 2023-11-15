@@ -11,4 +11,6 @@ public sealed class UserDto
 	public Guid? AvatarPath { get; set; } = null!;
 	public bool EmailConfirmed { get; set; }
 	public Guid? PersonId { get; set; }
+	public bool Banned { get; set; }
+	public bool CanChangePassword { get; set; }
 }

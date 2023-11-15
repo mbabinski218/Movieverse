@@ -5,11 +5,4 @@ using Movieverse.Domain.ValueObjects;
 
 namespace Movieverse.Contracts.Commands.Person;
 
-public sealed record CreatePersonCommand(
-	bool ForUser,
-	Information? Information,
-	LifeHistory LifeHistory,
-	string? Biography,
-	string? FunFacts,
-	IEnumerable<IFormFile>? Pictures
-	) : IRequest<Result>;
+public sealed record CreatePersonCommand(bool ForUser) : IRequest<Result<string>>;

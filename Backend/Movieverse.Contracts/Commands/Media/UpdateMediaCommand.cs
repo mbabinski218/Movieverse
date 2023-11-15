@@ -18,7 +18,7 @@ public sealed record UpdateMediaCommand(
 	IEnumerable<string>? VideosToAdd,
 	IEnumerable<Guid>? ContentToRemove,
 	IEnumerable<Guid>? PlatformIds,
-	IEnumerable<Guid>? GenreIds,
+	IEnumerable<int>? GenreIds,
 	IEnumerable<PostStaffDto>? Staff,
 	MovieInfoDto? MovieInfo,
 	SeriesInfoDto? SeriesInfo

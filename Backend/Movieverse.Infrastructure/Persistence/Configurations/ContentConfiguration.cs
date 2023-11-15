@@ -21,9 +21,6 @@ public sealed class ContentConfiguration : IEntityTypeConfiguration<Content>
 			.HasConversion(
 				id => id.Value,
 				value => ContentId.Create(value));
-		
-		builder.Property(c => c.Title)
-			.HasMaxLength(Constants.titleLength);
 
 		builder.Property(c => c.Path)
 			.HasMaxLength(Constants.pathLength);

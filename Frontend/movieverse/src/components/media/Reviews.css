@@ -1,0 +1,100 @@
+.review-menu {
+  display: grid;
+  flex-wrap: wrap;
+  grid-template-areas: 
+  "input btn"
+  "rev rev";
+  grid-template-columns: 1fr 60px;
+  grid-template-rows: min-content min-content;
+  column-gap: 10px;
+  row-gap: 10px;
+}
+
+.review-input {
+  grid-area: input;
+}
+
+.review-send-button {
+  grid-area: btn;
+  align-self: center;
+  justify-self: center;
+  height: 36px;
+}
+
+.review-show {
+  grid-area: rev;
+}
+
+.review-break {
+  grid-area: bre;
+  border-width: 1px;
+  border-radius: 10px;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-areas: 
+  "name text"
+  "date text"
+  "util text"
+  "bre bre";
+  grid-template-columns: 180px 590px;
+  grid-template-rows: min-content min-content min-content min-content;
+  column-gap: 10px;
+  row-gap: 10px;
+  animation: fadein 0.8s, move-down 0.3s;
+}
+
+.review-name {
+  grid-area: name;
+  font-weight: bold;
+}
+
+.review-date {
+  grid-area: date;
+}
+
+.review-text {
+  grid-area: text;
+  overflow-wrap: break-word;
+}
+
+.review-util {
+  grid-area: util;
+  width: fit-content;
+}
+
+
+@media (max-width: 1050px) {
+  .review-grid {
+    grid-template-columns: 180px 450px;
+  }
+  
+}
+
+@media (max-width: 680px) {
+  .review-grid {
+    grid-template-columns: 180px 1fr;
+  }
+
+  .review-text {
+    overflow: auto !important;
+  }
+}
+
+@keyframes fadein {
+  from { opacity: 0}
+  to   { opacity: 1}
+}
+
+@keyframes move-down {
+  from {
+    transform: translateY(-32px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Movieverse.Domain.Common;
 using Movieverse.Domain.Entities;
-using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Infrastructure.Persistence.Configurations;
 

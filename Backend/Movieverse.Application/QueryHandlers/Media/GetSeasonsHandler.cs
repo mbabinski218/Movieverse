@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces.Repositories;
-using Movieverse.Contracts.DataTransferObjects.Genre;
 using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Contracts.Queries.Media;
 using Movieverse.Domain.Common.Result;

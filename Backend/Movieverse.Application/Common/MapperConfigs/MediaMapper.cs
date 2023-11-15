@@ -55,9 +55,6 @@ public sealed class MediaMapper : IRegister
 		config.NewConfig<Staff, StaffDto>()
 			.Map(dest => dest.PersonId, src => src.PersonId.Value)
 			.Map(dest => dest.Role, src => src.Role.ToString());
-		
-		// config.NewConfig<Episode, EpisodeDto>()
-		// 	.Map(dest => dest.ContentIds, src => src.ContentIds.Select(id => id.Value));
 
 		config.NewConfig<Media, SearchMediaDto>()
 			.Map(dest => dest.Id, src => src.Id.GetValue())
@@ -88,11 +85,11 @@ public sealed class MediaMapper : IRegister
 			return null;
 		}
 		
-		if (description.Length <= 100)
+		if (description.Length <= 200)
 		{
 			return description + "...";
 		}
 		
-		return description[..100] + "...";
+		return description[..200] + "...";
 	}
 }

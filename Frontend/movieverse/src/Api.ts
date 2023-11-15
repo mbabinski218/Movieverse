@@ -15,6 +15,8 @@ import { SearchPersonDto } from "./core/dtos/person/searchPersonDto";
 import { GenreDto } from "./core/dtos/genre/genreDto";
 import { AddMediaContract } from "./core/contracts/addMediaContract";
 import { UpdateRolesContract } from "./core/contracts/updateRolesContract";
+import { UpdateMediaContract } from "./core/contracts/updateMediaContract";
+import { ChangePasswordContract } from "./core/contracts/changePasswordContract";
 
 export class Api {
 	static readonly url: string = "https://localhost:44375/api";
@@ -25,7 +27,7 @@ export class Api {
 
 		const response = await fetch(url, init)
 			.catch(error => {
-				console.log(error);
+				console.error(error);
 				throw error;
 			});
 			
@@ -112,7 +114,7 @@ export class Api {
 	}
 
 	static async getGenres(): Promise<GenreDto[]> {
-		return await fetch(`${this.url}/genre`)
+		return await fetch(`${this.url}/media/genres`)
 		.then(response => response.json())
 		.then(data => data as GenreDto[])
 		.catch(error => {
@@ -327,6 +329,19 @@ export class Api {
 			},
 			body: form
 		})
+	}
+
+	static async changePassword(body: ChangePasswordContract) : Promise<Response> {
+		return await this.fetchWithAuthorization(`user/password`, {
+			mode: "cors",
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			},
+			body: JSON.stringify(body)
+		});
 	}
 
 	static async getWatchlist(pageNumber: number | null = null, pageSize: number | null = null) : Promise<Response> {
@@ -647,4 +662,82 @@ export class Api {
 			}
 		});
 	};
+
+	static async getReview(mediaId: string) : Promise<Response> {
+		return await fetch(`${this.url}/media/${mediaId}/review`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture
+			}
+		});
+	};
+
+	static async addReview(mediaId: string, text: string) : Promise<Response> {
+		const queryParams = new QueryParams();
+		queryParams.add("text", text);
+
+		return await this.fetchWithAuthorization(`media/${mediaId}/review`, {
+			mode: "cors",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		}, queryParams);
+	};
+
+	static async banUser(userId: string) : Promise<Response> {
+		return await this.fetchWithAuthorization(`user/${userId}/ban`, {
+			mode: "cors",
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		});
+	};
+
+	static async addPerson(forUser: boolean) : Promise<Response> {
+		const queryParams = new QueryParams();
+		queryParams.add("forUser", forUser.toString());
+		
+		return await this.fetchWithAuthorization(`person`, {
+			mode: "cors",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		}, queryParams);
+	};
+
+	static async updateMedia(mediaId:string, data: UpdateMediaContract) : Promise<Response> {
+		const form = FormDataHelper.toFormData(data);
+
+		return await this.fetchWithAuthorization(`media/${mediaId}`, {
+			mode: "cors",
+			method: "PUT",
+			headers: {
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			},
+			body: form
+		})
+	}
+
+	static async getPlatforms() : Promise<Response> {
+		return await this.fetchWithAuthorization(`platform`, {
+			mode: "cors",
+			method: "GET",
+			headers: {
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			}
+		})
+	}
 }

@@ -4,7 +4,6 @@ using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Contracts.Queries.Person;
 using Movieverse.Domain.Common.Result;
-using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.QueryHandlers.Person;
 

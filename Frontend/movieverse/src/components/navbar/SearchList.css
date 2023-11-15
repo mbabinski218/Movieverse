@@ -4,6 +4,7 @@
     text-decoration: none;
     display: flex;
     padding: 10px 10px 10px 10px;
+    animation: fadein 0.8s, move-down 0.3s;
 }
 
 .items:hover {
@@ -38,4 +39,18 @@
 .poster {
     height: 150px;
     width: 101px;
+}
+
+@keyframes fadein {
+    from { opacity: 0}
+    to   { opacity: 1}
+}
+  
+@keyframes move-down {
+    from {
+        transform: translateY(-32px);
+    }
+    to {
+        transform: translateY(0);
+    }
 }

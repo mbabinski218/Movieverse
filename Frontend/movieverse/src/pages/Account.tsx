@@ -7,12 +7,14 @@ import { Success } from "../components/basic/Success";
 import { Error } from "../components/basic/Error";
 import { Input, InputFile } from "../components/basic/Input";
 import { Button } from "../components/basic/Button";
-import { UserDto } from "../core/dtos/user/userDto";
 import { Api } from "../Api";
 import { useUserData, AccountProps, emptyAccountProps } from "../hooks/useUserData";
+import { ChangePassword } from "../components/user/ChangePassword";
+import { Loading } from "../components/basic/Loading";
 import "./Account.css";
 
 export const Account: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(true);
   const [accountCurrentProps, setAccountCurrentProps] = useUserData();
   const [accountProps, setAccountProps] = useState<AccountProps>(emptyAccountProps);
   const [stateProps, setStateProps] = useState<StateProps>(emptyState);
@@ -25,6 +27,12 @@ export const Account: React.FC = () => {
 
     document.title = "Account - Movieverse";
   }, []);
+
+  useEffect(() => {
+    if (accountCurrentProps) {
+      setLoading(false);
+    }
+  }, [accountCurrentProps]);
 
   // Show error message
   const showError = (err: string | string[]) => {
@@ -109,7 +117,8 @@ export const Account: React.FC = () => {
             age: accountProps.age ? accountProps.age : accountCurrentProps.age,
             firstName: accountProps.firstName ? accountProps.firstName : accountCurrentProps.firstName,
             lastName: accountProps.lastName ? accountProps.lastName : accountCurrentProps.lastName,
-            avatar: null
+            avatar: null,
+            canChangePassword: accountCurrentProps.canChangePassword
           });
           setAccountProps(emptyAccountProps)
         }
@@ -136,73 +145,92 @@ export const Account: React.FC = () => {
         window.location.reload();
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
         showError("Something went wrong. Please try again.");
       });
   }, []);
 
   return (
-    <div className="account-page">
-      <div className="account-title">
-        <span>Account</span>
-      </div>
-      <div className="account-form">
-        <Input label={`Email: ${accountCurrentProps.email}`}
-               onChange={handleEmailChange} 
-               value={accountProps.email}
-        />
-        <Input label={`Username: ${accountCurrentProps.username}`}
-               onChange={handleUsernameChange} 
-               value={accountProps.username}
-        />
-        <Input label={`Age: ${accountCurrentProps.age}`}
-               onChange={handleAgeChange} 
-               type="number" 
-               min={1}
-               max={200}
-               onKeyDown={onNotAllowedKeyDown}
-               value={accountProps.age}
-        />
-        <Input label={`First name: ${accountCurrentProps.firstName}`}
-               onChange={handleFirstNameChange} 
-               value={accountProps.firstName}
-        />
-        <Input label={`Last name: ${accountCurrentProps.lastName}`}
-               onChange={handleLastNameChange} 
-               value={accountProps.lastName}
-        />
-        <InputFile label="Upload profile picture..."
-                   fileName={accountProps.avatar?.name}
-                   accept="image/png, image/jpeg, image/jpg, image/svg"
-                   onChange={handleFileChange}
-        />
-        <div className="account-space account-buttons">
-          <Button label="Update data"
-                  primary={true}
-                  disabled={!canUpdate()} 
-                  onClick={handleSubmit} 
+    <>
+    {
+      loading ?
+      <Loading /> :
+      <div className="account-page">
+        <div className="account-title">
+          <span>Account</span>
+        </div>
+        <div className="account-form">
+          <Input label={`Email: ${accountCurrentProps.email}`}
+                onChange={handleEmailChange} 
+                value={accountProps.email}
           />
-        </div>    
-      </div>
-      <div className="account-form account-logout">
-        <div className="account-buttons">
-          <Button label="Logout"
-                  onClick={handleLogout}
+          <Input label={`Username: ${accountCurrentProps.username}`}
+                onChange={handleUsernameChange} 
+                value={accountProps.username}
           />
+          <Input label={`Age: ${accountCurrentProps.age}`}
+                onChange={handleAgeChange} 
+                type="number" 
+                min={1}
+                max={200}
+                onKeyDown={onNotAllowedKeyDown}
+                value={accountProps.age}
+          />
+          <Input label={`First name: ${accountCurrentProps.firstName}`}
+                onChange={handleFirstNameChange} 
+                value={accountProps.firstName}
+          />
+          <Input label={`Last name: ${accountCurrentProps.lastName}`}
+                onChange={handleLastNameChange} 
+                value={accountProps.lastName}
+          />
+          <InputFile label="Upload profile picture..."
+                    fileName={accountProps.avatar?.name}
+                    accept="image/png, image/jpeg, image/jpg, image/svg"
+                    onChange={handleFileChange}
+          />
+          <div className="account-space account-buttons">
+            <Button label="Update data"
+                    primary={true}
+                    disabled={!canUpdate()} 
+                    onClick={handleSubmit} 
+            />
+          </div>    
+        </div>
+        <>
+          {
+            !accountCurrentProps.canChangePassword ?
+            <div className="account-form account-pass account-external">
+              Cannot change external account password
+            </div> :
+            <div className="account-pass">
+              <ChangePassword onSuccess={showSuccess}
+                              onError={showError}
+              />
+            </div>
+          }
+        </>
+        <div className="account-form account-logout">
+          <div className="account-buttons">
+            <Button label="Logout"
+                    onClick={handleLogout}
+            />
+          </div>
+        </div>
+        <div className="account-error">
+        {
+          stateProps.error && 
+          <Error errors={stateProps.errorMessages} />
+        }
+        </div>
+        <div className="account-success">
+        {
+          stateProps.success && 
+          <Success success={stateProps.successMessages} />
+        }
         </div>
       </div>
-      <div className="account-error">
-      {
-        stateProps.error && 
-        <Error errors={stateProps.errorMessages} />
-      }
-      </div>
-      <div className="account-success">
-      {
-        stateProps.success && 
-        <Success success={stateProps.successMessages} />
-      }
-      </div>
-    </div>
+    }
+    </>
   )
 }

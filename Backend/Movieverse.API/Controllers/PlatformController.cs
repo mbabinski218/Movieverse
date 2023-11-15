@@ -16,7 +16,7 @@ public sealed class PlatformController : ApiController
 	{
 	}
 	
-	[AllowAnonymous]
+	[PolicyAuthorize(Policies.administrator)]
 	[OutputCache(NoStore = true)]
 	[HttpPost]
 	public async Task<ActionResult> Add([FromForm] AddPlatformCommand command, CancellationToken cancellationToken) =>
@@ -39,12 +39,12 @@ public sealed class PlatformController : ApiController
 		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
-	
-	[PolicyAuthorize(Policies.atLeastPro)]
-	[OutputCache(NoStore = true)]
-	[HttpPost("{Id:guid}/media")]
-	public async Task<ActionResult> AddMedia([FromQuery] AddMediaToPlatformCommand query, CancellationToken cancellationToken) =>
-		await mediator.Send(query, cancellationToken).Then(
+    
+	[AllowAnonymous]
+	[OutputCache]
+	[HttpGet]
+	public async Task<ActionResult> GetAll(CancellationToken cancellationToken) =>
+		await mediator.Send(new GetPlatformsQuery(), cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
 	

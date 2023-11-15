@@ -84,13 +84,6 @@ public static class DependencyInjection
 				builder.AddPolicy<ByIdOutputCachePolicy>();
 				builder.Expire(TimeSpan.Parse(cacheSettings.ExpirationTime));
 			}, true);
-
-			options.AddPolicy(CachePolicies.byUserId, builder =>
-			{
-				builder.AddPolicy<DefaultOutputCachePolicy>();
-				builder.AddPolicy<ByUserIdCachePolicy>();
-				builder.Expire(TimeSpan.Parse(cacheSettings.ExpirationTime));
-			}, true);
 			
 			options.AddPolicy(CachePolicies.byQuery, builder =>
 			{
@@ -195,16 +188,13 @@ public static class DependencyInjection
 		services.AddAuthorization(options =>
 		{
 			options.AddPolicy(Policies.administrator, policy => 
-				policy.Requirements.Add(new RoleRequirement(UserRole.Administrator)));
-			
-			options.AddPolicy(Policies.critic, policy =>
-				policy.Requirements.Add(new RoleRequirement(UserRole.Critic)));
+				policy.Requirements.Add(new OneOfRoleRequirement(UserRole.Administrator, UserRole.SystemAdministrator)));
 			
 			options.AddPolicy(Policies.atLeastPro, policy =>
-				policy.Requirements.Add(new OneOfRoleRequirement(UserRole.Pro, UserRole.Critic, UserRole.Administrator)));
+				policy.Requirements.Add(new OneOfRoleRequirement(UserRole.Pro, UserRole.Administrator, UserRole.SystemAdministrator)));
 			
 			options.AddPolicy(Policies.atLeastUser, policy =>
-				policy.Requirements.Add(new OneOfRoleRequirement(UserRole.User, UserRole.Pro, UserRole.Critic, UserRole.Administrator)));
+				policy.Requirements.Add(new OneOfRoleRequirement(UserRole.User, UserRole.Pro, UserRole.Administrator, UserRole.SystemAdministrator)));
 			
 			options.AddPolicy(Policies.personalData, policy =>
 				policy.Requirements.Add(new PersonalDataRequirement()));

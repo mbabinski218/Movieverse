@@ -28,11 +28,6 @@ public sealed class PlatformConfiguration : IEntityTypeConfiguration<Platform>
 
 		builder.Property(p => p.Price)
 			.HasPrecision(Constants.pricePrecision, Constants.priceScale);
-
-		builder.Property(p => p.LogoId)
-			.HasConversion(
-				x => x.Value, 
-				x => ContentId.Create(x));
 	}
 
 	private static void ConfigurePlatformMediaIdsTable(EntityTypeBuilder<Platform> builder)

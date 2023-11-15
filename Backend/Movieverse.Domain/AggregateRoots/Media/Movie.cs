@@ -21,7 +21,6 @@ public sealed class Movie : Media
 	public static Movie Create(MediaId id, string title)
 	{
 		var movie = new Movie(id, title);
-		movie.AdvancedStatistics = Statistics.Create(movie);
 		return movie;
 	}
 	

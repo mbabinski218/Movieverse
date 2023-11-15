@@ -103,6 +103,10 @@ public sealed class UpdateHandler : IRequestHandler<UpdateCommand, Result<UserDt
 		await _outputCacheStore.EvictByTagAsync(id.Value.ToString(), cancellationToken);
 		
 		_logger.LogDebug("User {id} updated successfully.", id);
-        return _mapper.Map<UserDto>(user);
+		
+		var mappedUser = _mapper.Map<UserDto>(user);
+		mappedUser.CanChangePassword = user.PasswordHash is not null;
+		
+        return mappedUser;
 	}
 }

@@ -41,6 +41,7 @@ export interface AccessToken {
   exp: number;
   iss: string;
   aud: string;
+  personId?: string;
 }
 
 export const useLocalStorage = <T>(key: string, initialValue: T | (() => T)) => {
@@ -55,7 +56,7 @@ export const useLocalStorage = <T>(key: string, initialValue: T | (() => T)) => 
 			return typeof initialValue === "function" ? initialValue as () => T : initialValue;
 		} 
     catch (err) {
-      console.log(err);
+      console.error(err);
       return initialValue;
     }
   });

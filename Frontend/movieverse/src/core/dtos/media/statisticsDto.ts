@@ -1,6 +1,7 @@
 export type StatisticsDto = {
   popularity: PopularityDto[];
   boxOffice: BoxOfficeDto;
+  onWatchlistCount: number;
 }
 
 export type BoxOfficeDto = {

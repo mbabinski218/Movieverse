@@ -8,8 +8,6 @@ using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.Platform;
 using Movieverse.Contracts.DataTransferObjects.Platform;
 using Movieverse.Domain.Common.Result;
-using Movieverse.Domain.DomainEvents;
-using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.CommandHandlers.PlatformCommands.Update;
 
@@ -45,10 +43,6 @@ public sealed class UpdatePlatformHandler : IRequestHandler<UpdatePlatformComman
 		
 		if (request.Name is not null) platform.Name = request.Name;
 		if (request.Price is not null) platform.Price = request.Price.Value;
-		if (request.Image is not null)
-		{
-			platform.AddDomainEvent(new ImageChanged(platform.LogoId ?? ContentId.Create(), request.Image));
-		}
 		
 		var updateResult = await _platformRepository.UpdateAsync(platform, cancellationToken);
 		if (!updateResult.IsSuccessful)

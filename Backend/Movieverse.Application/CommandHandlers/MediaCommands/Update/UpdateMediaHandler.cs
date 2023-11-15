@@ -130,13 +130,23 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		{
 			foreach (var genreId in request.GenreIds)
 			{
-				if (media.GenreIds.Contains(GenreId.Create(genreId)))
+				var genreResult = await _mediaRepository.FindGenreAsync(genreId, cancellationToken);
+				if (genreResult.IsUnsuccessful)
 				{
 					continue;
 				}
+				var genre = genreResult.Value;
+
+				var mediaGenre = new MediaGenre
+				{
+					Media = media,
+					MediaId = MediaId.Create(media.Id),
+					Genre = genre,
+					GenreId = genre.Id
+				};
 				
-				media.AddGenre(genreId);
-				media.AddDomainEvent(new GenreToMediaAdded(media.Id.Value, genreId));
+				// media.AddGenre(mediaGenre);
+				// genre.AddMedia(mediaGenre);
 			}
 		}
 
@@ -197,34 +207,6 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 							{
 								episode = Episode.Create(season, episodeDto.EpisodeNumber, episodeDto.Title ?? "", episodeDto.Details ?? new Details());
 								season.AddEpisode(episode);
-							}
-								
-							if (episodeDto.ImagesToAdd is not null)
-							{
-								foreach (var image in episodeDto.ImagesToAdd)
-								{
-									var imageId = ContentId.Create();
-									episode.AddContent(imageId);
-									episode.AddDomainEvent(new ImageChanged(imageId, image));
-								}
-							}
-		
-							if (episodeDto.VideosToAdd is not null)
-							{
-								foreach (var video in episodeDto.VideosToAdd)
-								{
-									var videoId = ContentId.Create();
-									episode.AddContent(videoId);
-									episode.AddDomainEvent(new VideoChanged(videoId, video));
-								}
-							}
-		
-							if (episodeDto.ContentToRemove is not null)
-							{
-								foreach (var content in episodeDto.ContentToRemove)
-								{
-									episode.RemoveContent(content);
-								}
 							}
 						}
 					}

@@ -291,7 +291,10 @@ public sealed class UserRepository : IUserRepository
 			return Error.Invalid(UserResources.UserAlreadyHavePersonality);
 		}
 		
+		await _userManager.AddClaimAsync(user.Value, new Claim(ClaimNames.personId, personId.ToString()));
+		
 		user.Value.PersonId = personId;
+		
 		return Result.Ok();
 	}
 
@@ -357,6 +360,26 @@ public sealed class UserRepository : IUserRepository
 		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToAddRoles);
 	}
 
+	public async Task<bool> IsSystemAdministratorAsync(User user, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Check if user with id: {id} is system administrator", user.Id.ToString());
+		
+		return await _userManager.IsInRoleAsync(user, UserRole.SystemAdministrator.ToStringFast());
+	}
+
+	public async Task<Result> ChangePasswordAsync(User user, string currentPassword, string newPassword, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Change password for user with id: {id}", user.Id);
+
+		if (user.PasswordHash is null)
+		{
+			return Error.Invalid(UserResources.CanNotChangeExternalLoginPassword);
+		}
+		
+		var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+		return result.Succeeded ? Result.Ok() : Error.Invalid(UserResources.FailedToChangePassword);
+	}
+
 	public async Task<Result> ChangeUsernameAsync(User user, string username, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Database - Change username for user with id: {id}", user.Id);
@@ -393,6 +416,7 @@ public sealed class UserRepository : IUserRepository
 			new(ClaimNames.displayName, string.IsNullOrWhiteSpace(user.Information.FirstName) ? user.UserName! : user.Information.FirstName),
 			new(ClaimNames.age, user.Information.Age.ToString()),
 		};
+		
 		return claims;
 	} 
 	

@@ -19,6 +19,12 @@ public sealed class Person : AggregateRoot<PersonId, Guid>
 	public IReadOnlyList<MediaId> MediaIds => _mediaIds.AsReadOnly();
 		
 	// Constructors
+	private Person(PersonId id) : base(id)
+	{
+		Information = new();
+		LifeHistory = new();
+	}
+	
 	private Person(PersonId id, Information information, LifeHistory lifeHistory, string? biography, string? funFacts) : base(id)
 	{
 		Information = information;
@@ -28,18 +34,24 @@ public sealed class Person : AggregateRoot<PersonId, Guid>
 	}
 	
 	// Methods
-	public static Person Create(PersonId id, Information information, LifeHistory lifeHistory, string? biography, string? funFacts) =>
-		new(id, information, lifeHistory, biography, funFacts);
+	public static Person Create() => new(PersonId.Create());
+	
+	public static Person Create(PersonId id) => new(id);
 	
 	public static Person Create(Information information, LifeHistory lifeHistory, string? biography, string? funFacts) =>
 		new(PersonId.Create(), information, lifeHistory, biography, funFacts);
 	
-	public void AddContentId(ContentId contentId)
+	public void AddContent(ContentId contentId)
 	{
 		_contentIds.Add(contentId);
 	}
 	
-	public void AddMediaId(MediaId mediaId)
+	public void RemoveContent(ContentId contentId)
+	{
+		_contentIds.Remove(contentId);
+	}
+	
+	public void AddMedia(MediaId mediaId)
 	{
 		_mediaIds.Add(mediaId);
 	}

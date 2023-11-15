@@ -8,7 +8,7 @@ namespace Movieverse.Contracts.Queries.Media;
 public sealed record SearchMediaWithFiltersQuery(	
 	string? Term,
 	string Type,
-	Guid? GenreId,
+	int? GenreId,
 	short? PageNumber,
 	short? PageSize
 ) : IRequest<Result<IPaginatedList<SearchMediaDto>>>;

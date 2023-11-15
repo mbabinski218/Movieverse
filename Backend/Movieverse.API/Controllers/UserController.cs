@@ -61,7 +61,6 @@ public sealed class UserController : ApiController
 	
 	
 	[PolicyAuthorize(Policies.personalData)]
-	// [OutputCache(PolicyName = CachePolicies.byUserId)]
 	[OutputCache(NoStore = true)]
 	[HttpGet]
 	public async Task<ActionResult<UserDto>> Get(CancellationToken cancellationToken) => 
@@ -74,6 +73,15 @@ public sealed class UserController : ApiController
 	[OutputCache(NoStore = true)]
 	[HttpPut]
 	public async Task<ActionResult<UserDto>> Update([FromForm] UpdateCommand command, CancellationToken cancellationToken) =>
+		await mediator.Send(command, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[PolicyAuthorize(Policies.atLeastUser)]
+	[PolicyAuthorize(Policies.personalData)]
+	[OutputCache(NoStore = true)]
+	[HttpPut("password")]
+	public async Task<ActionResult<UserDto>> ChangePassword([FromBody] ChangePasswordCommand command, CancellationToken cancellationToken) =>
 		await mediator.Send(command, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
@@ -103,7 +111,6 @@ public sealed class UserController : ApiController
 			err => StatusCode(err.Code, err.Messages));
 	
 	[PolicyAuthorize(Policies.personalData)]
-	// [OutputCache(PolicyName = CachePolicies.byUserId)]
 	[OutputCache(NoStore = true)]
 	[HttpGet("watchlist")]
 	public async Task<ActionResult<IPaginatedList<SearchMediaDto>>> GetWatchlist([FromQuery] GetWatchlistQuery query, CancellationToken cancellationToken) =>
@@ -124,6 +131,14 @@ public sealed class UserController : ApiController
 	[HttpGet("{MediaId:guid}")]
 	public async Task<ActionResult> GetMediaInfo([FromRoute] GetMediaInfoQuery query, CancellationToken cancellationToken) =>
 		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[PolicyAuthorize(Policies.administrator)]
+	[OutputCache(NoStore = true)]
+	[HttpPut("{UserId:guid}/ban")]
+	public async Task<ActionResult> GetMediaInfo([FromRoute] BanUserCommand command, CancellationToken cancellationToken) =>
+		await mediator.Send(command, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
 } 

@@ -15,8 +15,8 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 		ConfigureMediaTable(builder);
 		ConfigureMediaPlatformIdsTable(builder);
 		ConfigureMediaContentIdsTable(builder);
-		ConfigureMediaGenreIdsTable(builder);
 		ConfigureStaffTable(builder);
+		ConfigureReviewsTable(builder);
 		ConfigureAdvancedStatisticsTable(builder);
 		ConfigureValueObjects(builder);
 	}
@@ -86,25 +86,6 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 			.SetPropertyAccessMode(PropertyAccessMode.Field);
 	}
 	
-	private static void ConfigureMediaGenreIdsTable(EntityTypeBuilder<Media> builder)
-	{
-		builder.OwnsMany(m => m.GenreIds, genreIdsBuilder =>
-		{
-			genreIdsBuilder.ToTable($"{nameof(Media)}{nameof(Media.GenreIds)}");
-			
-			genreIdsBuilder.WithOwner().HasForeignKey("MediaId");
-
-			genreIdsBuilder.HasKey("Id");
-			
-			genreIdsBuilder.Property(x => x.Value)
-				.ValueGeneratedNever()
-				.HasColumnName("GenreId");
-		});
-		
-		builder.Metadata.FindNavigation(nameof(Media.GenreIds))!
-			.SetPropertyAccessMode(PropertyAccessMode.Field);
-	}
-	
 	private static void ConfigureStaffTable(EntityTypeBuilder<Media> builder)
 	{
 		builder.OwnsMany(m => m.Staff, staffBuilder =>
@@ -124,7 +105,23 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 			.WithOne(s => s.Media)
 			.HasForeignKey<Statistics>("MediaId");
 	}
-
+	
+	private static void ConfigureReviewsTable(EntityTypeBuilder<Media> builder)
+	{
+		builder.OwnsMany(m => m.Reviews, reviewBuilder =>
+		{
+			reviewBuilder.ToTable($"{nameof(Media.Reviews)}");
+		
+			reviewBuilder.HasKey(nameof(Review.Id));
+		
+			reviewBuilder.Property(r => r.UserName)
+				.HasMaxLength(Constants.nameLength);
+		
+			reviewBuilder.Property(r => r.Text)
+				.HasMaxLength(Constants.reviewLength);
+		});
+	}
+	
 	private static void ConfigureValueObjects(EntityTypeBuilder<Media> builder)
 	{
 		builder.OwnsOne(m => m.Details, detailsConfiguration =>
@@ -162,5 +159,13 @@ public sealed class MediaConfiguration : IEntityTypeConfiguration<Media>
 			technicalSpecsConfiguration.Property(t => t.SoundMix)
 				.HasMaxLength(Constants.technicalSpecsLength);
 		});
+	}
+}
+
+public sealed class GenreConfiguration : IEntityTypeConfiguration<Genre>
+{
+	public void Configure(EntityTypeBuilder<Genre> builder)
+	{
+		builder.HasKey(g => g.Id);
 	}
 }

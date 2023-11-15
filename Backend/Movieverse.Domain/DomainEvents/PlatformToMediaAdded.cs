@@ -3,7 +3,7 @@ using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Domain.DomainEvents;
 
-public record PlatformToMediaAdded(
+public sealed record PlatformToMediaAdded(
 	MediaId MediaId,
 	PlatformId PlatformId
 	) : IDomainEvent;

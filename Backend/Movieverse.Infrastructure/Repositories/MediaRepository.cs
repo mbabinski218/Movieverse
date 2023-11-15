@@ -7,6 +7,7 @@ using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common;
 using Movieverse.Domain.Common.Result;
+using Movieverse.Domain.Entities;
 using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 using Movieverse.Infrastructure.Persistence;
 
@@ -27,7 +28,7 @@ public sealed class MediaRepository : IMediaRepository
 	{
 		_logger.LogDebug("Database - Finding media with id {id}...", id.ToString());
 		
-		var media = await _dbContext.Medias
+		var media = await _dbContext.Media
 			.SingleOrDefaultAsync(m => m.Id == id, cancellationToken);
 		
 		return media is null ? Error.NotFound("Not found") : media;
@@ -37,7 +38,7 @@ public sealed class MediaRepository : IMediaRepository
 	{
 		_logger.LogDebug("Database - Getting all media");
 
-		return await _dbContext.Medias
+		return await _dbContext.Media
 			.Include(x => x.AdvancedStatistics)
 			.ThenInclude(x => x.Popularity)
 			.ToListAsync(cancellationToken);
@@ -47,7 +48,7 @@ public sealed class MediaRepository : IMediaRepository
 	{
 		_logger.LogDebug("Database - Getting upcoming media...");
 		
-		var media = await _dbContext.Medias
+		var media = await _dbContext.Media
 			.AsNoTracking()
 			.Where(m => m.Details.ReleaseDate > DateTime.UtcNow)
 			.Where(m => platformId == null || m.PlatformIds.Any(p => p.Value == platformId.Value))
@@ -87,7 +88,7 @@ public sealed class MediaRepository : IMediaRepository
 	{
 		_logger.LogDebug("Database - Checking if media with title {title} exists...", title);
 		
-		return await _dbContext.Medias.AnyAsync(m => m.Title == title, cancellationToken: cancellationToken);
+		return await _dbContext.Media.AnyAsync(m => m.Title == title, cancellationToken: cancellationToken);
 	}
 
 	public async Task<Result<IPaginatedList<MediaInfoDto>>> FindMoviesByIdsAsync(List<MediaId> ids, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
@@ -136,7 +137,7 @@ public sealed class MediaRepository : IMediaRepository
 	{
 		_logger.LogDebug("Database - Updating media with id {id}...", media.Id.ToString());
 
-		_dbContext.Medias.Update(media);
+		_dbContext.Media.Update(media);
 		return await Task.FromResult(Result.Ok());
 	}
 
@@ -144,7 +145,30 @@ public sealed class MediaRepository : IMediaRepository
 	{
 		_logger.LogDebug("Database - Updating {count} media...", media.Count.ToString());
 		
-		_dbContext.Medias.UpdateRange(media);
+		_dbContext.Media.UpdateRange(media);
 		return await Task.FromResult(Result.Ok());
+	}
+
+	public async Task<Result<Genre>> FindGenreAsync(int genreId, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Finding genre with id {id}...", genreId.ToString());
+		
+		var genre = await _dbContext.Genres.FindAsync(new object?[] { genreId }, cancellationToken: cancellationToken);
+		
+		return genre is not null ? genre : Error.NotFound();
+	}
+
+	public async Task<Result> BanReviewsByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Banning reviews by user with id {id}...", userId.ToString());
+
+		var media = await _dbContext.Media.Include(media => media.Reviews).ToListAsync(cancellationToken);
+		media.ForEach(m =>
+		{
+			var reviews = m.Reviews.Where(r => r.UserId == userId).ToList();
+			reviews.ForEach(r => r.Banned = true);
+		});
+		
+		return Result.Ok();
 	}
 }

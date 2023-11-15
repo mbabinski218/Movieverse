@@ -22,11 +22,10 @@ public static class AppDbContextMock
 
 		var db = new Context(options, publishDomainEventsInterceptor, dateTimeSetterInterceptor);
 		
-		db.Medias = Substitute.For<DbSet<Media>>();
+		db.Media = Substitute.For<DbSet<Media>>();
 		db.Movies = Substitute.For<DbSet<Movie>>();
 		db.Series = Substitute.For<DbSet<Series>>();
 		db.Contents = Substitute.For<DbSet<Content>>();
-		db.Genres = Substitute.For<DbSet<Genre>>();
 		db.Persons = Substitute.For<DbSet<Person>>();
 		db.Platforms = Substitute.For<DbSet<Platform>>();
 		db.Users = Substitute.For<DbSet<User>>();

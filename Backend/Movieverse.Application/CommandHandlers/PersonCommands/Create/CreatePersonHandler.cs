@@ -13,78 +13,57 @@ using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.CommandHandlers.PersonCommands.Create;
 
-public sealed class CreatePersonHandler : IRequestHandler<CreatePersonCommand, Result>
+public sealed class CreatePersonHandler : IRequestHandler<CreatePersonCommand, Result<string>>
 {
 	private readonly ILogger<CreatePersonCommand> _logger;
 	private readonly IPersonRepository _personRepository;
-	private readonly IUserRepository _userRepository;
-	private readonly IOutputCacheStore _outputCacheStore;
+	private readonly IUserReadOnlyRepository _userRepository;
 	private readonly IHttpService _httpService;
 	private readonly IUnitOfWork _unitOfWork;
 
-	public CreatePersonHandler(ILogger<CreatePersonCommand> logger, IPersonRepository personRepository,  IUserRepository userRepository, 
-		IOutputCacheStore outputCacheStore, IHttpService httpService, IUnitOfWork unitOfWork)
+	public CreatePersonHandler(ILogger<CreatePersonCommand> logger, IPersonRepository personRepository,  IUserReadOnlyRepository userRepository, 
+		IHttpService httpService, IUnitOfWork unitOfWork)
 	{
 		_logger = logger;
 		_personRepository = personRepository;
 		_userRepository = userRepository;
-		_outputCacheStore = outputCacheStore;
 		_httpService = httpService;
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(CreatePersonCommand request, CancellationToken cancellationToken)
+	public async Task<Result<string>> Handle(CreatePersonCommand request, CancellationToken cancellationToken)
 	{
 		_logger.LogDebug("CreatePersonCommandHandler.Handle called");
 		
-		var userId = _httpService.UserId;
-		if (userId is null)
-		{
-			return Error.Unauthorized(UserResources.YouAreNotLoggedIn);
-		}
-
-		Information information;
-		switch (request.Information)
-		{
-			case null when request.ForUser:
-			{
-				var informationResult = await _userRepository.GetInformationAsync(userId.Value, cancellationToken);
-				if (informationResult.IsUnsuccessful)
-				{
-					return informationResult.Error;
-				}
-				information = informationResult.Value;
-				break;
-			}
-			case null:
-				return Error.Invalid(PlatformResources.InformationCannotBeNull);
-			default:
-				information = request.Information;
-				break;
-		}
-		
 		var personId = PersonId.Create();
-		var person = Person.Create(
-			personId, 
-			information, 
-			request.LifeHistory, 
-			request.Biography, 
-			request.FunFacts);
+		var person = Person.Create(personId);
 
 		if (request.ForUser)
 		{
-			person.AddDomainEvent(new PersonalityCreated(personId, userId.Value));
-		}
-		
-		// Adding pictures
-		if(request.Pictures is not null)
-		{
-			foreach (var picture in request.Pictures)
+			var userId = _httpService.UserId;
+			if (userId is null)
 			{
-				var pictureId = ContentId.Create();
-				person.AddDomainEvent(new ImageChanged(pictureId, picture));
-				person.AddContentId(pictureId);
+				return Error.Unauthorized(UserResources.YouAreNotLoggedIn);
 			}
+			
+			var user = await _userRepository.FindAsync(userId.Value, cancellationToken);
+			if (user.IsUnsuccessful)
+			{
+				return user.Error;
+			}
+			
+			if (user.Value.PersonId is not null)
+			{
+				return Error.Invalid();
+			}
+			
+			person.Information = new Information
+			{
+				FirstName = user.Value.Information.FirstName,
+				LastName = user.Value.Information.LastName,
+				Age = user.Value.Information.Age,
+			};
+			person.AddDomainEvent(new PersonalityCreated(personId, userId.Value));
 		}
 		
 		var addResult = await _personRepository.AddAsync(person, cancellationToken);
@@ -93,12 +72,11 @@ public sealed class CreatePersonHandler : IRequestHandler<CreatePersonCommand, R
 			return addResult.Error;
 		}
 
-		if (!await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false))
+		if (!await _unitOfWork.SaveChangesAsync(cancellationToken))
 		{
 			return Error.Invalid(PersonResources.CouldNotCreatePerson);
 		}
 		
-		await _outputCacheStore.EvictByTagAsync(personId.ToString(), cancellationToken);
-		return Result.Ok();
+		return personId.ToString();
 	}
 }

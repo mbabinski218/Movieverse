@@ -69,6 +69,15 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can not change external login password.
+        /// </summary>
+        public static string CanNotChangeExternalLoginPassword {
+            get {
+                return ResourceManager.GetString("CanNotChangeExternalLoginPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cloud not sign in.
         /// </summary>
         public static string CloudNotSignIn {
@@ -186,6 +195,15 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to change password.
+        /// </summary>
+        public static string FailedToChangePassword {
+            get {
+                return ResourceManager.GetString("FailedToChangePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to change username.
         /// </summary>
         public static string FailedToChangeUsername {
@@ -276,6 +294,15 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to System administrator role cannot be added.
+        /// </summary>
+        public static string SystemAdministratorRoleCannotBeAdded {
+            get {
+                return ResourceManager.GetString("SystemAdministratorRoleCannotBeAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User already have personality.
         /// </summary>
         public static string UserAlreadyHavePersonality {
@@ -290,6 +317,15 @@ namespace Movieverse.Application.Resources {
         public static string UserDoesNotExist {
             get {
                 return ResourceManager.GetString("UserDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User is system administrator.
+        /// </summary>
+        public static string UserIsSystemAdministrator {
+            get {
+                return ResourceManager.GetString("UserIsSystemAdministrator", resourceCulture);
             }
         }
         
