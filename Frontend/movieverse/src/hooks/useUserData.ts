@@ -8,6 +8,7 @@ export interface AccountProps {
   firstName: string;
   lastName: string;
   avatar: File | null;
+  canChangePassword: boolean;
 }
 
 export const emptyAccountProps: AccountProps = {
@@ -16,7 +17,8 @@ export const emptyAccountProps: AccountProps = {
   age: "",
   firstName: "",
   lastName: "",
-  avatar: null
+  avatar: null,
+  canChangePassword: false
 };
 
 export const useUserData = () => {
@@ -38,7 +40,8 @@ export const useUserData = () => {
             age: data.information.age,
             firstName: data.information.firstName ?? "",
             lastName: data.information.lastName ?? "",
-            avatar: new File([], "")
+            avatar: new File([], ""),
+            canChangePassword: data.canChangePassword
           };        
           setAccountProps(accountProps);
         })
