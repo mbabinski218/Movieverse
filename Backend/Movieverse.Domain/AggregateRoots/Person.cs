@@ -55,6 +55,11 @@ public sealed class Person : AggregateRoot<PersonId, Guid>
 	{
 		_mediaIds.Add(mediaId);
 	}
+	
+	public void RemoveMedia(MediaId mediaId)
+	{
+		_mediaIds.Remove(mediaId);
+	}
 
 	// Equality
 	public override bool Equals(object? obj) => obj is PersonId entityId && Id.Equals(entityId);

@@ -1,5 +1,4 @@
-﻿using Movieverse.Domain.Entities;
-using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
+﻿using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Domain.AggregateRoots.Media;
 

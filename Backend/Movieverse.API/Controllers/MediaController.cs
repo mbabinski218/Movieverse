@@ -106,7 +106,7 @@ public sealed class MediaController : ApiController
 	[AllowAnonymous]
 	[OutputCache]
 	[HttpGet("{Id:guid}/genre")]
-	public async Task<ActionResult<IEnumerable<GenreInfoDto>>> GetGenre([FromRoute] GetGenreQuery query, CancellationToken cancellationToken) =>
+	public async Task<ActionResult<IEnumerable<GenreDto>>> GetGenre([FromRoute] GetGenreQuery query, CancellationToken cancellationToken) =>
 		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));

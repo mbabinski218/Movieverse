@@ -10,6 +10,7 @@ namespace Movieverse.Application.Interfaces.Repositories;
 public interface IMediaRepository
 {
 	Task<Result<Media>> FindAsync(MediaId id, CancellationToken cancellationToken = default);
+	Task<Result<Media>> FindFullAsync(MediaId id, CancellationToken cancellationToken = default);
 	Task<Result<List<Media>>> GetAllAsync(CancellationToken cancellationToken = default);
 	Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMediaAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default);
 	Task<Result<IEnumerable<MediaDemoDto>>> GetUpcomingMoviesAsync(PlatformId? platformId, short count, CancellationToken cancellationToken = default);

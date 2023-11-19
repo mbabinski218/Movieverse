@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Common;
 using Movieverse.Application.Interfaces.Repositories;
+using Movieverse.Application.Resources;
 using Movieverse.Contracts.DataTransferObjects.Media;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common;
@@ -24,15 +25,36 @@ public sealed class MediaRepository : IMediaRepository
 		_dbContext = dbContext;
 	}
 
+	private static readonly Func<Context, MediaId, Task<Media?>> getMediaAsync =
+		EF.CompileAsyncQuery((Context context, MediaId id) =>
+			context.Media.SingleOrDefault(x => x.Id == id));
+	
 	public async Task<Result<Media>> FindAsync(MediaId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Database - Finding media with id {id}...", id.ToString());
 		
-		var media = await _dbContext.Media
-			.SingleOrDefaultAsync(m => m.Id == id, cancellationToken);
+		var media = await getMediaAsync(_dbContext, id);
 		
-		return media is null ? Error.NotFound("Not found") : media;
+		return media is null ? Error.NotFound(MediaResources.NotFound) : media;
 	}
+
+	private static readonly Func<Context, MediaId, Task<Media?>> getFullMediaAsync =
+		EF.CompileAsyncQuery((Context context, MediaId id) =>
+			context.Media.Where(m => m.Id == id)
+				.Include(m => m.PlatformIds)
+				.Include(m => m.Staff)
+				.Include(m => m.Genres)
+				.ThenInclude(g => g.Media)
+				.SingleOrDefault());
+	
+	public async Task<Result<Media>> FindFullAsync(MediaId id, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Finding media with id {id}...", id.ToString());
+		
+		var media = await getFullMediaAsync(_dbContext, id);
+		
+		return media is null ? Error.NotFound(MediaResources.NotFound) : media;
+	} 
 
 	public async Task<Result<List<Media>>> GetAllAsync(CancellationToken cancellationToken = default)
 	{

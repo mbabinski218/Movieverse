@@ -39,51 +39,51 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 		_logger.LogDebug("Updating media with id {Id}", request.Id);
 		
 		// Search for media
-		var findResult = await _mediaRepository.FindAsync(request.Id, cancellationToken);
+		var findResult = await _mediaRepository.FindFullAsync(request.Id, cancellationToken);
 		if (!findResult.IsSuccessful)
 		{
 			return findResult.Error;
 		}
 		var media = findResult.Value;
 
-		// Update media
+		// Updating media
 		if (request.Title is not null) media.Title = request.Title;
 		
-		if (request.Details is not null)
+		media.Details = request.Details ?? new();
+		media.Details.ReleaseDate = media.Details.ReleaseDate?.UtcDateTime;
+		media.TechnicalSpecs = request.TechnicalSpecs ?? new();
+		
+		// Updating poster
+		if (request.ChangePoster ?? false)
 		{
-			if (request.Details.Certificate is not null) media.Details.Certificate = request.Details.Certificate; 
-			if (request.Details.Language is not null) media.Details.Language = request.Details.Language; 
-			if (request.Details.Runtime is not null) media.Details.Runtime = request.Details.Runtime; 
-			if (request.Details.Storyline is not null) media.Details.Storyline = request.Details.Storyline; 
-			if (request.Details.Tagline is not null) media.Details.Tagline = request.Details.Tagline; 
-			if (request.Details.FilmingLocations is not null) media.Details.FilmingLocations = request.Details.FilmingLocations; 
-			if (request.Details.ReleaseDate is not null) media.Details.ReleaseDate = request.Details.ReleaseDate; 
-			if (request.Details.CountryOfOrigin is not null) media.Details.CountryOfOrigin = request.Details.CountryOfOrigin; 
-		}
-
-		if (request.TechnicalSpecs is not null)
-		{
-			if (request.TechnicalSpecs.Camera is not null) media.TechnicalSpecs.Camera = request.TechnicalSpecs.Camera;
-			if (request.TechnicalSpecs.Color is not null) media.TechnicalSpecs.Color = request.TechnicalSpecs.Color;
-			if (request.TechnicalSpecs.AspectRatio is not null) media.TechnicalSpecs.AspectRatio = request.TechnicalSpecs.AspectRatio;
-			if (request.TechnicalSpecs.NegativeFormat is not null) media.TechnicalSpecs.NegativeFormat = request.TechnicalSpecs.NegativeFormat;
-			if (request.TechnicalSpecs.SoundMix is not null) media.TechnicalSpecs.SoundMix = request.TechnicalSpecs.SoundMix;
+			if (request.Poster is not null)
+			{
+				var posterId = media.PosterId ?? ContentId.Create();
+				media.PosterId = posterId;
+				media.AddDomainEvent(new ImageChanged(posterId, request.Poster));
+			}
+			else
+			{
+				media.PosterId = null;
+			}
 		}
 		
-		if (request.Poster is not null)
+		// Updating trailer
+		if (request.ChangeTrailer ?? false)
 		{
-			var posterId = media.PosterId ?? ContentId.Create();
-			media.PosterId = posterId;
-			media.AddDomainEvent(new ImageChanged(posterId, request.Poster));
+			if (request.Trailer is not null)
+			{
+				var trailerId = media.TrailerId ?? ContentId.Create();
+				media.TrailerId = trailerId;
+				media.AddDomainEvent(new VideoChanged(trailerId, request.Trailer));
+			}
+			else
+			{
+				media.TrailerId = null;
+			}
 		}
 		
-		if (request.Trailer is not null)
-		{
-			var trailerId = media.TrailerId ?? ContentId.Create();
-			media.TrailerId = trailerId;
-			media.AddDomainEvent(new VideoChanged(trailerId, request.Trailer));
-		}
-		
+		// Updating images
 		if (request.ImagesToAdd is not null)
 		{
 			foreach (var image in request.ImagesToAdd)
@@ -94,6 +94,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 			}
 		}
 		
+		// Updating videos
 		if (request.VideosToAdd is not null)
 		{
 			foreach (var video in request.VideosToAdd)
@@ -104,6 +105,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 			}
 		}
 		
+		// Removing content
 		if (request.ContentToRemove is not null)
 		{
 			foreach (var content in request.ContentToRemove)
@@ -112,6 +114,8 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 			}
 		}
 		
+		// Updating platforms
+		media.ClearPlatforms();
 		if (request.PlatformIds is not null)
 		{
 			foreach (var platformId in request.PlatformIds)
@@ -122,10 +126,15 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 				}
 				
 				media.AddPlatform(platformId);
-				media.AddDomainEvent(new PlatformToMediaAdded(media.Id.Value, platformId));
 			}
 		}
 		
+		// Updating genres
+		foreach (var genre in media.Genres)
+		{
+			genre.RemoveMedia(media);
+		}
+		media.ClearGenres();
 		if (request.GenreIds is not null)
 		{
 			foreach (var genreId in request.GenreIds)
@@ -136,26 +145,31 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 					continue;
 				}
 				var genre = genreResult.Value;
-
-				var mediaGenre = new MediaGenre
-				{
-					Media = media,
-					MediaId = MediaId.Create(media.Id),
-					Genre = genre,
-					GenreId = genre.Id
-				};
 				
-				// media.AddGenre(mediaGenre);
-				// genre.AddMedia(mediaGenre);
+				media.AddGenre(genre);
+				genre.AddMedia(media);
 			}
 		}
 
+		// Updating staff
 		if (request.Staff is not null)
 		{
+			var currentStaff = media.Staff.ToList();
+			foreach (var staff in currentStaff)
+			{
+				if (request.Staff.All(x => x.PersonId != staff.PersonId))
+				{
+					media.RemoveStaff(staff);
+					media.AddDomainEvent(new PersonFromMediaRemoved(media.Id.Value, staff.PersonId));
+				}
+			}
+			
 			foreach (var staffDto in request.Staff)
 			{
-				if (media.Staff.Any(x => x.PersonId == staffDto.PersonId))
+				var editStaff = media.Staff.FirstOrDefault(x => x.PersonId == staffDto.PersonId);
+				if (editStaff is not null)
 				{
+					editStaff.Role = staffDto.Role;
 					continue;
 				}
 				
@@ -164,13 +178,38 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 				media.AddDomainEvent(new PersonToMediaAdded(media.Id.Value, staff.PersonId));
 			}
 		}
+		else
+		{
+			foreach (var staff in media.Staff)
+			{
+				media.AddDomainEvent(new PersonFromMediaRemoved(media.Id.Value, staff.PersonId));
+			}
+			media.ClearStaff();
+		}
 
+		// Updating movie info
 		if (request.MovieInfo is not null)
 		{
 			if (media is Movie movie)
 			{
-				if (request.MovieInfo.SequelId is not null) movie.SequelId = request.MovieInfo.SequelId;
-				if (request.MovieInfo.PrequelId is not null) movie.PrequelId = request.MovieInfo.PrequelId;
+				if (request.MovieInfo.SequelId is not null)
+				{
+					var sequel = await _mediaRepository.FindAsync(request.MovieInfo.SequelId, cancellationToken);
+					if (sequel.IsSuccessful)
+					{
+						movie.SequelId = MediaId.Create(sequel.Value.Id);
+						movie.SequelTitle = sequel.Value.Title;
+					}
+				}
+				if (request.MovieInfo.PrequelId is not null)
+				{
+					var prequel = await _mediaRepository.FindAsync(request.MovieInfo.PrequelId, cancellationToken);
+					if (prequel.IsSuccessful)
+					{
+						movie.PrequelId = MediaId.Create(prequel.Value.Id);
+						movie.PrequelTitle = prequel.Value.Title;
+					}
+				}
 			}
 			else
 			{
@@ -178,11 +217,14 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 			}
 		}
 		
+		// Updating series info
 		if (request.SeriesInfo is not null)
 		{
 			if (media is Series series)
 			{
-				if (request.SeriesInfo.SeriesEnded is not null) series.SeriesEnded = request.SeriesInfo.SeriesEnded;
+				series.ClearSeasons();
+				
+				series.SeriesEnded = request.SeriesInfo.SeriesEnded?.UtcDateTime;
 				
 				if (request.SeriesInfo.Seasons is not null)
 				{
@@ -205,7 +247,10 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 							var episode = season.Episodes.FirstOrDefault(x => x.EpisodeNumber == episodeDto.EpisodeNumber);
 							if (episode is null)
 							{
-								episode = Episode.Create(season, episodeDto.EpisodeNumber, episodeDto.Title ?? "", episodeDto.Details ?? new Details());
+								var details = episodeDto.Details ?? new Details();
+								details.ReleaseDate = details.ReleaseDate?.UtcDateTime;
+								
+								episode = Episode.Create(season, episodeDto.EpisodeNumber, episodeDto.Title ?? "", details);
 								season.AddEpisode(episode);
 							}
 						}
@@ -231,6 +276,7 @@ public sealed class UpdateMediaHandler : IRequestHandler<UpdateMediaCommand, Res
 			return Error.Invalid(MediaResources.CouldNotUpdateMedia);
 		}
 		
+		// Evicting cache
 		await _outputCacheStore.EvictByTagAsync(request.Id.ToString(), cancellationToken);
 		return _mapper.Map<MediaDto>(media);
 	}

@@ -6,4 +6,4 @@ namespace Movieverse.Contracts.Queries.Media;
 
 public sealed record GetGenreQuery(
 	Guid Id
-	) : IRequest<Result<IEnumerable<GenreInfoDto>>>;
+	) : IRequest<Result<IEnumerable<GenreDto>>>;

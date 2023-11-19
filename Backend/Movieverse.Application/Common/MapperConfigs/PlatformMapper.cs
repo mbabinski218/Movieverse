@@ -14,5 +14,8 @@ public sealed class PlatformMapper : IRegister
 
 		config.NewConfig<Platform, PlatformDemoDto>()
 			.Map(dest => dest.Id, src => src.Id.GetValue());
+		
+		config.NewConfig<Platform, PlatformInfoDto>()
+			.Map(dest => dest.Id, src => src.Id.GetValue());
 	}
 }

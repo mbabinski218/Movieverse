@@ -7,8 +7,6 @@ using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.Media;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common.Result;
-using Movieverse.Domain.DomainEvents;
-using Movieverse.Domain.Entities;
 using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.CommandHandlers.MediaCommands.Add;

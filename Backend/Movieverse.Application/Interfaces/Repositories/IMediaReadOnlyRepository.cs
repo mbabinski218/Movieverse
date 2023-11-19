@@ -28,7 +28,7 @@ public interface IMediaReadOnlyRepository
 	Task<Result<IPaginatedList<SearchMediaDto>>> FindTop100MoviesAsync(short? pageNumber, short? pageSize, CancellationToken cancellationToken = default);
 	Task<Result<IPaginatedList<SearchMediaDto>>> FindTop100SeriesAsync(short? pageNumber, short? pageSize, CancellationToken cancellationToken = default);
 	
-	Task<Result<IEnumerable<GenreInfoDto>>> GetGenresAsync(MediaId id, CancellationToken cancellationToken = default);
+	Task<Result<IEnumerable<GenreDto>>> GetGenresAsync(MediaId id, CancellationToken cancellationToken = default);
 	Task<Result<IEnumerable<GenreDto>>> GetAllGenresAsync(CancellationToken cancellationToken = default);
 	
 	Task<Result<IEnumerable<ContentId>>> GetContentAsync(MediaId id, CancellationToken cancellationToken = default);

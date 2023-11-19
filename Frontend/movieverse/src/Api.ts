@@ -17,6 +17,7 @@ import { AddMediaContract } from "./core/contracts/addMediaContract";
 import { UpdateRolesContract } from "./core/contracts/updateRolesContract";
 import { UpdateMediaContract } from "./core/contracts/updateMediaContract";
 import { ChangePasswordContract } from "./core/contracts/changePasswordContract";
+import { UpdatePersonContract } from "./core/contracts/updatePersonContract";
 
 export class Api {
 	static readonly url: string = "https://localhost:44375/api";
@@ -319,7 +320,7 @@ export class Api {
 
 	static async updateUserData(data: UpdateUserContract) : Promise<Response> {
 		const form = FormDataHelper.toFormData(data);
-
+		
 		return await this.fetchWithAuthorization(`user`, {
 			mode: "cors",
 			method: "PUT",
@@ -716,10 +717,26 @@ export class Api {
 		}, queryParams);
 	};
 
-	static async updateMedia(mediaId:string, data: UpdateMediaContract) : Promise<Response> {
+	static async updateMedia(mediaId: string, data: UpdateMediaContract) : Promise<Response> {
 		const form = FormDataHelper.toFormData(data);
+		data.ImagesToAdd.forEach(image => form.append("ImagesToAdd", image));
 
 		return await this.fetchWithAuthorization(`media/${mediaId}`, {
+			mode: "cors",
+			method: "PUT",
+			headers: {
+				"Accept-Language": this.culture,
+				"Authorization": LocalStorage.getBearerToken()
+			},
+			body: form
+		})
+	}
+
+	static async updatePerson(personId: string, data: UpdatePersonContract) : Promise<Response> {
+		const form = FormDataHelper.toFormData(data);
+		data.Pictures.forEach(picture => form.append("Pictures", picture));
+
+		return await this.fetchWithAuthorization(`person/${personId}`, {
 			mode: "cors",
 			method: "PUT",
 			headers: {

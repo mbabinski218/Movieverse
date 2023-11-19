@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Movieverse.Domain.ValueObjects;
+﻿using Movieverse.Domain.ValueObjects;
 
 namespace Movieverse.Contracts.DataTransferObjects.Media;
 

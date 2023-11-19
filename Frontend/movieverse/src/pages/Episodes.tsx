@@ -16,7 +16,9 @@ export const Episodes: React.FC = () => {
     if (data) {
       document.title = `${data.title} - Episodes - Movieverse`;
       setLoading(false);
-      setSeasonNumber(data.seasons[0].seasonNumber);
+      if (data.seasons.length > 0) {        
+        setSeasonNumber(data.seasons[0].seasonNumber);
+      }
     }   
     else {
       if (!loading) {
@@ -41,6 +43,7 @@ export const Episodes: React.FC = () => {
                     onChange={selectSeasonHandler}
             >
               {
+                data &&
                 data?.seasons.map((season, index) => (
                   <option key={index} value={season.seasonNumber}>{`Season: ${season.seasonNumber}`}</option>
                 ))

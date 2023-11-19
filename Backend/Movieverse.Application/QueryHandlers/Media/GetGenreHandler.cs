@@ -7,7 +7,7 @@ using Movieverse.Domain.Common.Result;
 
 namespace Movieverse.Application.QueryHandlers.Media;
 
-public sealed class GetGenreHandler : IRequestHandler<GetGenreQuery, Result<IEnumerable<GenreInfoDto>>>
+public sealed class GetGenreHandler : IRequestHandler<GetGenreQuery, Result<IEnumerable<GenreDto>>>
 {
 	private readonly ILogger<GetGenreHandler> _logger;
 	private readonly IMediaReadOnlyRepository _mediaRepository;
@@ -18,7 +18,7 @@ public sealed class GetGenreHandler : IRequestHandler<GetGenreQuery, Result<IEnu
 		_mediaRepository = mediaRepository;
 	}
 
-	public async Task<Result<IEnumerable<GenreInfoDto>>> Handle(GetGenreQuery request, CancellationToken cancellationToken)
+	public async Task<Result<IEnumerable<GenreDto>>> Handle(GetGenreQuery request, CancellationToken cancellationToken)
 	{
 		_logger.LogDebug("Retrieving genre info for media with id {Id}", request.Id);
 		

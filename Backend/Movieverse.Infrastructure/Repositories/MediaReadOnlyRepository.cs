@@ -29,12 +29,15 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		_mapper = mapper;
 	}
 
+	private static readonly Func<ReadOnlyContext, MediaId, Task<Media?>> findById = 
+		EF.CompileAsyncQuery((ReadOnlyContext context, MediaId id) =>
+			context.Media.AsNoTracking().SingleOrDefault(m => m.Id == id));
+	
 	public async Task<Result<MediaDto>> FindAsync(MediaId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Database - Finding media with id {id}...", id.ToString());
 
-		var media = await _dbContext.Media
-			.SingleOrDefaultAsync(m => m.Id == id, cancellationToken);
+		var media = await findById(_dbContext, id);
 		
 		return media switch
 		{
@@ -154,7 +157,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		return platformIds;
 	}
 
-	public async Task<Result<IEnumerable<GenreInfoDto>>> GetGenresAsync(MediaId id, CancellationToken cancellationToken = default)
+	public async Task<Result<IEnumerable<GenreDto>>> GetGenresAsync(MediaId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Database - Getting genres for media id: {id}", id.ToString());
 		
@@ -162,8 +165,7 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.AsNoTracking()
 			.Where(m => m.Id == id)
 			.SelectMany(m => m.Genres)
-			// .Select(mg => mg.Genre)
-			.ProjectToType<GenreInfoDto>()
+			.ProjectToType<GenreDto>()
 			.ToListAsync(cancellationToken);
 
 		return genreIds;
@@ -362,7 +364,6 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		var media = await _dbContext.Movies
 			.AsNoTracking()
 			.Where(m => search == null || m.Title.ToLower().StartsWith(search.ToLower()))
-			// .Where(m => genre == null || m.Genres.Any(mg => mg.GenreId == genre.Value))
 			.Where(m => genre == null || m.Genres.Any(g => g.Id == genre.Value))
 			.ProjectToType<SearchMediaDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
@@ -377,7 +378,6 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		var media = await _dbContext.Series
 			.AsNoTracking()
 			.Where(s => search == null || s.Title.ToLower().StartsWith(search.ToLower()))
-			// .Where(s => genre == null || s.Genres.Any(mg => mg.GenreId == genre.Value))
 			.Where(s => genre == null || s.Genres.Any(g => g.Id == genre.Value))
 			.ProjectToType<SearchMediaDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);

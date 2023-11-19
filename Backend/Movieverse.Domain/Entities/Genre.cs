@@ -24,6 +24,11 @@ public class Genre : Entity<int>
 	{
 		_media.Add(media);
 	}
+	
+	public void RemoveMedia(Media media)
+	{
+		_media.Remove(media);
+	}
 
 	// EF Core
 	private Genre()

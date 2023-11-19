@@ -12,6 +12,7 @@ public sealed record UpdatePersonCommand(
 	LifeHistory? LifeHistory,
 	string? Biography,
 	string? FunFacts,
+	bool? ChangePicture,
 	IFormFile? Picture,
 	IEnumerable<IFormFile>? Pictures,
 	IEnumerable<Guid>? PicturesToRemove

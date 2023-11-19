@@ -5,10 +5,8 @@ using Movieverse.Application.Interfaces;
 using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.Person;
-using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.Common.Result;
 using Movieverse.Domain.DomainEvents;
-using Movieverse.Domain.ValueObjects;
 using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Application.CommandHandlers.PersonCommands.Update;
@@ -31,27 +29,39 @@ public sealed class UpdatePersonHandler : IRequestHandler<UpdatePersonCommand, R
 
 	public async Task<Result> Handle(UpdatePersonCommand request, CancellationToken cancellationToken)
 	{
-		_logger.LogDebug("UpdatePersonCommandHandler.Handle called");
+		_logger.LogDebug("Updating person with id {Id}", request.Id);
 
 		var personResult = await _personRepository.FindAsync(request.Id, cancellationToken);
-		if (personResult.IsSuccessful)
+		if (personResult.IsUnsuccessful)
 		{
-			return Error.NotFound(PersonResources.PersonDoesNotExist);
+			return personResult.Error;
 		}
 		var person = personResult.Value;
 		
 		// Updating person
-		if (request.Biography is not null) person.Biography = request.Biography;
-		if (request.FunFacts is not null) person.FunFacts = request.FunFacts;
-		if (request.Information is not null) person.Information = request.Information;
-		if (request.LifeHistory is not null) person.LifeHistory = request.LifeHistory;
-		
+		person.Biography = request.Biography;
+		person.FunFacts = request.FunFacts;
+
+		person.Information = request.Information ?? new();
+		person.LifeHistory = request.LifeHistory ?? new();
+		person.LifeHistory.BirthDate = person.LifeHistory.BirthDate?.UtcDateTime;
+		person.LifeHistory.DeathDate = person.LifeHistory.DeathDate?.UtcDateTime;
+		person.LifeHistory.CareerStart = person.LifeHistory.CareerStart?.UtcDateTime;
+		person.LifeHistory.CareerEnd = person.LifeHistory.CareerEnd?.UtcDateTime;
+
 		// Updating picture
-		if (request.Picture is not null)
+		if (request.ChangePicture ?? false)
 		{
-			var pictureId = person.PictureId ?? ContentId.Create();
-			person.PictureId = pictureId;
-			person.AddDomainEvent(new ImageChanged(pictureId, request.Picture));
+			if (request.Picture is not null)
+			{
+				var pictureId = person.PictureId ?? ContentId.Create();
+				person.PictureId = pictureId;
+				person.AddDomainEvent(new ImageChanged(pictureId, request.Picture));
+			}
+			else
+			{
+				person.PictureId = null;
+			}
 		}
 		
 		// Adding pictures
@@ -74,6 +84,7 @@ public sealed class UpdatePersonHandler : IRequestHandler<UpdatePersonCommand, R
 			}
 		}
 		
+		// Database operations
 		var updateResult = await _personRepository.UpdateAsync(person, cancellationToken);
 		if (updateResult.IsUnsuccessful)
 		{
@@ -85,6 +96,7 @@ public sealed class UpdatePersonHandler : IRequestHandler<UpdatePersonCommand, R
 			return Error.Invalid(PersonResources.CouldNotCreatePerson);
 		}
 		
+		// Evicting cache
 		await _outputCacheStore.EvictByTagAsync(person.Id.ToString(), cancellationToken);
 		return Result.Ok();
 	}

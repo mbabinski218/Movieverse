@@ -29,8 +29,8 @@ public sealed class PersonController : ApiController
     
     [PolicyAuthorize(Policies.atLeastPro)]
     [OutputCache(NoStore = true)]
-    [HttpPut]
-    public async Task<ActionResult> Create([FromForm] UpdatePersonCommand command, CancellationToken cancellationToken) =>
+    [HttpPut("{Id:guid}")]
+    public async Task<ActionResult> Update([FromForm] UpdatePersonCommand command, CancellationToken cancellationToken) =>
 	    await mediator.Send(command, cancellationToken).Then(
 		    Ok,
 		    err => StatusCode(err.Code, err.Messages));

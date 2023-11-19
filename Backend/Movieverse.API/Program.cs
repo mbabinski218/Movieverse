@@ -39,7 +39,6 @@ services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 const string cors = "corsapp";
 services.AddCors(options => options.AddPolicy(cors, corsBuilder =>
     corsBuilder.WithOrigins(defaultSettings.Routes.Origin).AllowAnyMethod().AllowAnyHeader()));
-    // corsBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 var app = builder.Build();
 

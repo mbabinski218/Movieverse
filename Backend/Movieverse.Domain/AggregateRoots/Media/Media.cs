@@ -56,6 +56,11 @@ public class Media : AggregateRoot<MediaId, Guid>
 	{
 		_staff.Add(staff);
 	}
+	
+	public void RemoveStaff(Staff staff)
+	{
+		_staff.Remove(staff);
+	}
 
 	public void AddReview(Review review)
 	{
@@ -65,6 +70,21 @@ public class Media : AggregateRoot<MediaId, Guid>
 	public void AddGenre(Genre genre)
 	{
 		_genres.Add(genre);
+	}
+
+	public void ClearGenres()
+	{
+		_genres.Clear();
+	}
+
+	public void ClearPlatforms()
+	{
+		_platformIds.Clear();
+	}
+
+	public void ClearStaff()
+	{
+		_staff.Clear();
 	}
 	
 	// Equality

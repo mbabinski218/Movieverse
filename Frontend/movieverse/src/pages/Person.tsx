@@ -9,6 +9,7 @@ import { Text } from "../components/basic/Text";
 import { Button } from "../components/basic/Button";
 import { useUserToken } from "../hooks/useUserToken";
 import { UserRoles } from "../UserRoles";
+import { EditPerson } from "../components/person/EditPerson";
 import "./Person.css";
 import Blank from "../assets/blank.png";
 import Pen from "../assets/pen.svg";
@@ -81,9 +82,9 @@ export const Person: React.FC = () => {
               />              
               {
                 editMode &&
-                <div>
-                  
-                </div>
+                <EditPerson personId={params.id as string}
+                            onClose={toggleEditMode}     
+                />
               }              
             </>
           }

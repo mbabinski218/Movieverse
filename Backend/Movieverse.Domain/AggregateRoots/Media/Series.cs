@@ -39,6 +39,12 @@ public sealed class Series : Media
 		SeasonCount--;
 	}
 	
+	public void ClearSeasons()
+	{
+		_seasons.Clear();
+		SeasonCount = 0;
+	}
+	
 	// EF Core
 	private Series()
 	{
