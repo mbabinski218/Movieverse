@@ -107,7 +107,7 @@ public static class DependencyInjection
 			});
 
 		services.AddSingleton<ITokenProvider, TokenProvider>();
-		services.AddScoped<GoogleAuthentication>();
+		services.AddScoped<IGoogleAuthentication, GoogleAuthentication>();
 		
 		return services;
 	}

@@ -20,6 +20,9 @@ public sealed class Platform : AggregateRoot<PlatformId, Guid>
 	}
 
 	//Methods
+	public static Platform Create(PlatformId id, string name, decimal price)
+		=> new(id, name, price);
+	
 	public static Platform Create(string name, ContentId logoId, decimal price)
 		=> new(PlatformId.Create(), name, price);
 	

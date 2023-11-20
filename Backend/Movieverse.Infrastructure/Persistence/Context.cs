@@ -11,7 +11,7 @@ using Movieverse.Domain.Entities;
 
 namespace Movieverse.Infrastructure.Persistence;
 
-public sealed class Context : IdentityDbContext<User, IdentityUserRole, Guid>
+public class Context : IdentityDbContext<User, IdentityUserRole, Guid>
 {
 	// DbSet
 	public DbSet<Media> Media { get; set; } = null!;

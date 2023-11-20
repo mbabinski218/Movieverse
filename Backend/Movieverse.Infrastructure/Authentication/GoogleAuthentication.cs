@@ -21,7 +21,7 @@ public readonly struct GoogleUser
 	}
 }
 
-public sealed class GoogleAuthentication
+public sealed class GoogleAuthentication : IGoogleAuthentication
 {
 	private readonly GoogleJsonWebSignature.ValidationSettings _validationSettings;
 	private readonly Context _dbContext;

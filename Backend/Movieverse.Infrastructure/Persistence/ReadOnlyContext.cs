@@ -10,7 +10,7 @@ using Movieverse.Domain.Entities;
 
 namespace Movieverse.Infrastructure.Persistence;
 
-public sealed class ReadOnlyContext : IdentityDbContext<User, IdentityUserRole, Guid>
+public class ReadOnlyContext : IdentityDbContext<User, IdentityUserRole, Guid>
 {
 	// DbSet
 	public DbSet<Media> Media { get; set; } = null!;

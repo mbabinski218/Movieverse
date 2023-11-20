@@ -37,6 +37,9 @@ public class User : IdentityAggregateRoot
 	}
 	
 	// Methods
+	public static User Create(Guid id, string email, string userName, string? firstName, string? lastName, short age) => 
+		new(id, email, userName, firstName, lastName, age);
+	
 	public static User Create(string email, string userName, string? firstName, string? lastName, short age) => 
 		new(Guid.NewGuid(), email, userName, firstName, lastName, age);
 	

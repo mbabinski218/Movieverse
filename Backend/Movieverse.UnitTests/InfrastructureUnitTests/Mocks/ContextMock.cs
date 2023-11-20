@@ -9,7 +9,7 @@ using NSubstitute;
 
 namespace Movieverse.UnitTests.InfrastructureUnitTests.Mocks;
 
-public static class AppDbContextMock
+public static class ContextMock
 {
 	public static Context Get()
 	{

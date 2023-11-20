@@ -26,11 +26,10 @@ public sealed class UserRepository : IUserRepository
 	private readonly UserManager<User> _userManager;
 	private readonly RoleManager<IdentityUserRole> _roleManager;
 	private readonly ITokenProvider _tokenProvider;
-	private readonly GoogleAuthentication _googleAuthentication;
+	private readonly IGoogleAuthentication _googleAuthentication;
 
 	public UserRepository(ILogger<UserRepository> logger, Context dbContext, UserManager<User> userManager, 
-		RoleManager<IdentityUserRole> roleManager, ITokenProvider tokenProvider, 
-		GoogleAuthentication googleAuthentication)
+		RoleManager<IdentityUserRole> roleManager, ITokenProvider tokenProvider, IGoogleAuthentication googleAuthentication)
 	{
 		_dbContext = dbContext;
 		_userManager = userManager;
@@ -252,11 +251,6 @@ public sealed class UserRepository : IUserRepository
 		await _userManager.SetAuthenticationTokenAsync(user, GrantType.Google.ToStringFast(), "RefreshToken", refreshToken);
 
 		return new TokensDto(accessToken, refreshToken);
-	}
-
-	public Task<Result<TokensDto>> LoginWithFacebookAsync(string idToken, CancellationToken cancellationToken = default)
-	{
-		throw new NotImplementedException();
 	}
 
 	public async Task<Result> LogoutAsync(User user, CancellationToken cancellationToken = default)
