@@ -59,7 +59,6 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.ToListAsync(cancellationToken);
 		
 		var result = _mapper.Map<List<MediaDemoDto>>(media);
-		
 		return result.ToPaginatedList(pageNumber, pageSize);
 	}
 
@@ -71,10 +70,10 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.AsNoTracking()
 			.Where(m => m.Details.ReleaseDate > DateTime.UtcNow)
 			.OrderBy(m => m.Details.ReleaseDate)
-			.ProjectToType<SearchMediaDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
-
-		return movies;
+			.ToListAsync(cancellationToken);
+		
+		var result = _mapper.Map<List<SearchMediaDto>>(movies);
+		return result.ToPaginatedList(pageNumber, pageSize);
 	}
 	
 	public async Task<Result<IPaginatedList<SearchMediaDto>>> FindUpcomingSeriesAsync(short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
@@ -85,10 +84,10 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.AsNoTracking()
 			.Where(s => s.Details.ReleaseDate > DateTime.UtcNow)
 			.OrderBy(s => s.Details.ReleaseDate)
-			.ProjectToType<SearchMediaDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
+			.ToListAsync(cancellationToken);
 		
-		return series;
+		var result = _mapper.Map<List<SearchMediaDto>>(series);
+		return result.ToPaginatedList(pageNumber, pageSize);
 	}
 
 	public async Task<Result<IPaginatedList<SearchMediaDto>>> FindTop100MoviesAsync(short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
@@ -99,10 +98,10 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.AsNoTracking()
 			.Where(m => m.BasicStatistics.Rating > 0)
 			.OrderByDescending(m => m.BasicStatistics.Rating)
-			.ProjectToType<SearchMediaDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
+			.ToListAsync(cancellationToken);
 
-		return movies;
+		var result = _mapper.Map<List<SearchMediaDto>>(movies);
+		return result.ToPaginatedList(pageNumber, pageSize);
 	}
 
 	public async Task<Result<IPaginatedList<SearchMediaDto>>> FindTop100SeriesAsync(short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
@@ -125,10 +124,10 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		
 		var genres = await _dbContext.Genres
 			.AsNoTracking()
-			.ProjectToType<GenreDto>()
 			.ToListAsync(cancellationToken);
 
-		return genres;
+		var result = _mapper.Map<List<GenreDto>>(genres);
+		return result;
 	}
 
 	public async Task<Result<IEnumerable<ContentId>>> GetContentAsync(MediaId id, CancellationToken cancellationToken = default)
@@ -307,10 +306,10 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 		var media = await _dbContext.Media
 			.AsNoTracking()
 			.Where(m => m.Title.ToLower().StartsWith(search.ToLower()))
-			.ProjectToType<SearchMediaDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
+			.ToListAsync(cancellationToken);
 
-		return media;
+		var result = _mapper.Map<List<SearchMediaDto>>(media);
+		return result.ToPaginatedList(pageNumber, pageSize);
 	}
 	
 	public async Task<Result<IPaginatedList<SearchMediaDto>>> FindMostPopularMoviesAsync(short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
@@ -365,10 +364,10 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.AsNoTracking()
 			.Where(m => search == null || m.Title.ToLower().StartsWith(search.ToLower()))
 			.Where(m => genre == null || m.Genres.Any(g => g.Id == genre.Value))
-			.ProjectToType<SearchMediaDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
+			.ToListAsync(cancellationToken);
 
-		return media;
+		var result = _mapper.Map<List<SearchMediaDto>>(media);
+		return result.ToPaginatedList(pageNumber, pageSize);
 	}
 	
 	public async Task<Result<IPaginatedList<SearchMediaDto>>> SearchSeriesWithFiltersAsync(string? search, int? genre, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
@@ -379,9 +378,9 @@ public sealed class MediaReadOnlyRepository : IMediaReadOnlyRepository
 			.AsNoTracking()
 			.Where(s => search == null || s.Title.ToLower().StartsWith(search.ToLower()))
 			.Where(s => genre == null || s.Genres.Any(g => g.Id == genre.Value))
-			.ProjectToType<SearchMediaDto>()
-			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
+			.ToListAsync(cancellationToken);
 
-		return media;
+		var result = _mapper.Map<List<SearchMediaDto>>(media);
+		return result.ToPaginatedList(pageNumber, pageSize);
 	}
 }
