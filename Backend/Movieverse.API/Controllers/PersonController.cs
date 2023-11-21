@@ -19,13 +19,21 @@ public sealed class PersonController : ApiController
 	{
 	}
 	
-	[PolicyAuthorize(Policies.atLeastUser)]
+	[PolicyAuthorize(Policies.atLeastPro)]
     [OutputCache(NoStore = true)]
     [HttpPost]
-    public async Task<ActionResult> Create([FromForm] CreatePersonCommand command, CancellationToken cancellationToken) =>
+    public async Task<ActionResult<string>> Create([FromQuery] CreatePersonCommand command, CancellationToken cancellationToken) =>
     	 await mediator.Send(command, cancellationToken).Then(
     		Ok,
     		err => StatusCode(err.Code, err.Messages));
+    
+    [PolicyAuthorize(Policies.atLeastPro)]
+    [OutputCache(NoStore = true)]
+    [HttpPut("{Id:guid}")]
+    public async Task<ActionResult> Update([FromForm] UpdatePersonCommand command, CancellationToken cancellationToken) =>
+	    await mediator.Send(command, cancellationToken).Then(
+		    Ok,
+		    err => StatusCode(err.Code, err.Messages));
     
     [AllowAnonymous]
     [OutputCache]

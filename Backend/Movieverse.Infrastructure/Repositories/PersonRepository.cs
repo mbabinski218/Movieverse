@@ -18,7 +18,7 @@ public sealed class PersonRepository : IPersonRepository
 		_logger = logger;
 		_dbContext = dbContext;
 	}
-	
+
 	public async Task<Result<Person>> FindAsync(PersonId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Database - Getting person with id {id}...", id.ToString());
@@ -35,5 +35,13 @@ public sealed class PersonRepository : IPersonRepository
 		
 		await _dbContext.Persons.AddAsync(person, cancellationToken);
 		return Result.Ok();
+	}
+	
+	public Task<Result> UpdateAsync(Person person, CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Updating person with id {id}...", person.Id.ToString());
+		
+		_dbContext.Persons.Update(person);
+		return Task.FromResult(Result.Ok());
 	}
 }

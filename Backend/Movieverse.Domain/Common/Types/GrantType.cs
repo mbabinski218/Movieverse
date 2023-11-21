@@ -7,6 +7,5 @@ public enum GrantType
 {
 	Password,
 	RefreshToken,
-	Google,
-	Facebook
+	Google
 }

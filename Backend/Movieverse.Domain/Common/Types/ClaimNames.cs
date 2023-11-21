@@ -7,4 +7,5 @@ public static class ClaimNames
 	public const string displayName = "displayName";
 	public const string age = "age";
 	public const string role = "role";
+	public const string personId = "personId";
 }

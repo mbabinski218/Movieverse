@@ -7,8 +7,12 @@ import { CloudStore } from "../CloudStore";
 import { Section } from "../components/basic/Section";
 import { Text } from "../components/basic/Text";
 import { Button } from "../components/basic/Button";
+import { useUserToken } from "../hooks/useUserToken";
+import { UserRoles } from "../UserRoles";
+import { EditPerson } from "../components/person/EditPerson";
 import "./Person.css";
 import Blank from "../assets/blank.png";
+import Pen from "../assets/pen.svg";
 
 // Dynamic imports
 const LazyPersonMedia = React.lazy(() => import("../components/person/PersonMedia"));
@@ -19,6 +23,8 @@ export const Person: React.FC = () => {
   const [person] = usePerson(params.id ?? "");
   const [imgSrc, setImgSrc] = useState<string>("");
   const [moreContent, setMoreContent] = useState<boolean>(false);
+  const [token] = useUserToken();
+  const [editMode, setEditMode] = useState<boolean>(false);
 
   // On person change
   useEffect(() => {
@@ -55,12 +61,33 @@ export const Person: React.FC = () => {
     setMoreContent(!moreContent);
   }, [moreContent]);
 
+  //Toggle edit mode
+  const toggleEditMode = useCallback(() => {
+    setEditMode(!editMode);
+  }, [editMode]);
+
   return (
     <>      
       {
         loading ? <Loading /> :
         !person ? <NotFound /> : 
         <div className="person-page">
+          {
+            (token?.role.includes(UserRoles.Administrator) || token?.role.includes(UserRoles.SystemAdministrator) || token?.personId === params.id) &&
+            <>
+              <img className="person-pen"
+                  src={Pen} 
+                  alt="pen"
+                  onClick={toggleEditMode}
+              />              
+              {
+                editMode &&
+                <EditPerson personId={params.id as string}
+                            onClose={toggleEditMode}     
+                />
+              }              
+            </>
+          }
           <span className="person-title">{getFullName()}</span>
           <img className="person-poster"
                src={imgSrc}

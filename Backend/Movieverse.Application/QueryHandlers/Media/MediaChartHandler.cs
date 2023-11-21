@@ -31,7 +31,6 @@ public sealed class MediaChartHandler : IRequestHandler<MediaChartQuery, Result<
 				"top100" => await _mediaRepository.FindTop100MoviesAsync(request.PageNumber, request.PageSize, cancellationToken),
 				"mostPopular" => await _mediaRepository.FindMostPopularMoviesAsync(request.PageNumber, request.PageSize, cancellationToken),
 				"releaseCalendar" => await _mediaRepository.FindUpcomingMoviesAsync(request.PageNumber, request.PageSize, cancellationToken),
-				"recommended" => await _mediaRepository.FindRecommendedMoviesAsync(request.PageNumber, request.PageSize, cancellationToken),
 				_ => Error.Invalid(MediaResources.InvalidChartCategory)
 			},
 			"series" => request.Category switch
@@ -39,7 +38,6 @@ public sealed class MediaChartHandler : IRequestHandler<MediaChartQuery, Result<
 				"top100" => await _mediaRepository.FindTop100SeriesAsync(request.PageNumber, request.PageSize, cancellationToken),
 				"mostPopular" => await _mediaRepository.FindMostPopularSeriesAsync(request.PageNumber, request.PageSize, cancellationToken),
 				"releaseCalendar" => await _mediaRepository.FindUpcomingSeriesAsync(request.PageNumber, request.PageSize, cancellationToken),
-				"recommended" => await _mediaRepository.FindRecommendedSeriesAsync(request.PageNumber, request.PageSize, cancellationToken),
 				_ => Error.Invalid(MediaResources.InvalidChartCategory)
 			},
 			_ => Error.Invalid(MediaResources.InvalidChartType)

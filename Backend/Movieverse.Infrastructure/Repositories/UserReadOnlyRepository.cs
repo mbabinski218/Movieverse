@@ -30,7 +30,16 @@ public sealed class UserReadOnlyRepository : IUserReadOnlyRepository
 		_logger.LogDebug("Database - Find user with id: {id}", id);
 
 		var user = await _dbContext.Users.FindAsync(new object?[] { id }, cancellationToken);
-		return user is null ? Error.NotFound(UserResources.UserDoesNotExist) : _mapper.Map<UserDto>(user);
+
+		if (user is null)
+		{
+			return Error.NotFound(UserResources.UserDoesNotExist);
+		}
+		
+		var mappedUser = _mapper.Map<UserDto>(user);
+		mappedUser.CanChangePassword = user.PasswordHash is not null;
+
+		return mappedUser;
 	}
 
 	public async Task<Result<IEnumerable<WatchlistStatusDto>>> GetWatchlistStatusesAsync(Guid userId, IEnumerable<MediaId> mediaIds, CancellationToken cancellationToken = default)

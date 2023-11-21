@@ -9,24 +9,25 @@ public sealed class Platform : AggregateRoot<PlatformId, Guid>
 	private readonly List<MediaId> _mediaIds = new();
 	
 	public string Name { get; set; } = null!;
-	public ContentId? LogoId { get; set; }
 	public decimal Price { get; set; }
 	public IReadOnlyList<MediaId> MediaIds => _mediaIds.AsReadOnly();
 
 	// Constructors
-	private Platform(PlatformId id, string name, ContentId logoId, decimal price) : base(id)
+	private Platform(PlatformId id, string name, decimal price) : base(id)
 	{
 		Name = name;
-		LogoId = logoId;
 		Price = price;
 	}
 
 	//Methods
+	public static Platform Create(PlatformId id, string name, decimal price)
+		=> new(id, name, price);
+	
 	public static Platform Create(string name, ContentId logoId, decimal price)
-		=> new(PlatformId.Create(), name, logoId, price);
+		=> new(PlatformId.Create(), name, price);
 	
 	public static Platform Create(PlatformId id, string name, ContentId logoId, decimal price)
-		=> new(id, name, logoId, price);
+		=> new(id, name, price);
 	
 	public void AddMedia(MediaId mediaId)
 	{

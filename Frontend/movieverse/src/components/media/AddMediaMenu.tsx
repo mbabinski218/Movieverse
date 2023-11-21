@@ -59,8 +59,9 @@ export const AddMediaMenu: React.FC<AddMediaMenuProps> = (props) => {
             if (props.onSuccessfulAdd) {
               props.onSuccessfulAdd();
             }
-
+            
             navigate(`/media/${id}`);
+            window.location.reload();
           })
         }
         else {

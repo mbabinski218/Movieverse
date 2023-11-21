@@ -23,7 +23,6 @@ public sealed class Series : Media
 	public static Series Create(MediaId id, string title, short? seasonCount = null)
 	{
 		var series = new Series(id, title, seasonCount);
-		series.AdvancedStatistics = Statistics.Create(series);
 		return series;
 	}
 	public static Series Create(string title, short? seasonCount = null) => new(MediaId.Create(), title, seasonCount);
@@ -38,6 +37,12 @@ public sealed class Series : Media
 	{
 		_seasons.Remove(season);
 		SeasonCount--;
+	}
+	
+	public void ClearSeasons()
+	{
+		_seasons.Clear();
+		SeasonCount = 0;
 	}
 	
 	// EF Core

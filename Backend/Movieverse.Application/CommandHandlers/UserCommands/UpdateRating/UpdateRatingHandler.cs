@@ -5,6 +5,7 @@ using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.User;
 using Movieverse.Domain.Common.Result;
+using Movieverse.Domain.DomainEvents;
 using Movieverse.Domain.Entities;
 
 namespace Movieverse.Application.CommandHandlers.UserCommands.UpdateRating;
@@ -54,9 +55,15 @@ public sealed class UpdateRatingHandler : IRequestHandler<UpdateRatingCommand, R
 			
 			var newMediaInfo = MediaInfo.Create(user, request.MediaId, false, request.Rating);
 			user.AddMediaInfo(newMediaInfo);
+			newMediaInfo.AddDomainEvent(new NewRatingAdded(request.MediaId));
 		}
 		else
 		{
+			if (mediaInfo.Rating == 0 && request.Rating != 0)
+			{
+				mediaInfo.AddDomainEvent(new NewRatingAdded(request.MediaId));
+			}
+			
 			if (mediaInfo.Rating == request.Rating)
 			{
 				return Result.Ok();

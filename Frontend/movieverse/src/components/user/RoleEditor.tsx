@@ -5,12 +5,24 @@ import { Button } from "../basic/Button";
 import { Error } from "../basic/Error";
 import { Success } from "../basic/Success";
 import { StateProps, emptyState } from "../../common/stateProps";
-import { Api } from "../../Api";
-import "./RoleEditor.css"
-import Close from "../../assets/bars-close.svg";
 import { UpdateRolesContract } from "../../core/contracts/updateRolesContract";
 import { Checkbox } from "../basic/Checkbox";
 import { UserRoles } from "../../UserRoles";
+import { Api } from "../../Api";
+import "./RoleEditor.css"
+import Close from "../../assets/bars-close.svg";
+
+const isValid = (text?: string | null): boolean => {
+  const str = text as string;
+
+  return str !== undefined && str !== null && str.trim() !== '';
+};
+
+const isValidEmailFormat = (text: string): boolean => {
+  const str = text as string;
+
+  return /\S+@\S+\.\S+/.test(str);
+};
 
 export interface RoleEditorProps {
   onClose?: () => void;
@@ -28,7 +40,7 @@ export const RoleEditor: React.FC<RoleEditorProps> = (props) => {
   const handleCheckboxChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const checked = e.target.checked;
-    console.log(value, checked);
+    
     if (checked) {
       setRoles([...roles, value]);
     } 
@@ -38,18 +50,18 @@ export const RoleEditor: React.FC<RoleEditorProps> = (props) => {
   }, [roles]);
 
   const handleUpdateRolesButtonClick = useCallback(() => {
-    if (!email?.isValid()) {
+    if (isValid(email)) {
       showError("Email is required!");
       return;
     }
 
-    if (!email.isValidEmailFormat()) {
+    if (isValidEmailFormat(email!)) {
       showError("Wrong email format!");
       return;
     }
 
     const body: UpdateRolesContract = {
-      email: email,
+      email: email!,
       roles: roles
     }
 
@@ -96,10 +108,6 @@ export const RoleEditor: React.FC<RoleEditorProps> = (props) => {
                       checked={roles.includes(UserRoles.Administrator)}
                       onChange={handleCheckboxChange}
             />
-            <Checkbox label={UserRoles.Critic} 
-                      checked={roles.includes(UserRoles.Critic)}
-                      onChange={handleCheckboxChange}
-            />
             <Checkbox label={UserRoles.Pro} 
                       checked={roles.includes(UserRoles.Pro)}
                       onChange={handleCheckboxChange}
@@ -108,7 +116,7 @@ export const RoleEditor: React.FC<RoleEditorProps> = (props) => {
           <Button className="roleEditor-button"
                   label="Update roles"              
                   primary={true}
-                  disabled={!email?.isValid()}
+                  disabled={!isValid(email) || !isValidEmailFormat(email!)}
                   onClick={handleUpdateRolesButtonClick}
           />
         </div>

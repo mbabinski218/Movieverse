@@ -55,16 +55,14 @@ public sealed class UpdateStatisticsHandler : IRequestHandler<UpdateStatisticsCo
 		{
 			Rating = media.Value.Min(x => x.BasicStatistics.Rating),
 			Votes = media.Value.Min(x => x.BasicStatistics.Votes),
-			UserReviews = media.Value.Min(x => x.BasicStatistics.UserReviews),
-			CriticReviews = media.Value.Min(x => x.BasicStatistics.CriticReviews),
+			ReviewCount = media.Value.Min(x => x.BasicStatistics.ReviewCount),
 			OnWatchlistCount = media.Value.Min(x => x.BasicStatistics.OnWatchlistCount)
 		};
 		var maxBasicStatistics = new BasicStatistics
 		{
 			Rating = media.Value.Max(x => x.BasicStatistics.Rating),
 			Votes = media.Value.Max(x => x.BasicStatistics.Votes),
-			UserReviews = media.Value.Max(x => x.BasicStatistics.UserReviews),
-			CriticReviews = media.Value.Max(x => x.BasicStatistics.CriticReviews),
+			ReviewCount = media.Value.Max(x => x.BasicStatistics.ReviewCount),
 			OnWatchlistCount = media.Value.Max(x => x.BasicStatistics.OnWatchlistCount)
 		};
 		
@@ -147,12 +145,11 @@ public sealed class UpdateStatisticsHandler : IRequestHandler<UpdateStatisticsCo
 			var normalizedPosition = (lastPopularity.Position - 1) / rangePosition;
 			var normalizedViews = (viewsChange - minViews) / rangeViews;
 			var normalizedVotes = (basicStatisticsChange.Votes - minBasicStatistics.Votes) / (float)rangeBasicStatistics.Votes;
-			var normalizedUserReviews = (basicStatisticsChange.UserReviews - minBasicStatistics.UserReviews) / (float)rangeBasicStatistics.UserReviews;
-			var normalizedCriticReviews = (basicStatisticsChange.CriticReviews - minBasicStatistics.CriticReviews) / (float)rangeBasicStatistics.CriticReviews;
+			var normalizedUserReviews = (basicStatisticsChange.ReviewCount - minBasicStatistics.ReviewCount) / (float)rangeBasicStatistics.ReviewCount;
 			var normalizedOnWatchlistCount = (basicStatisticsChange.OnWatchlistCount - minBasicStatistics.OnWatchlistCount) / (float)rangeBasicStatistics.OnWatchlistCount;
 				
-			var points = normalizedViews + normalizedVotes * 2 + normalizedUserReviews * 4 + normalizedCriticReviews * 5 + 
-			             normalizedOnWatchlistCount * 3 + normalizedPosition * 3;
+			var points = normalizedViews + normalizedVotes * 2 + normalizedUserReviews * 4 
+			             + normalizedOnWatchlistCount * 3 + normalizedPosition * 3;
 				
 			mediaToCalculate.AdvancedStatistics.AddPopularity(latestPopularity);
 			_newRanking.TryAdd(mediaToCalculate.Id, points);

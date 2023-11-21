@@ -50,9 +50,6 @@ public sealed class LoginHandler : IRequestHandler<LoginCommand, Result<TokensDt
 			case GrantType.Google:
 				return await _userRepository.LoginWithGoogleAsync(request.IdToken!, cancellationToken);
 			
-			case GrantType.Facebook:
-				return await _userRepository.LoginWithFacebookAsync(request.IdToken!, cancellationToken);
-			
 			default:
 				return Error.Invalid(UserResources.InvalidGrantType);
 		};

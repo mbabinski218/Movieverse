@@ -29,7 +29,7 @@ public sealed class PersonToMediaAddedHandler : INotificationHandler<PersonToMed
 		var person = await _personRepository.FindAsync(notification.PersonId, cancellationToken);
 		ResultException.ThrowIfUnsuccessful(person);
 		
-		person.Value.AddMediaId(notification.MediaId);
+		person.Value.AddMedia(notification.MediaId);
 		await _outputCacheStore.EvictByTagAsync(notification.PersonId.ToString(), cancellationToken);
 	}
 }

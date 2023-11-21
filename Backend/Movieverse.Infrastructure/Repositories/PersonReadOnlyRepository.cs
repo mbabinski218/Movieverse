@@ -24,12 +24,15 @@ public sealed class PersonReadOnlyRepository : IPersonReadOnlyRepository
 		_dbContext = dbContext;
 	}
 
+	private static readonly Func<ReadOnlyContext, PersonId, Task<Person?>> findById = 
+		EF.CompileAsyncQuery((ReadOnlyContext context, PersonId id) =>
+			context.Persons.AsNoTracking().SingleOrDefault(m => m.Id == id));
+	
 	public async Task<Result<Person>> FindAsync(PersonId id, CancellationToken cancellationToken = default)
 	{
 		_logger.LogDebug("Database - Getting person with id {id}...", id.ToString());
 		
-		var person = await _dbContext.Persons
-			.SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
+		var person = await findById(_dbContext, id);
 		
 		return person is null ? Error.NotFound(PersonResources.PersonDoesNotExist) : person;
 	}

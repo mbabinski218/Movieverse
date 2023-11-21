@@ -11,4 +11,5 @@ public interface IPlatformReadOnlyRepository
 	Task<Result<IEnumerable<Platform>>> GetAllAsync(CancellationToken cancellationToken = default);
 	Task<Result<IEnumerable<MediaId>>> GetAllMediaIdsAsync(PlatformId id, CancellationToken cancellationToken = default);
 	Task<Result<IEnumerable<PlatformInfoDto>>> GetPlatformsInfoAsync(IEnumerable<PlatformId> ids, CancellationToken cancellationToken = default);
+	Task<Result<IEnumerable<PlatformDemoDto>>> GetPlatformsDemoAsync(CancellationToken cancellationToken = default);
 }

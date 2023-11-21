@@ -17,7 +17,6 @@ public interface IUserRepository
 	Task<Result<User>> FindByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
 	Task<Result<TokensDto>> LoginWithRefreshTokenAsync(User user, string refreshToken, CancellationToken cancellationToken = default);
 	Task<Result<TokensDto>> LoginWithGoogleAsync(string idToken, CancellationToken cancellationToken = default);
-	Task<Result<TokensDto>> LoginWithFacebookAsync(string idToken, CancellationToken cancellationToken = default);
 	Task<Result> ConfirmEmailAsync(User user, string token, CancellationToken cancellationToken = default);
 	Task<Result> UpdateAsync(User user, CancellationToken cancellationToken = default);
 	Task<Result> LogoutAsync(User user, CancellationToken cancellationToken = default);
@@ -29,4 +28,6 @@ public interface IUserRepository
 	Task<Result> UpdateRolesAsync(User user, IList<string> roles, CancellationToken cancellationToken = default);
 	Task<Result> AddRoleAsync(User user, string role, CancellationToken cancellationToken = default);
 	Task<Result> RemoveRoleAsync(User user, string role, CancellationToken cancellationToken = default);
+	Task<bool> IsSystemAdministratorAsync(User user, CancellationToken cancellationToken = default);
+	Task<Result> ChangePasswordAsync(User user, string currentPassword, string newPassword, CancellationToken cancellationToken = default);
 }

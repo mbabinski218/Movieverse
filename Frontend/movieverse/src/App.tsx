@@ -10,6 +10,7 @@ import { Person } from "./pages/Person";
 import { User } from "./pages/User";
 import { Account } from "./pages/Account";
 import { Find } from "./pages/Find";
+import { NotFound } from "./pages/NotFound";
 import "./styles/variables.css";
 import "./App.css";
 
@@ -28,6 +29,7 @@ const App: React.FC = () => {
           <Route path="/account" element={<Account />} />
           <Route path="/chart/:type/:category?" element={<Chart />} />
           <Route path="/find" element={<Find />} />
+          <Route path="/not-found" element={<NotFound />} />
         </Routes>
         <Footer />
       </BrowserRouter>

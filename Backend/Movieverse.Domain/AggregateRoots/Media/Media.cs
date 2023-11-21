@@ -10,9 +10,9 @@ public class Media : AggregateRoot<MediaId, Guid>
 	// Map to table
 	private readonly List<PlatformId> _platformIds = new();
 	private readonly List<ContentId> _contentIds = new();
-	private readonly List<GenreId> _genreIds = new();
 	private readonly List<Staff> _staff = new();
-
+	private readonly List<Review> _reviews = new();
+	private readonly List<Genre> _genres = new();
 	public string Title { get; set; } = null!;
 	public Details Details { get; set; } = null!;
 	public TechnicalSpecs TechnicalSpecs { get; set; } = null!;
@@ -23,8 +23,10 @@ public class Media : AggregateRoot<MediaId, Guid>
 	public ContentId? TrailerId { get; set; }
 	public IReadOnlyList<PlatformId> PlatformIds => _platformIds.AsReadOnly();
 	public IReadOnlyList<ContentId> ContentIds => _contentIds.AsReadOnly();
-	public IReadOnlyList<GenreId> GenreIds => _genreIds.AsReadOnly();
 	public IReadOnlyList<Staff> Staff => _staff.AsReadOnly();
+	public IReadOnlyList<Review> Reviews => _reviews.AsReadOnly();
+	public IReadOnlyList<Genre> Genres => _genres.AsReadOnly();
+	
 	
 	// Constructors
 	protected Media(MediaId id, string title) : base(id)
@@ -50,16 +52,41 @@ public class Media : AggregateRoot<MediaId, Guid>
 		_contentIds.Remove(contentId);
 	}
 	
-	public void AddGenre(GenreId genreId)
-	{
-		_genreIds.Add(genreId);
-	}
-	
 	public void AddStaff(Staff staff)
 	{
 		_staff.Add(staff);
 	}
+	
+	public void RemoveStaff(Staff staff)
+	{
+		_staff.Remove(staff);
+	}
 
+	public void AddReview(Review review)
+	{
+		_reviews.Add(review);
+	}
+
+	public void AddGenre(Genre genre)
+	{
+		_genres.Add(genre);
+	}
+
+	public void ClearGenres()
+	{
+		_genres.Clear();
+	}
+
+	public void ClearPlatforms()
+	{
+		_platformIds.Clear();
+	}
+
+	public void ClearStaff()
+	{
+		_staff.Clear();
+	}
+	
 	// Equality
 	public override bool Equals(object? obj) => obj is MediaId entityId && Id.Equals(entityId);
 	public override int GetHashCode() => Id.GetHashCode();

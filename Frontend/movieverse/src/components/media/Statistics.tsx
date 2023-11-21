@@ -41,56 +41,68 @@ const Statistics: React.FC<StatisticsProps> = ({mediaId, className}) => {
       {
         statistics &&
         <>
-          <Section title="BoxOffice (Pro)">
-            <Text label={`Revenue`} text={`${statistics.boxOffice.revenue}$`} />
-            <Text label={`Budget`} text={`${statistics.boxOffice.budget}$`} />
-            <hr className="stats-break" />
-            <Text label={`Gross`} />
-            <Text label={`US`} text={`${statistics.boxOffice.grossUs}$`} />
-            <Text label={`Worldwide`} text={`${statistics.boxOffice.grossWorldwide}$`} />
-            <hr className="stats-break" />
-            <Text label={`Opening weekend`} />
-            <Text label={`US`} text={`${statistics.boxOffice.openingWeekendUs}$`} />
-            <Text label={`Worldwide`} text={`${statistics.boxOffice.openingWeekendWorldwide}$`} />
-            <hr className="stats-break" />
-            <Text label={`Theaters`} text={`${statistics.boxOffice.theaters}`} />
-          </Section>
+          {
+            statistics.boxOffice &&
+            <>
+              <Section title="BoxOffice (Pro)">
+                <Text label={`Revenue`} text={`${statistics.boxOffice.revenue}$`} />
+                <Text label={`Budget`} text={`${statistics.boxOffice.budget}$`} />
+                <hr className="stats-break" />
+                <Text label={`Gross`} />
+                <Text label={`US`} text={`${statistics.boxOffice.grossUs}$`} />
+                <Text label={`Worldwide`} text={`${statistics.boxOffice.grossWorldwide}$`} />
+                <hr className="stats-break" />
+                <Text label={`Opening weekend`} />
+                <Text label={`US`} text={`${statistics.boxOffice.openingWeekendUs}$`} />
+                <Text label={`Worldwide`} text={`${statistics.boxOffice.openingWeekendWorldwide}$`} />
+                <hr className="stats-break" />
+                <Text label={`Theaters`} text={`${statistics.boxOffice.theaters}`} />
+              </Section>
+            </>
+          }
           <div style={{marginBottom: "15px"}} />
-          <Section title="Popularity (Pro)">
-            {
-              statistics.popularity.length > 0 &&
-              statistics.popularity.map((popularity, index) => (
-                <div key={index}>
-                  <Text label={`${popularity.date.substring(0, 7)}`} />
-                  <div className="popularity-item">
-                    <Text label={`Position`} text={`${popularity.position}`} />
-                    <Text label={`Change`} text={`${popularity.change}`} />
-                    <Text label={`Views`} text={`${popularity.views}`} />
-                  </div>
-                  <hr className="stats-break" />
-                </div>
-              ))
-            }
-          </Section>
-          <div style={{marginBottom: "15px"}} />
-          <Section title="Chart (Pro)">
-            {
-              statistics.popularity.length > 1 ?
-              <Line data={{
-                      labels: statistics.popularity.map(pop => pop.date.substring(0, 7)),
-                      datasets: [{
-                        label: "Position",
-                        data: statistics.popularity.map(pop => pop.position),
-                        borderColor: "#ffffff",
-                        backgroundColor: '#ffcb74',
-                        borderWidth: 2,
-                      }],
-                    }}
-                    options={config}
-              /> :
-              <span style={{fontWeight: "bold"}}>Not enough data</span>
-            }
-          </Section>
+          {
+            (statistics.popularity && statistics.popularity.length > 0) &&
+            <>
+              <Section title="Popularity (Pro)">
+                <Text label={`On watchlist`} text={`${statistics.onWatchlistCount}`} />
+                <br />
+                {
+                  statistics.popularity.length > 0 &&
+                  statistics.popularity.map((popularity, index) => (
+                    <div key={index}>
+                      <Text label={`${popularity.date.substring(0, 7)}`} />
+                      <div className="popularity-item">
+                        <Text label={`Position`} text={`${popularity.position}`} />
+                        <Text label={`Change`} text={`${popularity.change}`} />
+                        <Text label={`Views`} text={`${popularity.views}`} />
+                      </div>
+                      <hr className="stats-break" />
+                    </div>
+                  ))
+                }
+              </Section>
+              <div style={{marginBottom: "15px"}} />
+              <Section title="Chart (Pro)">
+                {
+                  statistics.popularity.length > 1 ?
+                  <Line data={{
+                          labels: statistics.popularity.map(pop => pop.date.substring(0, 7)),
+                          datasets: [{
+                            label: "Position",
+                            data: statistics.popularity.map(pop => pop.position),
+                            borderColor: "#ffffff",
+                            backgroundColor: '#ffcb74',
+                            borderWidth: 2,
+                          }],
+                        }}
+                        options={config}
+                  /> :
+                  <span style={{fontWeight: "bold"}}>Not enough data</span>
+                }
+              </Section>
+            </>
+          }
         </>
       }
     </div>

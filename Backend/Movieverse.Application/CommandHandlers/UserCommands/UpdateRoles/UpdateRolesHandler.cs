@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Interfaces.Repositories;
+using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.User;
 using Movieverse.Domain.Common.Result;
+using Movieverse.Domain.Common.Types;
 
 namespace Movieverse.Application.CommandHandlers.UserCommands.UpdateRoles;
 
@@ -25,6 +27,11 @@ public sealed class UpdateRolesHandler : IRequestHandler<UpdateRolesCommand, Res
 		if (user.IsUnsuccessful)
 		{
 			return user.Error;
+		}
+
+		if (request.Roles.Contains(UserRole.SystemAdministrator.ToStringFast()))
+		{
+			return Error.Invalid(UserResources.SystemAdministratorRoleCannotBeAdded);
 		}
 		
 		return await _userRepository.UpdateRolesAsync(user.Value, request.Roles.ToList(), cancellationToken);

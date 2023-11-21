@@ -2,6 +2,5 @@
 
 public static class CachePolicies
 {
-	public const string byUserId = nameof(byUserId); 
 	public const string byQuery = nameof(byQuery);
 }

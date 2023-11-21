@@ -69,4 +69,7 @@
     <data name="InvalidChartType" xml:space="preserve">
         <value>Invalid chart type</value>
     </data>
+    <data name="NotFound" xml:space="preserve">
+        <value>Media not found</value>
+    </data>
 </root>

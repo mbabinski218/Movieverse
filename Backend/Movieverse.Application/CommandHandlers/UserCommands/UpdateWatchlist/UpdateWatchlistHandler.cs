@@ -6,6 +6,7 @@ using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.Commands.User;
 using Movieverse.Domain.Common.Result;
+using Movieverse.Domain.DomainEvents;
 using Movieverse.Domain.Entities;
 
 namespace Movieverse.Application.CommandHandlers.UserCommands.UpdateWatchlist;
@@ -56,10 +57,13 @@ public sealed class UpdateWatchlistHandler : IRequestHandler<UpdateWatchlistComm
 			
 			var newMediaInfo = MediaInfo.Create(user, request.MediaId, true, 0);
 			user.AddMediaInfo(newMediaInfo);
+			user.AddDomainEvent(new WatchlistUpdated(request.MediaId, true));
 		}
 		else
 		{
-			mediaInfo.IsOnWatchlist = !mediaInfo.IsOnWatchlist;
+			var status = !mediaInfo.IsOnWatchlist;
+			mediaInfo.IsOnWatchlist = status;
+			mediaInfo.AddDomainEvent(new WatchlistUpdated(request.MediaId, status));
 		}
 
 		if (!await _unitOfWork.SaveChangesAsync(cancellationToken))

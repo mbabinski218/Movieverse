@@ -6,17 +6,18 @@ using Movieverse.Domain.AggregateRoots;
 using Movieverse.Domain.AggregateRoots.Media;
 using Movieverse.Domain.Common.Models;
 using Movieverse.Domain.Common.Types;
+using Movieverse.Domain.Entities;
 
 namespace Movieverse.Infrastructure.Persistence;
 
-public sealed class ReadOnlyContext : IdentityDbContext<User, IdentityUserRole, Guid>
+public class ReadOnlyContext : IdentityDbContext<User, IdentityUserRole, Guid>
 {
 	// DbSet
-	public DbSet<Media> Medias { get; set; } = null!;
+	public DbSet<Media> Media { get; set; } = null!;
 	public DbSet<Movie> Movies { get; set; } = null!;
 	public DbSet<Series> Series { get; set; } = null!;
-	public DbSet<Content> Contents { get; set; } = null!;
 	public DbSet<Genre> Genres { get; set; } = null!;
+	public DbSet<Content> Contents { get; set; } = null!;
 	public DbSet<Person> Persons { get; set; } = null!;
 	public DbSet<Platform> Platforms { get; set; } = null!;
 	
@@ -39,6 +40,7 @@ public sealed class ReadOnlyContext : IdentityDbContext<User, IdentityUserRole, 
 	
 	private const string readOnlyErrorMessage = "Context is read-only.";
 	
+	#pragma warning disable CS0809
 	[Obsolete(readOnlyErrorMessage, true)]
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 	{
@@ -62,4 +64,5 @@ public sealed class ReadOnlyContext : IdentityDbContext<User, IdentityUserRole, 
 	{
 		throw new InvalidOperationException(readOnlyErrorMessage);
 	}
+	#pragma warning restore CS0809
 }

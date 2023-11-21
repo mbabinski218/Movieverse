@@ -13,7 +13,6 @@ public sealed class UserMapper : IRegister
 		config.NewConfig<User, UserDto>()
 			.Map(dest => dest.UserName, src => src.UserName)
 			.Map(dest => dest.Email, src => src.Email)
-			.Map(dest => dest.PhoneNumber, src => src.PhoneNumber)
 			.Map(dest => dest.Information, src => src.Information)
 			.Map(dest => dest.AvatarPath, src => src.AvatarId.GetValue())
 			.Map(dest => dest.EmailConfirmed, src => src.EmailConfirmed)

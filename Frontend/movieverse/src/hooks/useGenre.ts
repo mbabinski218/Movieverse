@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Api } from "../Api";
-import { GenreInfoDto } from "../core/dtos/genre/genreInfoDto";
+import { GenreDto } from "../core/dtos/genre/genreDto";
 
 export const useGenre = (mediaId: string) => {
-  const [genre, setGenre] = useState<GenreInfoDto[] | null>(null);
+  const [genre, setGenre] = useState<GenreDto[] | null>(null);
 
   useEffect(() => {
     try {
@@ -13,7 +13,7 @@ export const useGenre = (mediaId: string) => {
             return res.json();
           }
         })
-        .then(data => data as GenreInfoDto[])
+        .then(data => data as GenreDto[])
         .then(setGenre);          
 		}
     catch {

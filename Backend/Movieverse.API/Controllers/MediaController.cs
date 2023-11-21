@@ -22,7 +22,7 @@ public sealed class MediaController : ApiController
 	{
 	}
 	
-	[PolicyAuthorize(Policies.atLeastPro)]
+	[PolicyAuthorize(Policies.administrator)]
 	[OutputCache(NoStore = true)]
 	[HttpPost]
 	public async Task<ActionResult> Add([FromBody] AddMediaCommand command, CancellationToken cancellationToken) =>
@@ -30,7 +30,7 @@ public sealed class MediaController : ApiController
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
 	
-	[PolicyAuthorize(Policies.atLeastPro)]
+	[PolicyAuthorize(Policies.administrator)]
 	[OutputCache(NoStore = true)]
 	[HttpPut("{Id:guid}")]
 	public async Task<ActionResult> Update([FromForm] UpdateMediaCommand command, CancellationToken cancellationToken) =>
@@ -81,6 +81,14 @@ public sealed class MediaController : ApiController
 	
 	[AllowAnonymous]
 	[OutputCache]
+	[HttpGet("genres")]
+	public async Task<ActionResult> GetAll([FromQuery] GetAllGenresQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
+	[OutputCache]
 	[HttpGet("{Id:guid}/content")]
 	public async Task<ActionResult<IEnumerable<ContentInfoDto>>> GetContent([FromRoute] GetContentPathQuery query, CancellationToken cancellationToken) =>
 		await mediator.Send(query, cancellationToken).Then(
@@ -98,7 +106,7 @@ public sealed class MediaController : ApiController
 	[AllowAnonymous]
 	[OutputCache]
 	[HttpGet("{Id:guid}/genre")]
-	public async Task<ActionResult<IEnumerable<GenreInfoDto>>> GetGenre([FromRoute] GetGenreQuery query, CancellationToken cancellationToken) =>
+	public async Task<ActionResult<IEnumerable<GenreDto>>> GetGenre([FromRoute] GetGenreQuery query, CancellationToken cancellationToken) =>
 		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));
@@ -122,7 +130,23 @@ public sealed class MediaController : ApiController
 	[AllowAnonymous]
 	[OutputCache]
 	[HttpGet("{Id:guid}/seasons")]
-	public async Task<ActionResult<StatisticsDto>> GetSeasons([FromRoute] GetSeasonsQuery query, CancellationToken cancellationToken) =>
+	public async Task<ActionResult<SeasonInfoDto>> GetSeasons([FromRoute] GetSeasonsQuery query, CancellationToken cancellationToken) =>
+		await mediator.Send(query, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
+	[OutputCache(NoStore = true)]
+	[HttpPost("{Id:guid}/review")]
+	public async Task<ActionResult<ReviewDto>> AddReview([FromQuery] AddReviewCommand command, CancellationToken cancellationToken) =>
+		await mediator.Send(command, cancellationToken).Then(
+			Ok,
+			err => StatusCode(err.Code, err.Messages));
+	
+	[AllowAnonymous]
+	[OutputCache(NoStore = true)]
+	[HttpGet("{Id:guid}/review")]
+	public async Task<ActionResult> AddReview([FromRoute] GetReviewQuery query, CancellationToken cancellationToken) =>
 		await mediator.Send(query, cancellationToken).Then(
 			Ok,
 			err => StatusCode(err.Code, err.Messages));

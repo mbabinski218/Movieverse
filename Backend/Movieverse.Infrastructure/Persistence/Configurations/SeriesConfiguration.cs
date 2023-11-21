@@ -37,31 +37,7 @@ public sealed class SeriesConfiguration : IEntityTypeConfiguration<Series>
 				episodesBuilder.Property(e => e.Title)
 					.HasMaxLength(Constants.titleLength);
 
-				episodesBuilder.OwnsOne(e => e.BasicStatistics, basicStatisticsBuilder =>
-				{
-					basicStatisticsBuilder.Property(bs => bs.Rating)
-						.HasPrecision(Constants.ratingPrecision, Constants.ratingScale);
-				});	
-
 				episodesBuilder.OwnsOne(e => e.Details);
-				
-				episodesBuilder.OwnsMany(e => e.ContentIds, contentIdsBuilder =>
-				{
-					contentIdsBuilder.ToTable($"{nameof(Episode)}{nameof(Media.ContentIds)}");
-
-					contentIdsBuilder.WithOwner().HasForeignKey("EpisodeId");
-
-					contentIdsBuilder.Property<int>("Id");
-
-					contentIdsBuilder.HasKey("Id");
-
-					contentIdsBuilder.Property(x => x.Value)
-						.ValueGeneratedNever()
-						.HasColumnName("ContentId");
-				});
-				
-				builder.Metadata.FindNavigation(nameof(Episode.ContentIds))!
-					.SetPropertyAccessMode(PropertyAccessMode.Field);
 			});
 		});
 	}

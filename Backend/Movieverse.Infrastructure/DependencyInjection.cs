@@ -107,7 +107,7 @@ public static class DependencyInjection
 			});
 
 		services.AddSingleton<ITokenProvider, TokenProvider>();
-		services.AddScoped<GoogleAuthentication>();
+		services.AddScoped<IGoogleAuthentication, GoogleAuthentication>();
 		
 		return services;
 	}
@@ -116,8 +116,6 @@ public static class DependencyInjection
 	{
 		services.AddScoped<IContentReadOnlyRepository, ContentReadOnlyRepository>();
 		services.AddScoped<IContentRepository, ContentRepository>();
-		services.AddScoped<IGenreReadOnlyRepository, GenreReadOnlyRepository>();
-		services.AddScoped<IGenreRepository, GenreRepository>();
 		services.AddScoped<IMediaReadOnlyRepository, MediaReadOnlyRepository>();
 		services.AddScoped<IMediaRepository, MediaRepository>();
 		services.AddScoped<IPersonReadOnlyRepository, PersonReadOnlyRepository>();

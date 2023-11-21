@@ -18,6 +18,7 @@ import { Platforms } from "../components/platform/Platforms";
 import { Player } from "../common/player";
 import { UserRoles } from "../UserRoles";
 import { CloudStore } from "../CloudStore";
+import { EditMedia } from "../components/media/EditMedia";
 import { Api } from "../Api";
 import "./Media.css";
 import Blank from "../assets/blank.png";
@@ -29,12 +30,13 @@ import Plus from "../assets/plus.svg";
 import CheckGold from "../assets/check-gold.svg";
 import StarEmpty from "../assets/star-empty.svg";
 import Images from "../assets/images.svg";
+import Pen from "../assets/pen.svg";
 
 // Dynamic imports
 const LazyGenres = React.lazy(() => import("../components/genre/Genres"));
 const LazyStaff = React.lazy(() => import("../components/staff/Staff"));
 const LazyStatistics = React.lazy(() => import("../components/media/Statistics"));
-
+const LazyReviews = React.lazy(() => import("../components/media/Reviews"));
 
 // Media page
 export const Media: React.FC = () => {
@@ -47,6 +49,7 @@ export const Media: React.FC = () => {
   const [isRatingPopupOpen, setIsRatingPopupOpen] = useState<boolean>(false);
   const [isContentPopupOpen, setIsContentPopupOpen] = useState<boolean>(false);
   const [userRoles] = useUserRoles();
+  const [editMode, setEditMode] = useState<boolean>(false);
   
   // On media change
   useEffect(() => {
@@ -117,6 +120,11 @@ export const Media: React.FC = () => {
   const contentHandler = useCallback(() => {
     setIsContentPopupOpen(!isContentPopupOpen);
   }, [isContentPopupOpen]);
+
+  //Toggle edit mode
+  const toggleEditMode = useCallback(() => {
+    setEditMode(!editMode);
+  }, [editMode]);
 
   // Render utils
   const isMovie = useCallback((media: MovieDto | SeriesDto | null): media is MovieDto => {
@@ -200,6 +208,22 @@ export const Media: React.FC = () => {
         loading ? <Loading /> :
         !media ? <NotFound /> : 
         <div className="media-page">
+          {
+            (userRoles?.includes(UserRoles.Administrator) || userRoles?.includes(UserRoles.SystemAdministrator)) &&
+            <>
+              <img className="person-pen"
+                  src={Pen} 
+                  alt="pen"
+                  onClick={toggleEditMode}
+              />              
+                {
+                  editMode &&
+                  <EditMedia mediaId={params.id as string}
+                             onClose={toggleEditMode}
+                  />
+                }
+            </>
+          }
           <span className="media-title">{media.title}</span>
           <div className="media-stats">
             <Icon className="media-icon-horizontal"
@@ -303,9 +327,16 @@ export const Media: React.FC = () => {
               </Suspense>
             </Section>
           </div>
+          <div className="media-review">
+            <Section title="Reviews">
+              <Suspense fallback={<Loading />}>
+                <LazyReviews mediaId={params.id as string}/>
+              </Suspense>
+            </Section>
+          </div>
           <div className="media-pro">
             {
-              (userRoles?.includes(UserRoles.Pro) || userRoles?.includes(UserRoles.Administrator)) &&              
+              (userRoles?.includes(UserRoles.Pro) || userRoles?.includes(UserRoles.Administrator) || userRoles?.includes(UserRoles.SystemAdministrator)) &&              
               <Suspense fallback={<Loading />}>
                 <LazyStatistics mediaId={params.id as string}/>
               </Suspense>

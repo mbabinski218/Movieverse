@@ -96,9 +96,21 @@
         <value>Błąd krytyczny</value>
     </data>
     <data name="FailedToChangeEmail" xml:space="preserve">
-        <value>Błąd podczas zmianyadresu email</value>
+        <value>Błąd podczas zmiany adresu email</value>
     </data>
     <data name="NoData" xml:space="preserve">
         <value>Brak danych</value>
+    </data>
+    <data name="SystemAdministratorRoleCannotBeAdded" xml:space="preserve">
+        <value>Nie można dodać roli system administratora</value>
+    </data>
+    <data name="UserIsSystemAdministrator" xml:space="preserve">
+        <value>Użytkownik jest system administratorem</value>
+    </data>
+    <data name="CanNotChangeExternalLoginPassword" xml:space="preserve">
+        <value>Nie można zmienić hasła</value>
+    </data>
+    <data name="FailedToChangePassword" xml:space="preserve">
+        <value>Błąd podczas zmiany hasła</value>
     </data>
 </root>

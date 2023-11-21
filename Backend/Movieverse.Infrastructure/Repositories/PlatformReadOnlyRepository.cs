@@ -2,7 +2,6 @@
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Movieverse.Application.Common.Extensions;
 using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.Resources;
 using Movieverse.Contracts.DataTransferObjects.Platform;
@@ -32,14 +31,12 @@ public sealed class PlatformReadOnlyRepository : IPlatformReadOnlyRepository
 		
 		var platform = await _dbContext.Platforms
 			.AsNoTracking()
-			.Include(p => p.LogoId)
 			.SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
 		
 		return platform is null ? Error.NotFound(PlatformResources.PlatformDoesNotExist) : new PlatformDto
 		{
 			Id = platform.Id,
 			Name = platform.Name,
-			LogoId = platform.LogoId.GetValue(),
 			Price = platform.Price
 		};
 	}
@@ -72,6 +69,18 @@ public sealed class PlatformReadOnlyRepository : IPlatformReadOnlyRepository
 			.AsNoTracking()
 			.Where(p => ids.Contains(p.Id))
 			.ProjectToType<PlatformInfoDto>()
+			.ToListAsync(cancellationToken);
+
+		return platforms;
+	}
+
+	public async Task<Result<IEnumerable<PlatformDemoDto>>> GetPlatformsDemoAsync(CancellationToken cancellationToken = default)
+	{
+		_logger.LogDebug("Database - Getting platforms demo...");
+		
+		var platforms =  await _dbContext.Platforms
+			.AsNoTracking()
+			.ProjectToType<PlatformDemoDto>()
 			.ToListAsync(cancellationToken);
 
 		return platforms;

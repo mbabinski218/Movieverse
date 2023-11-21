@@ -1,5 +1,4 @@
-﻿using Movieverse.Domain.Entities;
-using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
+﻿using Movieverse.Domain.ValueObjects.Ids.AggregateRootIds;
 
 namespace Movieverse.Domain.AggregateRoots.Media;
 
@@ -21,7 +20,6 @@ public sealed class Movie : Media
 	public static Movie Create(MediaId id, string title)
 	{
 		var movie = new Movie(id, title);
-		movie.AdvancedStatistics = Statistics.Create(movie);
 		return movie;
 	}
 	

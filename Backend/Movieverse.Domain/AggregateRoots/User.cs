@@ -15,6 +15,7 @@ public class User : IdentityAggregateRoot
 	public IReadOnlyList<MediaInfo> MediaInfos => _mediaInfos.AsReadOnly();
 	public PersonId? PersonId { get; set; }
 	public Subscription Subscription { get; set; } = null!;
+	public bool Banned { get; set; }
 
 	// Constructors
 	protected User(Guid id, string email, string userName, string? firstName, string? lastName, short age)
@@ -32,9 +33,13 @@ public class User : IdentityAggregateRoot
 		{
 			FreeTrial = true
 		};
+		Banned = false;
 	}
 	
 	// Methods
+	public static User Create(Guid id, string email, string userName, string? firstName, string? lastName, short age) => 
+		new(id, email, userName, firstName, lastName, age);
+	
 	public static User Create(string email, string userName, string? firstName, string? lastName, short age) => 
 		new(Guid.NewGuid(), email, userName, firstName, lastName, age);
 	

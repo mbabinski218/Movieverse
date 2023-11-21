@@ -44,12 +44,18 @@ public readonly struct Error
 	}
 
 	public static Error NotFound(string message) => new(StatusCode.NotFound, message);
+	public static Error NotFound() => new(StatusCode.NotFound);
 	public static Error Invalid(string message) => new(StatusCode.Invalid, message);
 	public static Error Invalid(List<string> message) => new(StatusCode.Invalid, message);
+	public static Error Invalid() => new(StatusCode.Invalid);
 	public static Error AlreadyExists(string message) => new(StatusCode.AlreadyExists, message);
+	public static Error AlreadyExists() => new(StatusCode.AlreadyExists);
 	public static Error Unauthorized(string message) => new(StatusCode.Unauthorized, message);
+	public static Error Unauthorized() => new(StatusCode.Unauthorized);
 	public static Error Forbidden(string message) => new(StatusCode.Forbidden, message);
+	public static Error Forbidden() => new(StatusCode.Forbidden);
 	public static Error NotImplemented() => new(StatusCode.NotImplemented);
 	public static Error InternalError(string message) => new(StatusCode.InternalError, message);
+	public static Error InternalError() => new(StatusCode.InternalError);
 	public static Error ValidationError(List<string> message) => new(StatusCode.Invalid, message);
 }
