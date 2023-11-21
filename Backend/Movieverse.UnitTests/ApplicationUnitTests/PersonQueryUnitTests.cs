@@ -3,7 +3,6 @@ using MapsterMapper;
 using Microsoft.Extensions.Logging;
 using Movieverse.Application.Common;
 using Movieverse.Application.Common.Extensions;
-using Movieverse.Application.Interfaces;
 using Movieverse.Application.Interfaces.Repositories;
 using Movieverse.Application.QueryHandlers.Person;
 using Movieverse.Application.Resources;
