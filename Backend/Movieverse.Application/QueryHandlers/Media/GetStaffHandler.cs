@@ -31,14 +31,14 @@ public sealed class GetStaffHandler : IRequestHandler<GetStaffQuery, Result<IEnu
 			return staff.Error;
 		}
 
-		var persons = await _personRepository.GetPersonsAsync(staff.Value.Select(x => x.PersonId), cancellationToken);
-		if (persons.IsUnsuccessful)
+		var people = await _personRepository.GetPeopleAsync(staff.Value.Select(x => x.PersonId), cancellationToken);
+		if (people.IsUnsuccessful)
 		{
-			return persons.Error;
+			return people.Error;
 		}
 
 		var staffDto = (
-			from person in persons.Value
+			from person in people.Value
 			let temp = staff.Value.FirstOrDefault(x => x.PersonId == person.Id)
 			where temp is not null
 			select new StaffDto

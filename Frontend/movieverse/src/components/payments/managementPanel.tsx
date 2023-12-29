@@ -84,7 +84,7 @@ export const ManagementPanel: React.FC = () => {
                   <div className="up-menu-info">
                     <span className="up-menu-info-bold">Available functions:</span><br/>
                     <span className="up-menu-info-m">Access to advanced statistics such as BoxOffice</span><br/>
-                    <span className="up-menu-info-m">Adding new movies and series</span><br/><br/>
+                    <span className="up-menu-info-m">Creating your own subpage</span><br/><br/>
                     <span className="up-menu-info-gold up-menu-info-m">Next billing: {(new Date(subscription.nextBillingTime ?? new Date())).toLocaleDateString()}</span>
                   </div>
                     <Button label="Cancel subscription"

@@ -31,7 +31,7 @@ export const Find: React.FC = () => {
 
   useEffect(() => {
     if (filters.type === "Person") {
-      Api.searchPersons(term, pageNumber, pageSize)
+      Api.searchPeople(term, pageNumber, pageSize)
         .then(res => {
           setList(res);
           setLoading(false);

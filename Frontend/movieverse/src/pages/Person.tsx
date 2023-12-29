@@ -109,14 +109,29 @@ export const Person: React.FC = () => {
               <Text label={`Birth date`} text={person.lifeHistory.birthDate?.substring(0, 10) ?? "unknown"} />
               <hr className="person-break" />
               <Text label={`Birth place`} text={person.lifeHistory.birthPlace ?? "unknown"} />
-              <hr className="person-break" />
-              <Text label={`Death date`} text={person.lifeHistory.deathDate?.substring(0, 10) ?? "unknown"} />
-              <hr className="person-break" />
-              <Text label={`Death place`} text={person.lifeHistory.deathPlace ?? "unknown"} />
+              {
+                person.lifeHistory.deathDate &&
+                <>
+                  <hr className="person-break" />
+                  <Text label={`Death date`} text={person.lifeHistory.deathDate.substring(0, 10)} />
+                </>
+              }
+              {
+                person.lifeHistory.deathPlace &&
+                <>
+                  <hr className="person-break" />
+                  <Text label={`Death place`} text={person.lifeHistory.deathPlace} />
+                </>
+              }
               <hr className="person-break" />
               <Text label={`Career start`} text={person.lifeHistory.careerStart?.substring(0, 10) ?? "unknown"} />
-              <hr className="person-break" />
-              <Text label={`Career end`} text={person.lifeHistory.careerEnd?.substring(0, 10) ?? "unknown"} />
+              {
+                person.lifeHistory.careerEnd &&
+                <>
+                  <hr className="person-break" />
+                  <Text label={`Career end`} text={person.lifeHistory.careerEnd.substring(0, 10)} />
+                </>
+              }
               <hr className="person-break" />
             </Section>
           </div>

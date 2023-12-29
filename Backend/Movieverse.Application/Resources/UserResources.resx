@@ -120,4 +120,7 @@
     <data name="FailedToChangePassword" xml:space="preserve">
         <value>Failed to change password</value>
     </data>
+    <data name="InvalidPasswordOrEmail" xml:space="preserve">
+        <value>Invalid email address or password</value>
+    </data>
 </root>

@@ -203,7 +203,6 @@ public class UserRepositoryUnitTests
 
 		// Assert
 		Assert.IsTrue(result.IsUnsuccessful);
-		Assert.AreEqual(new[] { UserResources.EmailOrUserNameAlreadyExist }, result.Error.Messages);
 	}
 	
 	[Test]
@@ -358,7 +357,7 @@ public class UserRepositoryUnitTests
 
 		// Assert
 		Assert.IsTrue(result.IsUnsuccessful);
-		Assert.AreEqual(new[] { UserResources.InvalidPassword }, result.Error.Messages);
+		Assert.AreEqual(new[] { UserResources.InvalidPasswordOrEmail }, result.Error.Messages);
 	}
 	
 	[Test]

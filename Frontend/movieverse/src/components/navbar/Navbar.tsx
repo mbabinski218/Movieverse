@@ -7,7 +7,6 @@ import { RoleEditor } from "../user/RoleEditor";
 import { useUserToken } from "../../hooks/useUserToken";
 import { UserRoles } from "../../UserRoles";
 import { AddPersonMenu } from "../person/AddPersonMenu";
-import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.svg";
 import Chart from "../../assets/chart.svg";
 import Check from "../../assets/check.svg";
@@ -126,9 +125,9 @@ export const Navbar: React.FC = () => {
             </Col>
             <Col>
               <div className="category">
-                <span>Persons</span>
+                <span>People</span>
               </div>
-              <Nav.Link href="/chart/persons/bornToday" className="element-link">Born today</Nav.Link>
+              <Nav.Link href="/chart/people/bornToday" className="element-link">Born today</Nav.Link>
             </Col>
             {
               (userToken?.role.includes(UserRoles.Administrator) || userToken?.role.includes(UserRoles.SystemAdministrator)) &&
@@ -165,7 +164,7 @@ export const Navbar: React.FC = () => {
       }
       {
         addPersonMenuOpen &&
-        <AddPersonMenu forUser={!userToken?.role.includes(UserRoles.Administrator)}
+        <AddPersonMenu forUser={!userToken?.role.includes(UserRoles.Administrator) && !userToken?.role.includes(UserRoles.SystemAdministrator)}
                        onClose={colseAddPersonMenu}
                        onSuccessfulAdd={colseAddPersonMenu}
         />

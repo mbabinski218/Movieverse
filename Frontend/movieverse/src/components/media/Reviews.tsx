@@ -86,7 +86,7 @@ const Reviews: React.FC<ReviewsProps> = ({mediaId, className}) => {
       <Button className="review-send-button"
               label="Send"
               color="gold"
-              disabled={text.length === 0}
+              disabled={text.length === 0 || !userRoles?.includes(UserRoles.User)}
               onClick={handleReviewSend}
       />
       <div className="review-show">

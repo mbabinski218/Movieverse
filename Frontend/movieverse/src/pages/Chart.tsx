@@ -88,11 +88,11 @@ export const Chart: React.FC = () => {
         setFunc(() => updateMoviesFunc);
         break;
 
-      case "persons":
-        setTitle("Persons > " + StringFormatter.convertFromCamelCase(category ?? ""));
+      case "people":
+        setTitle("People > " + StringFormatter.convertFromCamelCase(category ?? ""));
         document.title = "Chart - Movieverse";
-        const updatePersonsFunc = ((pageNumber: number, pageSize: number) => {
-          Api.getPersonsChart(category, pageNumber, pageSize)
+        const updatePeopleFunc = ((pageNumber: number, pageSize: number) => {
+          Api.getPeopleChart(category, pageNumber, pageSize)
             .then(res => res.json())
             .then(res => res as PaginatedList<SearchPersonDto>)
             .then(res => {
@@ -109,7 +109,7 @@ export const Chart: React.FC = () => {
             })
             .catch(console.error)
         })
-        setFunc(() => updatePersonsFunc);
+        setFunc(() => updatePeopleFunc);
         break;
 
       default:

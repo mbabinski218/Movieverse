@@ -6,7 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>478d0062-91a9-4b4e-81b3-b8dd3be0915d</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <Version>0.0.1</Version>
+        <Version>1.0</Version>
         <Title>Movieverse.Consumer</Title>
         <Authors>Movieverse</Authors>
     </PropertyGroup>
