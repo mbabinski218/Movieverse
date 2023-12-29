@@ -88,7 +88,7 @@ public class Media : AggregateRoot<MediaId, Guid>
 	}
 	
 	// Equality
-	public override bool Equals(object? obj) => obj is MediaId entityId && Id.Equals(entityId);
+	public override bool Equals(object? obj) => obj is Media entity && Id.Equals(entity.Id);
 	public override int GetHashCode() => Id.GetHashCode();
 	
 	// EF Core

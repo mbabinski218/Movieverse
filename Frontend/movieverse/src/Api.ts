@@ -171,7 +171,7 @@ export class Api {
 		})			
 	}
 
-	static async searchPersons(searchTerm: string | null, pageNumber: number | null = null, pageSize: number | null = null)
+	static async searchPeople(searchTerm: string | null, pageNumber: number | null = null, pageSize: number | null = null)
 	: Promise<PaginatedList<SearchPersonDto>> {
 	const queryParams = new QueryParams();
 	if (searchTerm !== null) {
@@ -391,7 +391,7 @@ export class Api {
 		}, queryParams);
 	}
 
-	static async getPersonsChart(category: string | null = null, pageNumber: number | null = null, pageSize: number | null = null) : Promise<Response> {
+	static async getPeopleChart(category: string | null = null, pageNumber: number | null = null, pageSize: number | null = null) : Promise<Response> {
 		const queryParams = new QueryParams();
 
 		if (category !== null) {

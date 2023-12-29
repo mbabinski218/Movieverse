@@ -39,41 +39,41 @@ public sealed class PersonReadOnlyRepository : IPersonReadOnlyRepository
 
 	public async Task<Result<IPaginatedList<SearchPersonDto>>> SearchAsync(string? term, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Database - Searching persons with term: {Term}", term);
+		_logger.LogDebug("Database - Searching people with term: {Term}", term);
 		
-		var persons = await _dbContext.Persons
+		var people = await _dbContext.Persons
 			.AsNoTracking()
 			.Where(p => term == null || (p.Information.FirstName + " " + p.Information.LastName).ToLower().StartsWith(term.ToLower()))
 			.ProjectToType<SearchPersonDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
 
-		return persons;
+		return people;
 	}
 
 	public async Task<Result<IPaginatedList<SearchPersonDto>>> FindPersonsBornTodayAsync(short? pageNumber, short? pageSize, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Database - Getting persons born today...");
+		_logger.LogDebug("Database - Getting people born today...");
 		
-		var persons = await _dbContext.Persons
+		var people = await _dbContext.Persons
 			.AsNoTracking()
 			.Where(p => p.LifeHistory.BirthDate != null && p.LifeHistory.BirthDate.Value.Date == DateTimeOffset.UtcNow.Date)
 			.ProjectToType<SearchPersonDto>()
 			.ToPaginatedListAsync(pageNumber, pageSize, cancellationToken);
 
-		return persons;
+		return people;
 	}
 
-	public async Task<Result<IEnumerable<PersonInfoDto>>> GetPersonsAsync(IEnumerable<PersonId> ids, CancellationToken cancellationToken = default)
+	public async Task<Result<IEnumerable<PersonInfoDto>>> GetPeopleAsync(IEnumerable<PersonId> ids, CancellationToken cancellationToken = default)
 	{
-		_logger.LogDebug("Database - Getting persons...");
+		_logger.LogDebug("Database - Getting people...");
 
-		var persons = await _dbContext.Persons
+		var people = await _dbContext.Persons
 			.AsNoTracking()
 			.Where(p => ids.Contains(p.Id))
 			.ProjectToType<PersonInfoDto>()
 			.ToListAsync(cancellationToken);
 
-		return persons;
+		return people;
 	}
 
 	public async Task<Result<IEnumerable<MediaId>>> GetMediaIdsAsync(PersonId id, CancellationToken cancellationToken = default)

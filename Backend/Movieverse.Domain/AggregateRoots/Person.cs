@@ -62,7 +62,7 @@ public sealed class Person : AggregateRoot<PersonId, Guid>
 	}
 
 	// Equality
-	public override bool Equals(object? obj) => obj is PersonId entityId && Id.Equals(entityId);
+	public override bool Equals(object? obj) => obj is Person entity && Id.Equals(entity.Id);
 
 	public override int GetHashCode() => Id.GetHashCode();
 

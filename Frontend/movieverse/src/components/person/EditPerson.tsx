@@ -324,14 +324,15 @@ export const EditPerson: React.FC<EditPersonProps> = (props) => {
                         )}
                       </FieldArray>
 
-                      <button className="submit-button"
-                              type="submit"
-                              disabled={updating}
-                      >
-                        {updating ? "Updating..." : "Submit"}
-                      </button>
                     </>
-                  }                  
+                  }           
+                         
+                  <button className="submit-button"
+                          type="submit"
+                          disabled={updating}
+                  >
+                    {updating ? "Updating..." : "Submit"}
+                  </button>
                 </Form>
               )}
             </Formik>

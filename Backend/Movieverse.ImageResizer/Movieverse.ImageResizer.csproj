@@ -9,7 +9,7 @@
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <!-- Generate ready to run images during publishing to improve cold start time. -->
         <PublishReadyToRun>true</PublishReadyToRun>
-        <Version>0.0.1</Version>
+        <Version>1.0</Version>
         <Title>Movieverse.ImageResizer</Title>
         <Authors>Movieverse</Authors>
     </PropertyGroup>

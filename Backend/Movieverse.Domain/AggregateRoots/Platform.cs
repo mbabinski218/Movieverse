@@ -23,6 +23,9 @@ public sealed class Platform : AggregateRoot<PlatformId, Guid>
 	public static Platform Create(PlatformId id, string name, decimal price)
 		=> new(id, name, price);
 	
+	public static Platform Create(string name, decimal price)
+		=> Create(PlatformId.Create(), name, price);
+	
 	public static Platform Create(string name, ContentId logoId, decimal price)
 		=> new(PlatformId.Create(), name, price);
 	
@@ -33,9 +36,14 @@ public sealed class Platform : AggregateRoot<PlatformId, Guid>
 	{
 		_mediaIds.Add(mediaId);
 	}
+	
+	public void RemoveMedia(MediaId mediaId)
+	{
+		_mediaIds.Remove(mediaId);
+	}
 
 	// Equality
-	public override bool Equals(object? obj) => obj is PlatformId entityId && Id.Equals(entityId);
+	public override bool Equals(object? obj) => obj is Platform entity && Id.Equals(entity.Id);
 
 	public override int GetHashCode() => Id.GetHashCode();
 	

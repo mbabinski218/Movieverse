@@ -267,6 +267,15 @@ namespace Movieverse.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid email address or password.
+        /// </summary>
+        public static string InvalidPasswordOrEmail {
+            get {
+                return ResourceManager.GetString("InvalidPasswordOrEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid refresh token.
         /// </summary>
         public static string InvalidRefreshToken {

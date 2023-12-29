@@ -21,7 +21,7 @@ public sealed class Content : AggregateRoot<ContentId, Guid>
 		new(id, path, contentType);
 	
 	// Equality
-	public override bool Equals(object? obj) => obj is ContentId entityId && Id.Equals(entityId);
+	public override bool Equals(object? obj) => obj is Content entity && Id.Equals(entity.Id);
 
 	public override int GetHashCode() => Id.GetHashCode();
 	

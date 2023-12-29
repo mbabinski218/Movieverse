@@ -314,7 +314,7 @@ export const Authentication: React.FC = () => {
             }
           </div>
           <div className="auth-buttons">
-            <Button label={registerMode ? "Register" : "Sign in"} 
+            <Button label={registerMode ? "Register" : "Log in"} 
                     primary={true} 
                     onClick={registerMode ? onRegister : onSignIn}
             />

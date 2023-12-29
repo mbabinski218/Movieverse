@@ -12,6 +12,6 @@ public interface IPersonReadOnlyRepository
 	Task<Result<Person>> FindAsync(PersonId id, CancellationToken cancellationToken = default);
 	Task<Result<IPaginatedList<SearchPersonDto>>> SearchAsync(string? term, short? pageNumber, short? pageSize, CancellationToken cancellationToken = default);
 	Task<Result<IPaginatedList<SearchPersonDto>>> FindPersonsBornTodayAsync(short? pageNumber, short? pageSize, CancellationToken cancellationToken = default);
-	Task<Result<IEnumerable<PersonInfoDto>>> GetPersonsAsync(IEnumerable<PersonId> ids, CancellationToken cancellationToken = default);
+	Task<Result<IEnumerable<PersonInfoDto>>> GetPeopleAsync(IEnumerable<PersonId> ids, CancellationToken cancellationToken = default);
 	Task<Result<IEnumerable<MediaId>>> GetMediaIdsAsync(PersonId id, CancellationToken cancellationToken = default);
 }

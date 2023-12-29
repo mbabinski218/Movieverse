@@ -81,14 +81,14 @@ public class PersonQueryUnitTests
 		const int pageNumber = 2;
 		const int pageSize = 3;
 
-		var persons = new List<SearchPersonDto>
+		var people = new List<SearchPersonDto>
 		{
 			new() { Id = PersonId.Create(), FullName = "Person 1" },
 			new() { Id = PersonId.Create(), FullName = "Person 2" },
 			new() { Id = PersonId.Create(), FullName = "Person 3" }
 		};
 		
-		var expected = new PaginatedList<SearchPersonDto>(persons, pageNumber, pageSize);
+		var expected = new PaginatedList<SearchPersonDto>(people, pageNumber, pageSize);
 
 		var loggerMock = Substitute.For<ILogger<PersonsChartHandler>>();
 		

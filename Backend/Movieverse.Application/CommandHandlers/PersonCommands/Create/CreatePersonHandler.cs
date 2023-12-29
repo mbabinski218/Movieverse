@@ -53,7 +53,7 @@ public sealed class CreatePersonHandler : IRequestHandler<CreatePersonCommand, R
 			
 			if (user.Value.PersonId is not null)
 			{
-				return Error.Invalid();
+				return Error.Invalid(PersonResources.UserAlreadyHavePersonality);
 			}
 			
 			person.Information = new Information

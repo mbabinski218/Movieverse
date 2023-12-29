@@ -98,7 +98,7 @@ export const EditMedia: React.FC<EditMediaProps> = (props) => {
 
   const [genres] = useGenres();
   const [platforms] = usePlatforms();
-  const [persons, setPersons] = useState<SearchPersonDto[]>([]);
+  const [people, setPeople] = useState<SearchPersonDto[]>([]);
   const [sequels, setSequels] = useState<SearchMediaDto[]>([]);
   const [prequels, setPrequels] = useState<SearchMediaDto[]>([]);
   const [personInput, setPersonInput] = useState<string>("");
@@ -250,16 +250,16 @@ export const EditMedia: React.FC<EditMediaProps> = (props) => {
     }
   }, [content]);
 
-  // Fetch persons
+  // Fetch people
   useEffect(() => {
     if (debouncedPersonInput) {
-      Api.searchPersons(debouncedPersonInput, 1, 10)
+      Api.searchPeople(debouncedPersonInput, 1, 10)
         .then(res => {
-          setPersons(res.items);
+          setPeople(res.items);
         });
     }
     else {
-      setPersons([]);
+      setPeople([]);
     }
   }, [debouncedPersonInput]);
 
@@ -692,13 +692,13 @@ export const EditMedia: React.FC<EditMediaProps> = (props) => {
                                            as="select"
                                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                                               staffHelpers.form.setFieldValue(`Staff.${index}.PersonId`, e.target.value);
-                                              const person = persons.find(p => p.id === e.target.value)
+                                              const person = people.find(p => p.id === e.target.value)
                                               staffHelpers.form.setFieldValue(`Staff.${index}.Name`, person?.fullName);
                                            }}
                                     >
                                       <option value="" disabled>Select person</option>
                                       {
-                                        persons.map((person) => (
+                                        people.map((person) => (
                                           <option key={person.id}
                                                   value={person.id}                                              
                                           >

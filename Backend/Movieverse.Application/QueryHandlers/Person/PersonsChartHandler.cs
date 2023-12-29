@@ -22,7 +22,7 @@ public sealed class PersonsChartHandler : IRequestHandler<PersonsChartQuery, Res
 
 	public async Task<Result<IPaginatedList<SearchPersonDto>>> Handle(PersonsChartQuery request, CancellationToken cancellationToken)
 	{
-		_logger.LogDebug("Getting persons born today...");
+		_logger.LogDebug("Getting people born today...");
 		
 		return request.Category switch
 		{

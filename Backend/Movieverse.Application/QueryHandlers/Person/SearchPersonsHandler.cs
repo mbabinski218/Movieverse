@@ -21,7 +21,7 @@ public sealed class SearchPersonsHandler : IRequestHandler<SearchPersonsQuery, R
 
 	public async Task<Result<IPaginatedList<SearchPersonDto>>> Handle(SearchPersonsQuery request, CancellationToken cancellationToken)
 	{
-		_logger.LogDebug("Searching persons with term: {Term}", request.Term);
+		_logger.LogDebug("Searching people with term: {Term}", request.Term);
 
 		return await _personRepository.SearchAsync(request.Term, request.PageNumber, request.PageSize, cancellationToken);
 	}

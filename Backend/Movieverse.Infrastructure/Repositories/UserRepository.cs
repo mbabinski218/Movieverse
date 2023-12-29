@@ -79,7 +79,7 @@ public sealed class UserRepository : IUserRepository
 		if (!result.Succeeded)
 		{
 			Helper.LogError(_logger, result);
-			return Error.Invalid(UserResources.EmailOrUserNameAlreadyExist);
+			return Error.Invalid(result.Errors.Select(e => e.Description).ToList());
 		}
 		
 		result = await _userManager.AddToRoleAsync(user, UserRole.User.ToString());
@@ -133,7 +133,7 @@ public sealed class UserRepository : IUserRepository
 
 		if (!await _userManager.CheckPasswordAsync(user, password).ConfigureAwait(false))
 		{
-			return Error.Unauthorized(UserResources.InvalidPassword);
+			return Error.Unauthorized(UserResources.InvalidPasswordOrEmail);
 		}
 		
 		var authClaims = await GetClaims(user);
